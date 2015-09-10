@@ -1,0 +1,1 @@
+<f:field bean="grupo" property="descricao" label="Descrição"/>
