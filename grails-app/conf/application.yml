@@ -67,25 +67,6 @@ grails:
 ---
 
 ---
-grails:
-    plugin:
-        springsecurity:
-            controllerAnnotations:
-                staticRules: 
-                    "[
-                       '/console/**':     ['permitAll'],
-                       '/':               ['permitAll'],
-                       '/error':          ['permitAll'],
-                       '/index':          ['permitAll'],
-                       '/index.gsp':      ['permitAll'],
-                       '/shutdown':       ['permitAll'],
-                       '/assets/**':      ['permitAll'],
-                       '/**/js/**':       ['permitAll'],
-                       '/**/css/**':      ['permitAll'],
-                       '/**/images/**':   ['permitAll'],
-                       '/**/favicon.ico': ['permitAll']
-                    ]"
-
 hibernate:
     cache:
         queries: false
