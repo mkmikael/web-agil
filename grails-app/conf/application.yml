@@ -97,8 +97,8 @@ environments:
     production:
         dataSource:
             dbCreate: update
-            password: agilroot
             url: jdbc:mysql://localhost:3306/agil_production
+            password: agilroot
             properties:
                 jmxEnabled: true
                 initialSize: 5

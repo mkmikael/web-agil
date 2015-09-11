@@ -1,5 +1,10 @@
 <%@ import="web.agil.*; web.agil.enums.*" %>
 
+<style type="text/css">
+	table { border: none; }
+	table tr:hover { background-color: transparent; }
+</style>
+
 <g:hiddenField name="dataCriacao" value="${new Date()}" />
 <g:hiddenField name="cliente.id" value="${pedido?.cliente?.id ?: params?.cliente?.id}" />
 
@@ -17,9 +22,8 @@
 	*PV = Preço de Venda
 </p>
 <br/>
-<table>
+<table id="#itens">
 	<thead>
-		<th>Produto</th>
 		<th>Prazo</th>
 		<th>Preço</th>
 		<th>Quant.</th>
@@ -29,37 +33,43 @@
 		<th>Total</th>
 	</thead>
 	<tbody>
+		
 	</tbody>
 </table>
 
-<div id="form-item">
+<div id="dialog-pedido">
 	<table>
 		<tr>
-			<td id="produto">
-				<g:select name="itensPedido[].unidade.id" from="${Produto.list()}" optionKey="id" optionValue="descricao" style="width: 100%" />
-			</td>
-			<td id="prazo">
-				<g:select name="itensPedido[].prazo.id" from="${Prazo.list()}" optionKey="id" optionValue="periodicidade" style="width: 100%" />
-			</td>
-			<td id="preco" style="width: 70px">
-				R$ <span>10</span>
-			</td>
-			<td id="quant">
-				<g:field type="number" name="itensPedido[].quantidade" style="width: 70px" />
-			</td>
-			<td id="desc">
-				<g:field type="number" name="itensPedido[].desconto" style="width: 70px" />
-			</td>
-			<td id="bonif">
-				<g:field type="number" name="itensPedido[].bonificacao" style="width: 70px" />
-			</td>
-			<td id="pv" style="width: 70px">
-				<g:hiddenField name="itensPedido[].precoNegociado" />
-				0
-			</td>
-			<td id="subtotal" style="width: 70px">
-				<g:hiddenField name="itensPedido[].total" />
-			</td>
+			<td><label>Produto</label></td>
+			<td><g:select name="produto" style="width: 100%" from="${Unidade.list()}" optionKey="id" /></td>
+		</tr>
+		<tr>
+			<td>Preço</td>
+			<td>R$ <span id="preco">3</span></td>
+		</tr>
+		<tr>
+			<td>Prazo</td>
+			<td><g:select name="prazo" from="${Prazo.list()}" optionKey="id" optionValue="periodicidade" /></td>
+		</tr>
+		<tr>
+			<td>Quantidade</td>
+			<td><g:field type="number" name="quant" /></td>
+		</tr>
+		<tr>
+			<td>Desconto</td>
+			<td><g:field type="number" name="desc" /></td>
+		</tr>
+		<tr>
+			<td>Bonificação</td>
+			<td><g:field type="number" name="bonif" /></td>
+		</tr>
+		<tr>
+			<td>PV</td>
+			<td>R$ <span id="pv">0</span></td>
+		</tr>
+		<tr>
+			<td>Total</td>
+			<td>R$ <span id="subtotal">0</span></td>
 		</tr>
 	</table>
 </div>

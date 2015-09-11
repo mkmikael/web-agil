@@ -2,8 +2,6 @@ $(function() {
 	
 	$( "#estoque" ).dialog({
 		modal: true,
-		width: 530,
-		heigth: 300,
 		autoOpen: false,
 		title: 'Estoque',
 		buttons: [
