@@ -13,7 +13,27 @@ class ClienteController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Cliente.list(params), model:[clienteCount: Cliente.count()]
+        def criteria = {
+            participante {
+                if (params.search_codigo)
+                    ilike('codigo', "%${params.search_codigo}%")
+                if (params.search_bairro)
+                    ilike('bairro', "%${params.search_bairro}%")
+                if (params.search_nome)
+                    ilike('nome', "%${params.search_nome}%")
+                if (params.search_nomeFantasia)
+                    ilike('nomeFantasia', "%${params.search_nomeFantasia}%")
+                if (params.search_razaoSocial)
+                    ilike('razaoSocial', "%${params.search_razaoSocial}%")
+                if (params.search_cpf)
+                    ilike('cpf', "%${params.search_cpf}%")
+                if (params.search_cnpj)
+                    ilike('cnpj', "%${params.search_cnpj}%")
+            } // participante
+        } // criteria
+        def clienteList = Cliente.createCriteria().list(params, criteria)
+        def clienteCount = Cliente.createCriteria().count(criteria)
+        respond clienteList, model:[clienteCount: clienteCount] + params
     }
 
     def show(Cliente cliente) {

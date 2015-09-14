@@ -1,53 +1,70 @@
 $(function() {
 	var count = 0;
+	var rowHtml;
+	rowHtml = $('#row-pedido tbody').clone();
+	$('#row-pedido').remove();
 
-	$( '#dialog-pedido' ).dialog({
-		modal: true,
-		autoOpen: false,
-		width: 600,
-		heigth: 400,
-		title: 'Item',
-		buttons: [
-			{
-				text: 'Salvar',
-				click: function() {
-					var map = { produto: $(this).find('#produto').val(), prazo: $(this).find('#prazo').val(), quantidade: $(this).find('#quantidade').val()
-					, desconto: $(this).find('#desconto').val(), bonificacao: $(this).find('#bonificacao').val(), total: $(this).find('#total').val() }
-					$('#itens tbody').appendTo( toRow(map) );
-					$( this ).dialog( 'close' );
-				}
+	function updateItem(select) {
+		var spanPreco = $(select).parent().parent();
+		$.ajax('/unidade/getUnidade/' + $(select).val(), 
+		{
+			success: function(data) {
+				spanPreco.find('#preco').html(data.valor);
+				console.log(data.valor);
 			}
-		]
-	});
+		});
+	}
+
+	function calcular(element) {
+		var row = $(element).parent().parent();
+		var quantidade = row.find('#item\\.quantidade').val();
+		var desconto = row.find('#item\\.desconto').val();
+		var bonificacao = row.find('#item\\.bonificacao').val();
+		var preco = parseInt( row.find('#preco').text() );
+
+		if (quantidade == 0) quantidade = 0
+		if (desconto == 0) desconto = 0
+		if (bonificacao == 0) bonificacao = 0
+
+		quantidade = parseInt(quantidade);
+		bonificacao = parseInt(bonificacao);
+		var subtotal = preco * quantidade * ( 1 - ( desconto / 100 ) );
+		if (bonificacao + quantidade != 0)
+			row.find( '#pv' ).text( ( subtotal / ( bonificacao + quantidade ) ).toFixed(2) , 2 );
+		else
+			row.find( '#pv' ).text( 0 );
+		row.find( '#subtotal' ).text( subtotal.toFixed(2) );
+
+		var sum = 0;
+		$('.subtotal').each(function(i, e) {
+			sum += parseFloat(e.innerHTML);
+		});
+		$('#total').text(sum);
+	}
 
 	$('button.btn').click(function() {
-		$('#dialog-pedido').dialog( 'open' );
+		var row = rowHtml.clone();
+		var inputs = row.find("#item\\.quantidade, #item\\.desconto, #item\\.bonificacao");
+
+		inputs.blur(function() {
+			if (this.value == 0) 
+				this.value = 0;
+		});
+
+		inputs.keyup(function() {
+			if (this.value < 0)
+				this.value = 0;
+			calcular(this);
+		});
+
+		row.find("#item\\.unidade\\.id").change(function() {
+			updateItem(this);
+			calcular(this);
+		});
+
+		updateItem(row.find("#item\\.unidade\\.id"));
+		$('#itens tbody').append( row.find("tr") );
 	});
 
-	$("#quant, #desc, #bonif").keyup(function() {
-		var row = $(this).parent().parent().parent();
-		var quant = row.find('#quant').val();
-		var desc = row.find('#desc').val();
-		var bonif = row.find('#bonif').val();
-		var preco = parseInt( row.find('#preco').text() );
-		if (desc == 0) desc = 0
-		if (bonif == 0) bonif = 0
-		var subtotal = preco * quant * ( 1 - desc / 100 );
-		if ((parseInt(bonif) + parseInt(quant)) != 0)
-			row.find( '#pv' ).text( subtotal / ( parseInt(bonif) + parseInt(quant) ) , 2 );
-		row.find( '#subtotal' ).text( subtotal );
-	});
 
-	function toRow(map) {
-		var html = "<tr>"
-		+ '<td><input type="hidden" name="itensPedido[' + count + '].unidade.id"/>' + map.produto + '</td>'
-		+ '<td><input type="hidden" name="itensPedido[' + count + '].prazo.id"/>' + map.prazo + '</td>'
-		+ '<td><input type="hidden" name="itensPedido[' + count + '].quantidade"/>' + map.quantidade + '</td>'
-		+ '<td><input type="hidden" name="itensPedido[' + count + '].desconto"/>' + map.desconto + '</td>'
-		+ '<td><input type="hidden" name="itensPedido[' + count + '].bonificacao"/>' + map.bonificacao + '</td>'
-		+ '<td><input type="hidden" name="itensPedido[' + count + '].total"/>' + map.total + '</td>'
-		+ "</tr>";
-		count++;
-		return html;
-	}
 });

@@ -1,6 +1,7 @@
 package web.agil
 
 import static org.springframework.http.HttpStatus.*
+import grails.converters.JSON
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
@@ -93,6 +94,10 @@ class UnidadeController {
             }
             '*'{ render status: NO_CONTENT }
         }
+    }
+
+    def getUnidade(Long id) {
+        render Unidade.get(id) as JSON
     }
 
     protected void notFound() {

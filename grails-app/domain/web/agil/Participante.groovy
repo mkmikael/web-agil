@@ -16,6 +16,9 @@ class Participante {
 	static hasMany = [papeis: Papel]
 
     static constraints = {
+    	endereco nullable: true
+    	bairro nullable: true
+    	cidade nullable: true
     	referencia nullable: true
     	telefone nullable: true
     	email nullable: true

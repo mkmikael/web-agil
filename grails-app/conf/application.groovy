@@ -4,12 +4,12 @@
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'web.agil.security.User'
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'web.agil.security.UserRole'
 grails.plugin.springsecurity.authority.className = 'web.agil.security.Role'
+grails.plugin.springsecurity.logout.postOnly = false
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
-	'/console':         ['MASTER'],
-	'/*':  			    ['MASTER'],
+	'/console':         ["hasRole('ROLE_MASTER')"],
+	'/**':  	    	["hasRole('ROLE_MASTER')"],
+	'/': 	            ["hasRole('ROLE_MASTER')"],
 	'/error':           ['permitAll'],
-	'/index':           ['permitAll'],
-	'/index.gsp':       ['permitAll'],
 	'/shutdown':        ['permitAll'],
 	'/assets/**':       ['permitAll'],
 	'/**/js/**':        ['permitAll'],

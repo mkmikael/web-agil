@@ -14,15 +14,18 @@ import org.apache.poi.ss.usermodel.Workbook
 import grails.transaction.Transactional
 
 import web.agil.*
+import web.agil.enums.*
 import web.agil.util.Util
 
 @Transactional
 class ExcelService {
 
+	String pathExcel = "/opt/publico/sistema_venda.xls"
+
     def loadClientes() {
-		FileInputStream fileInputStream = new FileInputStream("/opt/publico/sistema_venda.xls")
+		FileInputStream fileInputStream = new FileInputStream(pathExcel)
 		Workbook workbook = new HSSFWorkbook(fileInputStream)
-		Sheet sheet = workbook.getSheet("clientes")
+		Sheet sheet = workbook.getSheetAt(0)
 		Row row
 		for (i in 2 .. 219) {
 			row = sheet.getRow(i)
@@ -34,8 +37,8 @@ class ExcelService {
 				participante.cnpj = row.getCell(3)?.getStringCellValue()
 				def params = row.getCell(4)?.getStringCellValue()?.split('-')
 				if (params?.length == 2) {
-					participante.nomeFantasia = Util.removeSpecialCaracter(params[0].trim())
-					participante.razaoSocial = Util.removeSpecialCaracter(params[1].trim())
+					participante.nomeFantasia = Util.removeSpecialCaracter(params[1].trim())
+					participante.razaoSocial = Util.removeSpecialCaracter(params[0].trim())
 				} else {
 					participante.nomeFantasia = Util.removeSpecialCaracter(row.getCell(4)?.getStringCellValue())
 				}
@@ -43,8 +46,8 @@ class ExcelService {
 				participante.endereco = row.getCell(6)?.getStringCellValue()
 				participante.referencia = row.getCell(8)?.getStringCellValue()
 				participante.bairro = row.getCell(9)?.getStringCellValue()
-				participante.cidade = row.getCell(11)?.getStringCellValue()?.toUpperCase()
-				participante.telefone = row.getCell(16)?.getStringCellValue()
+				participante.cidade = row.getCell(10)?.getStringCellValue()?.toUpperCase()
+				participante.telefone = row.getCell(14)?.getStringCellValue()
 			} else {
 				participante = new Pessoa()
 				participante.id = row.getCell(1).getNumericCellValue() as Long
@@ -54,18 +57,29 @@ class ExcelService {
 				participante.endereco = row.getCell(6)?.getStringCellValue()
 				participante.referencia = row.getCell(8)?.getStringCellValue()
 				participante.bairro = row.getCell(9)?.getStringCellValue()
-				participante.cidade = row.getCell(11)?.getStringCellValue()?.toUpperCase()
-				participante.telefone = row.getCell(16)?.getStringCellValue()
+				participante.cidade = row.getCell(10)?.getStringCellValue()?.toUpperCase()
+				participante.telefone = row.getCell(14)?.getStringCellValue()
 			}
 			participante.save(insert: true, flush: true)
-			new Cliente(participante: participante).save()
+			def c = new Cliente(participante: participante)
+			if (row.getCell(15)?.getStringCellValue() == "001") {
+				c.vendedor = Vendedor.get(1)
+			} else if (row.getCell(15)?.getStringCellValue() == "002") {
+				c.vendedor = Vendedor.get(2)
+			} 
+			def semana = row.getCell(16)?.getStringCellValue()
+			if (semana != null && semana != "" && semana != " ") {
+				println semana
+				c.diaDeVisita = Semana.valueOf(semana) 
+			}
+			c.save()
 			println "Save $participante"
 		}
 		fileInputStream.close();
     }
 
     def loadProdutos() {
-    	FileInputStream fileInputStream = new FileInputStream("/opt/publico/sistema_venda.xls")
+    	FileInputStream fileInputStream = new FileInputStream(pathExcel)
 		Workbook workbook = new HSSFWorkbook(fileInputStream)
 		Sheet sheet = workbook.getSheet("produto")
 		Row row
@@ -92,7 +106,7 @@ class ExcelService {
     }
 
     def loadUnidades() {
-    	FileInputStream fileInputStream = new FileInputStream("/opt/publico/sistema_venda.xls")
+    	FileInputStream fileInputStream = new FileInputStream(pathExcel)
 		Workbook workbook = new HSSFWorkbook(fileInputStream)
 		Sheet sheet = workbook.getSheet("precos")
 		Row row
@@ -108,7 +122,9 @@ class ExcelService {
 			unidade.valor = row.getCell(3)?.getNumericCellValue()
 			unidade.valorMinimo = row.getCell(4)?.getNumericCellValue()
 			if (tipo == "UNI")
-				unidade.quantidade = 1
+				unidade.tipoUnidade = TipoUnidade.get(2)
+			else if (tipo == "CXA")
+				unidade.tipoUnidade = TipoUnidade.get(1)
 			unidade.save(insert: true, flush: true)
 			println unidade.properties
 		}
@@ -116,7 +132,7 @@ class ExcelService {
     }
 
     def associarFornecedorAndGrupo() {
-    	FileInputStream fileInputStream = new FileInputStream("/opt/publico/sistema_venda.xls")
+    	FileInputStream fileInputStream = new FileInputStream(pathExcel)
 		Workbook workbook = new HSSFWorkbook(fileInputStream)
 		Sheet sheet = workbook.getSheet("produto")
 		Row row = sheet.getRow(1)
@@ -134,6 +150,11 @@ class ExcelService {
     }
 
     def load() {
+    	new TipoUnidade(id: 1, tipo: "CXA", capacidade: 0).save(flush: true)
+    	new TipoUnidade(id: 2, tipo: "UNI", capacidade: 1).save(flush: true)
+    	new Vendedor(id: 1, codigo: "001").save(flush: true)
+    	new Vendedor(id: 2, codigo: "002").save(flush: true)
+
     	loadClientes()
     	loadProdutos()
     	loadUnidades()

@@ -2,10 +2,10 @@ package web.agil
 
 class Unidade {
 
-	String tipo
+	TipoUnidade tipoUnidade
+	Double valorDeCompra
 	Double valor
 	Double valorMinimo
-	Integer quantidade = 0
 	Integer estoque = 0
 
 	static belongsTo = [produto: Produto]

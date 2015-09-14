@@ -24,7 +24,10 @@
             <g:form action="index">
                 <fieldset class="form">
                     <label>Código</label>
-                    <g:field name="search_codigo" value="${search_codigo}" />
+                    <g:textField name="search_codigo" value="${search_codigo}" />
+
+                    <label>Descrição</label>
+                    <g:textField name="search_descricao" value="${search_descricao}" />
 
                     <label>Fornecedor</label>
                     <g:select name="search_fornecedor" value="${search_fornecedor}" from="${Fornecedor.list()}" optionKey="id" optionValue="descricao" noSelection="['': 'Selecione']"/>
@@ -81,7 +84,7 @@
             </div>
             
             <div id="movimentacao" hidden="true">
-                <g:form name="form-movimentacao" action="index">
+                <g:form name="form-movimentacao" action="index" params="${params}">
                     <div class="fieldcontain">
                         <label>Quantidade</label>
                         <g:field name="quantidade" required="required" />

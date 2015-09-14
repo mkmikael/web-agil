@@ -25,6 +25,7 @@
                     <ol>
                         <li><g:link controller="cliente">Clientes</g:link> </li>
                         <li><g:link controller="produto">Produtos</g:link> </li>
+                        <li><g:link controller="pedido">Pedidos</g:link> </li>
                         <li><g:link controller="fornecedor">Fornecedores</g:link> </li>
                         <li><g:link controller="grupo">Grupos</g:link> </li>
                         <li><g:link controller="prazo">Prazos</g:link> </li>

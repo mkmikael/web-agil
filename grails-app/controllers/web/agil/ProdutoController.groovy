@@ -13,10 +13,12 @@ class ProdutoController {
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         params.offset = params.offset ?: 0
-        def unidadeList = Unidade.createCriteria().list(params) {
+        def criteria = {
             produto {
+                if (params.search_descricao)
+                    ilike('descricao', "%${params.search_descricao}%")
                 if (params.search_codigo) 
-                    eq('codigo', params.search_codigo)
+                    ilike('codigo', "%${params.search_codigo}%")
                 if (params.search_fornecedor) 
                     eq('fornecedor', Fornecedor.get(params.search_fornecedor as Long))
                 if (params.search_grupo) 
@@ -25,7 +27,9 @@ class ProdutoController {
             if (params.search_tipo)
                 eq('tipo', params.search_tipo)
         }
-        respond unidadeList, model:[produtoCount: Unidade.count()] + params
+        def unidadeList = Unidade.createCriteria().list(params, criteria)
+        def unidadeCount = Unidade.createCriteria().count(criteria)
+        respond unidadeList, model:[produtoCount: unidadeCount] + params
     }
 
     def show(Produto produto) {
@@ -128,7 +132,7 @@ class ProdutoController {
                 it.estoque = new Integer( params.quantidade )
             }
         }
-        redirect action: 'index'
+        redirect action: 'index', model: params
     }
 
     protected void notFound() {
