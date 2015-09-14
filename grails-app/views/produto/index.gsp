@@ -34,9 +34,6 @@
 
                     <label>Grupo</label>
                     <g:select name="search_grupo" value="${search_grupo}" from="${Grupo.list()}" optionKey="id" optionValue="descricao" noSelection="['': 'Selecione']" />
-
-                    <label>Tipo</label>
-                    <g:field name="search_tipo" value="${search_tipo}" size="10" />
                 </fieldset>
                 <fieldset>
                     <input type="submit" value="Procurar" />
@@ -57,23 +54,17 @@
                         <g:sortableColumn property="produto.descricao" title="Descrição" />
                         <g:sortableColumn property="produto.fornecedor" title="Fornecedor" />
                         <g:sortableColumn property="produto.grupo" title="Grupo" />
-                        <g:sortableColumn property="tipo" title="Tipo" />
-                        <g:sortableColumn property="valor" title="Preço" />
-                        <g:sortableColumn property="estoque" title="Estoque" />
                         <th></th>
                     </thead>
                     <tbody>
-                        <g:each in="${unidadeList}" var="unidade">
-                            <tr style="background-color: ${unidade?.quantidade == 0 ? 'yellow' : 'transparent'}">
-                                <td><g:checkBox name="unidade_${unidade?.id}" /></td>
-                                <td>${unidade?.produto?.codigo}</td>
-                                <td>${unidade?.produto?.descricao}</td>
-                                <td>${unidade?.produto?.fornecedor?.descricao}</td>
-                                <td>${unidade?.produto?.grupo?.descricao}</td>
-                                <td>${unidade?.tipo}</td>
-                                <td>${unidade?.valor}</td>
-                                <td>${unidade?.estoque}</td>
-                                <td><g:link action="show" id="${unidade?.produto?.id}">Visualizar</g:link></td>
+                        <g:each in="${produtoList}" var="produto">
+                            <tr style="background-color: ${quantidade == 0 ? 'yellow' : 'transparent'}">
+                                <td><g:checkBox name="unidade_${produto?.id}" /></td>
+                                <td>${produto?.codigo}</td>
+                                <td>${produto?.descricao}</td>
+                                <td>${produto?.fornecedor?.descricao}</td>
+                                <td>${produto?.grupo?.descricao}</td>
+                                <td><g:link action="show" id="${produto?.id}">Visualizar</g:link></td>
                             </tr>
                         </g:each>
                     </tbody>

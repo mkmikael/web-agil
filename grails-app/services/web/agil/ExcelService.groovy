@@ -21,9 +21,10 @@ import web.agil.util.Util
 class ExcelService {
 
 	String pathExcel = "/opt/publico/sistema_venda.xls"
+	String pathClientes = "/opt/publico/clientes-agil-distribuicoes-V2.xls"
 
     def loadClientes() {
-		FileInputStream fileInputStream = new FileInputStream(pathExcel)
+		FileInputStream fileInputStream = new FileInputStream(pathClientes)
 		Workbook workbook = new HSSFWorkbook(fileInputStream)
 		Sheet sheet = workbook.getSheetAt(0)
 		Row row
@@ -72,7 +73,7 @@ class ExcelService {
 				println semana
 				c.diaDeVisita = Semana.valueOf(semana) 
 			}
-			c.save()
+			c.save(flush: true)
 			println "Save $participante"
 		}
 		fileInputStream.close();
@@ -112,18 +113,17 @@ class ExcelService {
 		Row row
 		for (i in 1..181) {
 			row = sheet.getRow(i)
-			def tipo = row.getCell(2)?.getStringCellValue() 
-			if (tipo == "DP" || tipo == "PT") 
+			def tipo = row.getCell(2)?.getStringCellValue()
+			if (tipo == "DP" || tipo == "PT")
 				continue
 			def unidade  = new Unidade()
 			unidade.id = row.getCell(0)?.getNumericCellValue() as Long
 			unidade.produto = Produto.get( row.getCell(1)?.getStringCellValue() as Long )
-			unidade.tipo = row.getCell(2)?.getStringCellValue()
 			unidade.valor = row.getCell(3)?.getNumericCellValue()
 			unidade.valorMinimo = row.getCell(4)?.getNumericCellValue()
-			if (tipo == "UNI")
+			if (tipo?.trim() == "UNI")
 				unidade.tipoUnidade = TipoUnidade.get(2)
-			else if (tipo == "CXA")
+			else if (tipo?.trim() == "CXA")
 				unidade.tipoUnidade = TipoUnidade.get(1)
 			unidade.save(insert: true, flush: true)
 			println unidade.properties

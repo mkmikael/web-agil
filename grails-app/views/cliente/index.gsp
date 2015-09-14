@@ -73,7 +73,7 @@
                 <tbody>
                     <g:each in="${clienteList}" var="cliente">
                         <tr>
-                            <td><g:link action="show" id="${cliente?.participante?.id}">${cliente?.participante?.codigo}</g:link></td>
+                            <td><g:link action="show" id="${cliente?.id}">${cliente?.participante?.codigo}</g:link></td>
                             <g:if test="${cliente?.participante.class == Organizacao}">
                                 <td>${cliente?.participante?.cnpj}</td>
                                 <td>${cliente?.participante?.nomeFantasia} - ${cliente?.participante?.razaoSocial}</td>

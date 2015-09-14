@@ -44,6 +44,14 @@
                                 <span class="property-label">Situação</span>
                                 <span class="property-value">${cliente?.situacao}</span>
                             </div>
+                            <div class="fieldcontain">
+                                <span class="property-label">Dia de Rota</span>
+                                <span class="property-value">${cliente?.diaDeVisita}</span>
+                            </div>
+                            <div class="fieldcontain">
+                                <span class="property-label">Vendedor</span>
+                                <span class="property-value">${cliente?.vendedor?.codigo}</span>
+                            </div>
                         </div> <!-- property-list -->
                     </div>
                     <div id="pedidos">

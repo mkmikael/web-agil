@@ -6,7 +6,7 @@ $(function() {
 
 	function updateItem(select) {
 		var spanPreco = $(select).parent().parent();
-		$.ajax('/unidade/getUnidade/' + $(select).val(), 
+		$.ajax('/web-agil/unidade/getUnidade/' + $(select).val(), 
 		{
 			success: function(data) {
 				spanPreco.find('#preco').html(data.valor);

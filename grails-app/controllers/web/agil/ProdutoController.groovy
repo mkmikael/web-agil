@@ -14,22 +14,18 @@ class ProdutoController {
         params.max = Math.min(max ?: 10, 100)
         params.offset = params.offset ?: 0
         def criteria = {
-            produto {
-                if (params.search_descricao)
-                    ilike('descricao', "%${params.search_descricao}%")
-                if (params.search_codigo) 
-                    ilike('codigo', "%${params.search_codigo}%")
-                if (params.search_fornecedor) 
-                    eq('fornecedor', Fornecedor.get(params.search_fornecedor as Long))
-                if (params.search_grupo) 
-                    eq('grupo', Grupo.get(params.search_grupo as Long))
-            }
-            if (params.search_tipo)
-                eq('tipo', params.search_tipo)
+            if (params.search_descricao)
+                ilike('descricao', "%${params.search_descricao}%")
+            if (params.search_codigo)
+                ilike('codigo', "%${params.search_codigo}%")
+            if (params.search_fornecedor)
+                eq('fornecedor', Fornecedor.get(params.search_fornecedor as Long))
+            if (params.search_grupo) 
+                eq('grupo', Grupo.get(params.search_grupo as Long))
         }
-        def unidadeList = Unidade.createCriteria().list(params, criteria)
-        def unidadeCount = Unidade.createCriteria().count(criteria)
-        respond unidadeList, model:[produtoCount: unidadeCount] + params
+        def produtoList = Produto.createCriteria().list(params, criteria)
+        def produtoCount = Produto.createCriteria().count(criteria)
+        respond produtoList, model:[produtoCount: produtoCount] + params
     }
 
     def show(Produto produto) {
