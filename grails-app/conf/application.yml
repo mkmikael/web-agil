@@ -14,7 +14,7 @@ spring:
             check-template-location: false
 ---
 server:
-    'contextPath': '/web-agil'
+    #'contextPath': '/'
 ---
 grails:
     mime:
