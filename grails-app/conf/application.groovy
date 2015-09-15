@@ -9,8 +9,8 @@ grails.plugin.springsecurity.rejectIfNoRule = true
 grails.plugin.springsecurity.fii.rejectPublicInvocations = false
 grails.plugin.springsecurity.securityConfigType = "Annotation"
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
-	'/console':         ["ROLE_MASTER"],
-	'/**':  			["ROLE_MASTER"],
+	'/console':         ["IS_AUTHENTICATED_ANONYMOUSLY"],
+	'/**':  			["IS_AUTHENTICATED_ANONYMOUSLY"],
 	'/error':           ['IS_AUTHENTICATED_ANONYMOUSLY'],
 	'/shutdown':        ['IS_AUTHENTICATED_ANONYMOUSLY'],
 	'/assets/**':       ['IS_AUTHENTICATED_ANONYMOUSLY'],
