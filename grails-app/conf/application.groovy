@@ -5,18 +5,23 @@ grails.plugin.springsecurity.userLookup.userDomainClassName = 'web.agil.security
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'web.agil.security.UserRole'
 grails.plugin.springsecurity.authority.className = 'web.agil.security.Role'
 grails.plugin.springsecurity.logout.postOnly = false
-grails.plugin.springsecurity.rejectIfNoRule = true
-grails.plugin.springsecurity.fii.rejectPublicInvocations = false
-grails.plugin.springsecurity.securityConfigType = "Annotation"
-grails.plugin.springsecurity.controllerAnnotations.staticRules = [
-	'/console':         ["IS_AUTHENTICATED_ANONYMOUSLY"],
-	'/**':  			["IS_AUTHENTICATED_ANONYMOUSLY"],
-	'/error':           ['IS_AUTHENTICATED_ANONYMOUSLY'],
-	'/shutdown':        ['IS_AUTHENTICATED_ANONYMOUSLY'],
-	'/assets/**':       ['IS_AUTHENTICATED_ANONYMOUSLY'],
-	'/**/js/**':        ['IS_AUTHENTICATED_ANONYMOUSLY'],
-	'/**/css/**':       ['IS_AUTHENTICATED_ANONYMOUSLY'],
-	'/**/images/**':    ['IS_AUTHENTICATED_ANONYMOUSLY'],
-	'/**/favicon.ico':  ['IS_AUTHENTICATED_ANONYMOUSLY']
+grails.plugin.springsecurity.securityConfigType = "InterceptUrlMap"
+grails.plugin.springsecurity.interceptUrlMap = [
+   '/console':         ['permitAll'],
+   '/':                ['permitAll'],
+   '/**':              ['permitAll'],
+   '/error':           ['permitAll'],
+   '/index':           ['permitAll'],
+   '/index.gsp':       ['permitAll'],
+   '/shutdown':        ['permitAll'],
+   '/assets/**':       ['permitAll'],
+   '/**/js/**':        ['permitAll'],
+   '/**/css/**':       ['permitAll'],
+   '/**/images/**':    ['permitAll'],
+   '/**/favicon.ico':  ['permitAll'],
+   '/login':           ['permitAll'],
+   '/login/**':        ['permitAll'],
+   '/logout':          ['permitAll'],
+   '/logout/**':       ['permitAll']
 ]
 

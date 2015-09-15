@@ -10,8 +10,8 @@
                 <li>
                     Sistema
                     <ol>
-                        <li><g:link url="/system">Informações</g:link> </li>
-                        <li><g:link url="/console">Console</g:link> </li>
+                        <li><g:link mapping="/system">Informações</g:link> </li>
+                        <li><g:link controller="console">Console</g:link> </li>
                     </ol>
                 </li>
                 <li>
