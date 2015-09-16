@@ -23,7 +23,7 @@
                 <div class="property-list">
                     <div class="fieldcontain">
                         <span class="property-label">Tipo</span>
-                        <span class="property-value">${unidade?.tipo}</span>
+                        <span class="property-value">${unidade?.tipoUnidade?.tipo}</span>
                     </div>
                     <div class="fieldcontain">
                         <span class="property-label">Preço</span>

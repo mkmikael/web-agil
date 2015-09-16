@@ -8,10 +8,10 @@ class Produto {
 	String descricao
 
 	def beforeInsert = {
-		codigo = Util.generateCodigo(8, this.count() + 1)
+		codigo = Util.generateCodigo(12, this.count() + 1)
 	}
 
-	static hasMany = [unidades: Unidade]
+	static hasMany = [unidades: Unidade, tiposUnidade: TipoUnidade]
 	static belongsTo = [fornecedor: Fornecedor, grupo: Grupo]
     static constraints = {
     	codigo nullable: true

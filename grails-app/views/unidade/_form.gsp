@@ -1,22 +1,41 @@
+<%@ import="web.agil.*; web.agil.enums.*" %>
+
 <g:hiddenField name="id" value="${unidade?.id}" />
-<g:hiddenField name="produto.id" value="${unidade?.produto?.id ?: params?.produto?.id}" />
+<g:if test="${params?.produto?.id}">
+	<g:hiddenField name="produto.id" value="${unidade?.produto?.id ?: params?.produto?.id}" />
+</g:if>
+<g:else>
+	<div class="fieldcontain">
+		<label for="produto.id">Produto</label>
+		<g:select name="produto.id" value="${unidade?.produto}" from="${Produto.list()}" optionKey="id" required="required" />
+	</div>
+</g:else>
 <div class="fieldcontain">
-	<label for="tipo">Tipo</label>
-	<g:textField name="tipo" value="${unidade?.tipo}" required="required" />
+	<label for="tipoUnidade">Unidade</label>
+	<g:select name="tipoUnidade" value="${unidade?.tipoUnidade}" from="${tipoUnidadeList ?: unidade?.produto?.tiposUnidade}" key="id" required="required" />
 </div>
 <div class="fieldcontain">
-	<label for="valor">Preço</label>
-	<g:field type="number" name="valor" value="${unidade?.valor}" required="required" />
+	<label for="valorMinimo">Preço de Compra</label>
+	<g:textField name="valorMinimo" value="${unidade?.valorMinimo}" required="required" />
+</div>
+<div class="fieldcontain">
+	<label for="valor">Preço de Venda</label>
+	<g:textField name="valor" value="${unidade?.valor}" required="required" />
 </div>
 <div class="fieldcontain">
 	<label for="valorMinimo">Preço Mínimo</label>
-	<g:field type="number" name="valorMinimo" value="${unidade?.valorMinimo}" required="required" />
+	<g:textField name="valorMinimo" value="${unidade?.valorMinimo}" required="required" />
 </div>
 <div class="fieldcontain">
-	<label for="quantidade">Quant. em Unidade</label>
-	<g:field type="number" name="quantidade" value="${unidade?.quantidade}" required="required" />
+	<label for="estoque">Quant. Estoque</label>
+	<g:field name="estoque" value="${unidade?.estoque}" required="required" />
+	<g:textField name="estoque" value="${unidade?.estoque}" required="required" />
 </div>
 <div class="fieldcontain">
-	<label for="estoque">Quant. em Estoque</label>
-	<g:field type="number" name="estoque" value="${unidade?.estoque}" required="required" />
+	<label for="vencimento">Data de Vencimento</label>
+	<g:datePicker name="vencimento" value="${unidade?.vencimento}" precision="day" />
+</div>
+<div class="fieldcontain">
+	<label for="statusLote">Status</label>
+	<g:select name="statusLote" value="${unidade?.statusLote}" from="${StatusLote.values()}" required="required" />
 </div>

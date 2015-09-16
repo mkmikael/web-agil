@@ -9,8 +9,13 @@ class UnidadeController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
+    def tiposUnidadeByProduto(Long id) {
+        def produto = Produto.get(id)
+        render template: '/unidade/form', model: [tipoUnidadeList: produto?.tiposUnidade]
+    }
+
     def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
+        params.max = Math.min(max ?: 25, 100)
         respond Unidade.list(params), model:[unidadeCount: Unidade.count()]
     }
 

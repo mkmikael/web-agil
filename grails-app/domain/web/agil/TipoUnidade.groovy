@@ -7,8 +7,13 @@ class TipoUnidade {
 	TipoUnidade superior
 	TipoUnidade inferior
 
+	static belongsTo = [produto: Produto]
     static constraints = {
     	superior nullable: true
     	inferior nullable: true
+    }
+
+    String toString() {
+    	tipo
     }
 }

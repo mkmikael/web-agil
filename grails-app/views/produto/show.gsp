@@ -23,7 +23,7 @@
                 <div class="tabs">
                     <ul>
                         <li><a href="#fragment-1">Produto</a></li>
-                        <li><a href="#fragment-2">Unidades</a></li>
+                        <li><a href="#fragment-2">Lotes</a></li>
                     </ul>
                     <div id="fragment-1">
                         <div class="property-list">
@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <div id="fragment-2">
-                        <g:link controller="unidade" action="create" class="btn" params="['produto.id': produto?.id]">Adicionar Unidade</g:link>
+                        <g:link controller="unidade" action="create" class="btn" params="['produto.id': produto?.id]">Novo Lote</g:link>
                         <br/><br/>
                         <table>
                             <thead>
@@ -54,17 +54,15 @@
                                 <th>Tipo</th>
                                 <th>Preço</th>
                                 <th>Preço Mínimo</th>
-                                <th>Quant. em Unidade</th>
                                 <th>Quant. em Estoque</th>
                             </thead>
                             <tbody>
                                 <g:each in="${produto?.unidades}" var="uni">
                                     <tr>
                                         <td><g:link controller="unidade" action="show" id="${uni.id}">${uni?.id}</g:link></td>
-                                        <td>${uni?.tipo}</td>
+                                        <td>${uni?.tipoUnidade?.tipo}</td>
                                         <td>${uni?.valor}</td>
                                         <td>${uni?.valorMinimo}</td>
-                                        <td>${uni?.quantidade}</td>
                                         <td>${uni?.estoque}</td>
                                     </tr>
                                 </g:each>

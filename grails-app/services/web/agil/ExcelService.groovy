@@ -118,13 +118,19 @@ class ExcelService {
 				continue
 			def unidade  = new Unidade()
 			unidade.id = row.getCell(0)?.getNumericCellValue() as Long
-			unidade.produto = Produto.get( row.getCell(1)?.getStringCellValue() as Long )
+			unidade.vencimento = new Date()
+			def produtoInstance = Produto.get( row.getCell(1)?.getStringCellValue() as Long )
+			unidade.produto = produtoInstance
 			unidade.valor = row.getCell(3)?.getNumericCellValue()
 			unidade.valorMinimo = row.getCell(4)?.getNumericCellValue()
-			if (tipo?.trim() == "UNI")
-				unidade.tipoUnidade = TipoUnidade.get(2)
-			else if (tipo?.trim() == "CXA")
-				unidade.tipoUnidade = TipoUnidade.get(1)
+			if (tipo?.trim() == "UNI") {
+				unidade.tipoUnidade = new TipoUnidade(id: 1, tipo: "UNI", capacidade: 1, produto: produtoInstance)
+			} else if (tipo?.trim() == "CXA") {
+				unidade.tipoUnidade = new TipoUnidade(tipo: 'CXA', capacidade: 0, produto: produtoInstance)
+			}
+			produtoInstance.addToTiposUnidade(unidade.tipoUnidade)
+			produtoInstance.save(flush: true)
+			unidade.statusLote = StatusLote.ESGOTADO
 			unidade.save(insert: true, flush: true)
 			println unidade.properties
 		}
@@ -149,12 +155,22 @@ class ExcelService {
 		fileInputStream.close();
     }
 
-    def load() {
-    	new TipoUnidade(id: 1, tipo: "CXA", capacidade: 0).save(flush: true)
-    	new TipoUnidade(id: 2, tipo: "UNI", capacidade: 1).save(flush: true)
+    def inserts() {
+    	new Prazo(id: 1, parcela: 0, periodicidade: "AVISTA" )
+		new Prazo(id: 2, parcela: 1, periodicidade: "7" )
+		new Prazo(id: 3, parcela: 1, periodicidade: "14" )
+		new Prazo(id: 4, parcela: 1, periodicidade: "21" )
+		new Prazo(id: 5, parcela: 2, periodicidade: "7 - 14" )
+		new Prazo(id: 6, parcela: 2, periodicidade: "7 - 21" )
+		new Prazo(id: 7, parcela: 2, periodicidade: "14 - 21" )
+		new Prazo(id: 8, parcela: 3, periodicidade: "7 - 14 - 21" )
+
     	new Vendedor(id: 1, codigo: "001").save(flush: true)
     	new Vendedor(id: 2, codigo: "002").save(flush: true)
+    }
 
+    def load() {
+    	inserts()
     	loadClientes()
     	loadProdutos()
     	loadUnidades()

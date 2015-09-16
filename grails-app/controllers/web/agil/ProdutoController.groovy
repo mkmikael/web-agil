@@ -11,7 +11,7 @@ class ProdutoController {
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", informarCXA: "POST"]
 
     def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
+        params.max = Math.min(max ?: 25, 100)
         params.offset = params.offset ?: 0
         def criteria = {
             if (params.search_descricao)
