@@ -1,4 +1,3 @@
-<%@ page import="web.agil.Pessoa; web.agil.Organizacao" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -29,10 +28,10 @@
                 <li class="fieldcontain">
                     <span class="property-label">Cliente</span>
                     <span class="property-value">
-                        <g:if test="${pedido.cliente?.participante.class == Organizacao}">
+                        <g:if test="${pedido.cliente?.participante.class == web.agil.Organizacao}">
                             ${pedido.cliente?.participante?.razaoSocial}
                         </g:if>
-                        <g:elseif test="${pedido.cliente?.participante.class == Pessoa}">
+                        <g:elseif test="${pedido.cliente?.participante.class == web.agil.Pessoa}">
                             ${pedido.cliente?.participante?.nome}
                         </g:elseif>
                     </span>
