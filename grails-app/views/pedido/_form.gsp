@@ -1,5 +1,3 @@
-<%@ page import="web.agil.Prazo; web.agil.Unidade" %>
-
 <style type="text/css">
 	table { border: none; }
 	table tr:hover { background-color: transparent; }
@@ -13,7 +11,7 @@
 </div>
 <div class="fieldcontain">
 	<label for="prazo.id">Prazo</label>
-	<g:select name="prazo.id" from="${Prazo.list()}" optionKey="id" optionValue="periodicidade" />
+	<g:select name="prazo.id" from="${web.agil.Prazo.list()}" optionKey="id" optionValue="periodicidade" />
 </div>
 
 <div style="float: right; font-size: 1.8em">
