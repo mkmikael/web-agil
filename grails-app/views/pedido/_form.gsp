@@ -1,5 +1,4 @@
-<%@ page import="web.agil.Unidade" %>
-<%@ import="web.agil.*; web.agil.enums.*" %>
+<%@ page import="web.agil.Prazo; web.agil.Unidade" %>
 
 <style type="text/css">
 	table { border: none; }
@@ -13,7 +12,7 @@
 	<g:datePicker name="dataFaturamento" value="${pedido?.dataFaturamento}" precision="day" />
 </div>
 <div class="fieldcontain">
-	<label for="prazo">Prazo</label>
+	<label for="prazo.id">Prazo</label>
 	<g:select name="prazo.id" from="${Prazo.list()}" optionKey="id" optionValue="periodicidade" />
 </div>
 
