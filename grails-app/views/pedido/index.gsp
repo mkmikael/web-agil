@@ -1,4 +1,3 @@
-<%@ page import="web.agil.enums.StatusPedido; web.agil.enums.StatusLote; web.agil.Pessoa; web.agil.Organizacao" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -57,7 +56,7 @@
                     <g:textField name="search_codigo_pedido" value="${search_codigo_pedido}" />
 
                     <label>Status</label>
-                    <g:select name="search_status" from="${StatusPedido.values()}" value="${search_status}" noSelection="['': 'TODOS']" />
+                    <g:select name="search_status" from="${web.agil.enums.StatusPedido.values()}" value="${search_status}" noSelection="['': 'TODOS']" />
                 </fieldset>
 
                 <fieldset>
@@ -88,12 +87,12 @@
                             <tr>
                                 <td><g:checkBox name="check${pedido.id}" /></td>
                                 <td><g:link action="show" id="${pedido.id}">${pedido.codigo}</g:link></td>
-                                <g:if test="${pedido.cliente?.participante.class == Organizacao}">
+                                <g:if test="${pedido.cliente?.participante.class == web.agil.Organizacao}">
                                     <td>
                                         <g:link controller="cliente" action="show" id="${pedido.cliente?.id}">${pedido.cliente?.participante?.codigo} - ${pedido.cliente?.participante?.razaoSocial}</g:link>
                                     </td>
                                 </g:if>
-                                <g:elseif test="${pedido.cliente?.participante.class == Pessoa}">
+                                <g:elseif test="${pedido.cliente?.participante.class == web.agil.Pessoa}">
                                     <td>
                                         <g:link controller="cliente" action="show" id="${pedido.cliente?.id}">
                                             ${pedido.cliente?.participante?.codigo} - ${pedido.cliente?.participante?.nome}
