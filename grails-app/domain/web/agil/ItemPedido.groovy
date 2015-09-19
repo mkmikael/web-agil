@@ -13,6 +13,14 @@ class ItemPedido {
     static constraints = {
     }
 
+	def isAbaixoDoMinimo() {
+		precoNegociado < unidade.valorMinimo
+	}
+
+	def isBonificado() {
+		bonificacao > 0
+	}
+
     void setQuantidade(Integer quantidade) {
     	this.quantidade = quantidade
     	calc()
@@ -33,4 +41,5 @@ class ItemPedido {
     	total = quantidade * unidade?.valor * ( 1 - ( desconto / 100 ) )
     	precoNegociado = total / (bonificacao + quantidade)
     }
+
 }

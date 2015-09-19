@@ -1,4 +1,4 @@
-<%@ import="web.agil.*; web.agil.enums.*" %>
+<%@ page import="web.agil.*; web.agil.enums.*" %>
 
 <g:hiddenField name="id" value="${unidade?.id}" />
 <g:if test="${params?.produto?.id}">
@@ -7,16 +7,16 @@
 <g:else>
 	<div class="fieldcontain">
 		<label for="produto.id">Produto</label>
-		<g:select name="produto.id" value="${unidade?.produto}" from="${Produto.list()}" optionKey="id" required="required" />
+		<g:select name="produto.id" value="${unidade?.produto?.id}" from="${Produto.list()}" optionKey="id" required="required" />
 	</div>
 </g:else>
 <div class="fieldcontain">
-	<label for="tipoUnidade">Unidade</label>
-	<g:select name="tipoUnidade" value="${unidade?.tipoUnidade}" from="${tipoUnidadeList ?: unidade?.produto?.tiposUnidade}" key="id" required="required" />
+	<label for="tipoUnidade.id">Unidade</label>
+	<g:select name="tipoUnidade.id" value="${unidade?.tipoUnidade?.id}" from="${tipoUnidadeList}" optionKey="id" required="required" />
 </div>
 <div class="fieldcontain">
-	<label for="valorMinimo">Preço de Compra</label>
-	<g:textField name="valorMinimo" value="${unidade?.valorMinimo}" required="required" />
+	<label for="valorDeCompra">Preço de Compra</label>
+	<g:textField name="valorDeCompra" value="${unidade?.valorDeCompra}" required="required" />
 </div>
 <div class="fieldcontain">
 	<label for="valor">Preço de Venda</label>
@@ -28,7 +28,7 @@
 </div>
 <div class="fieldcontain">
 	<label for="estoque">Quant. Estoque</label>
-	<g:field name="estoque" value="${unidade?.estoque}" required="required" />
+	<g:textField name="estoque" value="${unidade?.estoque}" required="required" />
 	<g:textField name="estoque" value="${unidade?.estoque}" required="required" />
 </div>
 <div class="fieldcontain">

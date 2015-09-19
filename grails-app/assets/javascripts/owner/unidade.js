@@ -10,15 +10,27 @@ $(function() {
 		}
 	});
 
-	$('#produto\\.id').change(function() {
-		var id = $('#produto\\.id').val();
-		$.ajax('/web-agil/unidade/tiposUnidadeByProduto/' + id, {
+	$('#produto\\.id, #tipoUnidade\\.id').change(function() {
+		var produtoId = $('#produto\\.id').val();
+        var id = this.id;
+		$.ajax('/web-agil/unidade/tiposUnidadeByProduto/' + produtoId, {
+            data: { tipoUnidadeId: $('#tipoUnidade').val() },
 			success: function(data) {
-				var html = $(data).find('#tipoUnidade').html();
-				$('#tipoUnidade').html( html );
+                var tipoUnidade = $(data).find('#tipoUnidade\\.id').html();
+                $('#tipoUnidade\\.id').html( tipoUnidade );
+
+                var valorMinimo = $(data).find('#valorMinimo').val();
+                $('#valorMinimo').val( valorMinimo );
+
+                var valor = $(data).find('#valor').val();
+                $('#valor').val( valor );
+
+                var valorDeCompra = $(data).find('#valorDeCompra').val();
+                $('#valorDeCompra').val( valorDeCompra );
 			}
 		}); // end ajax
 	});
-
-	$('#produto\\.id').change();
+    window.onload = function() {
+	    $('#produto\\.id').change();
+    }
 });

@@ -1,4 +1,4 @@
-<%@ import="web.agil.*" %>
+<%@ page import="web.agil.enums.StatusPedido; web.agil.enums.StatusLote; web.agil.Pessoa; web.agil.Organizacao" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,7 +21,8 @@
             </g:if>
 
             <g:form action="index">
-                <fieldset>
+                <fieldset class="embedded" style="padding: 1em; margin: 1em">
+                    <legend>Filtro Cliente</legend>
                     <fieldset class="embedded">
                         <legend>Geral</legend>
                         <label>Código</label>
@@ -49,47 +50,73 @@
                         <g:textField name="search_cnpj" value="${search_cnpj}" />
                     </fieldset>
                 </fieldset>
+
+                <fieldset class="embedded" style="padding: 1em; margin: 1em">
+                    <legend>Filtro Pedido</legend>
+                    <label>Codigo</label>
+                    <g:textField name="search_codigo_pedido" value="${search_codigo_pedido}" />
+
+                    <label>Status</label>
+                    <g:select name="search_status" from="${StatusPedido.values()}" value="${search_status}" noSelection="['': 'TODOS']" />
+                </fieldset>
+
                 <fieldset>
                     <input type="submit" value="Procurar" />
                 </fieldset>
             </g:form>
 
-            <table>
-                <thead>
-                    <g:sortableColumn property="participante.codigo" title="Código" />
-                    <g:sortableColumn property="participante.cliente" title="Cliente" />
-                    <g:sortableColumn property="participante.dataCriacao" title="Dt do Pedido" />
-                    <g:sortableColumn property="participante.dataFaturamento" title="Faturamento" />
-                    <g:sortableColumn property="participante.prazo" title="Prazo" />
-                    <g:sortableColumn property="participante.total" title="Total" />
-                </thead>
-                <tbody>
-                    <g:each in="${pedidoList}" var="pedido">
-                        <tr>
-                            <td><g:link action="show" id="${pedido.cliente?.id}">${pedido.codigo}</g:link></td>
-                            <g:if test="${pedido.cliente?.participante.class == Organizacao}">
-                                <td>
-                                    <g:link controller="cliente" action="show" id="${pedido.cliente?.id}">${pedido.cliente?.participante?.codigo} - ${pedido.cliente?.participante?.razaoSocial}</g:link>
-                                </td>
-                            </g:if>
-                            <g:elseif test="${pedido.cliente?.participante.class == Pessoa}">
-                                <td>
-                                    <g:link controller="cliente" action="show" id="${pedido.cliente?.id}">
-                                        ${pedido.cliente?.participante?.codigo} - ${pedido.cliente?.participante?.nome}
-                                    </g:link>
-                                </td>
-                            </g:elseif>
-                            <td>${g.formatDate(date: pedido.dataCriacao, format: "dd/MM/yyyy HH:mm")}</td>
-                            <td>${g.formatDate(date: pedido.dataFaturamento, format: "dd/MM/yyyy")}</td>
-                            <td>${pedido.prazo?.periodicidade}</td>
-                            <td>${pedido.total}</td>
-                        </tr>
-                    </g:each>
-                </tbody>
-            </table>
+            <g:form name="form-pedidos">
+                <fieldset>
+                    <g:actionSubmit class="btn" value="Negar" action="negarPedidos"/>
+                    <g:actionSubmit class="btn" value="Confirmar" action="negarPedidos"/>
+                </fieldset>
+                <table>
+                    <thead>
+                        <th><g:checkBox name="geral" /></th>
+                        <g:sortableColumn property="participante.codigo" title="Código" />
+                        <g:sortableColumn property="participante.cliente" title="Cliente" />
+                        <g:sortableColumn property="participante.dataCriacao" title="Dt do Pedido" />
+                        <g:sortableColumn property="participante.dataFaturamento" title="Faturamento" />
+                        <g:sortableColumn property="statusPedido" title="Status" />
+                        <g:sortableColumn property="participante.prazo" title="Prazo" />
+                        <g:sortableColumn property="participante.total" title="Total" />
+                        <th>Abaixo Min.</th>
+                        <th>Campanha</th>
+                    </thead>
+                    <tbody>
+                        <g:each in="${pedidoList}" var="pedido">
+                            <tr>
+                                <td><g:checkBox name="check${pedido.id}" /></td>
+                                <td><g:link action="show" id="${pedido.id}">${pedido.codigo}</g:link></td>
+                                <g:if test="${pedido.cliente?.participante.class == Organizacao}">
+                                    <td>
+                                        <g:link controller="cliente" action="show" id="${pedido.cliente?.id}">${pedido.cliente?.participante?.codigo} - ${pedido.cliente?.participante?.razaoSocial}</g:link>
+                                    </td>
+                                </g:if>
+                                <g:elseif test="${pedido.cliente?.participante.class == Pessoa}">
+                                    <td>
+                                        <g:link controller="cliente" action="show" id="${pedido.cliente?.id}">
+                                            ${pedido.cliente?.participante?.codigo} - ${pedido.cliente?.participante?.nome}
+                                        </g:link>
+                                    </td>
+                                </g:elseif>
+                                <td>${g.formatDate(date: pedido.dataCriacao, format: "dd/MM/yyyy HH:mm")}</td>
+                                <td>${g.formatDate(date: pedido.dataFaturamento, format: "dd/MM/yyyy")}</td>
+                                <td>${pedido.statusPedido}</td>
+                                <td>${pedido.prazo?.periodicidade}</td>
+                                <td>R$ <g:formatNumber number="${pedido.total}" maxFractionDigits="2" /></td>
+                                <td><g:formatBoolean boolean="${pedido.isItemAbaixoDoMinimo()}" /></td>
+                                <td><g:formatBoolean boolean="${pedido.isItemBonificado()}" /></td>
+                            </tr>
+                        </g:each>
+                    </tbody>
+                </table>
+            </g:form>
+
             <div class="pagination">
                 <g:paginate total="${pedidoCount ?: 0}"  params="${params}"/>
             </div>
+
         </div>
     </body>
 </html>

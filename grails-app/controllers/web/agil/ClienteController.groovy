@@ -12,7 +12,7 @@ class ClienteController {
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", create: ["POST", "GET"]]
 
     def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
+        params.max = Math.min(max ?: 30, 100)
         def criteria = {
             participante {
                 if (params.search_codigo)

@@ -11,7 +11,7 @@
 //= require_self
 
 $(function() {
-	$('input:text').keyup(function(e) {
+	$('.uppercase').keyup(function(e) {
 		var texto = $(this).val();
 		$(this).val(texto.toUpperCase()
 			.replace('Á','A')
@@ -36,7 +36,7 @@ $(function() {
 	});
 
 	$('.tabs').tabs();
-	$('.btn').button();
+	$('button, input:submit').button();
 });
 
 if (typeof jQuery !== 'undefined') {

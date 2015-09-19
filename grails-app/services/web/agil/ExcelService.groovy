@@ -79,6 +79,30 @@ class ExcelService {
 		fileInputStream.close();
     }
 
+	def corrigirCapacidade() {
+        Produto.withTransaction {
+            Produto.list().each { p ->
+                def m = p.descricao =~ /\d*?X\d*?X?\d*?$/
+                if (m.find()) {
+                    p.unidades.each { u ->
+                        def list = m.group(0).split('X')
+                        if (u.tipoUnidade.tipo == "CXA") {
+                            if (list.length == 2) {
+                                u.tipoUnidade.capacidade = list[0].trim() as Integer
+                            } else if (list.length == 3) {
+                                u.tipoUnidade.capacidade = list[2].trim() as Integer
+                            }
+                        } else {
+                            u.tipoUnidade.capacidade = 1
+                        }
+                        println "${u.tipoUnidade.tipo} - ${u.tipoUnidade.capacidade} - ${u.estoque} - ${m.group(0).split('X')} - ${p.descricao}"
+                    } // each unidades
+                } // if
+            }
+
+        }
+	}
+
     def loadProdutos() {
     	FileInputStream fileInputStream = new FileInputStream(pathExcel)
 		Workbook workbook = new HSSFWorkbook(fileInputStream)
@@ -156,14 +180,14 @@ class ExcelService {
     }
 
     def inserts() {
-    	new Prazo(id: 1, parcela: 0, periodicidade: "AVISTA" )
-		new Prazo(id: 2, parcela: 1, periodicidade: "7" )
-		new Prazo(id: 3, parcela: 1, periodicidade: "14" )
-		new Prazo(id: 4, parcela: 1, periodicidade: "21" )
-		new Prazo(id: 5, parcela: 2, periodicidade: "7 - 14" )
-		new Prazo(id: 6, parcela: 2, periodicidade: "7 - 21" )
-		new Prazo(id: 7, parcela: 2, periodicidade: "14 - 21" )
-		new Prazo(id: 8, parcela: 3, periodicidade: "7 - 14 - 21" )
+    	new Prazo(id: 1, parcela: 0, periodicidade: "AVISTA" ).save(insert: true, flush: true)
+		new Prazo(id: 2, parcela: 1, periodicidade: "7" ).save(insert: true, flush: true)
+		new Prazo(id: 3, parcela: 1, periodicidade: "14" ).save(insert: true, flush: true)
+		new Prazo(id: 4, parcela: 1, periodicidade: "21" ).save(insert: true, flush: true)
+		new Prazo(id: 5, parcela: 2, periodicidade: "7 - 14" ).save(insert: true, flush: true)
+		new Prazo(id: 6, parcela: 2, periodicidade: "7 - 21" ).save(insert: true, flush: true)
+		new Prazo(id: 7, parcela: 2, periodicidade: "14 - 21" ).save(insert: true, flush: true)
+		new Prazo(id: 8, parcela: 3, periodicidade: "7 - 14 - 21" ).save(insert: true, flush: true)
 
     	new Vendedor(id: 1, codigo: "001").save(flush: true)
     	new Vendedor(id: 2, codigo: "002").save(flush: true)
@@ -174,6 +198,7 @@ class ExcelService {
     	loadClientes()
     	loadProdutos()
     	loadUnidades()
+		corrigirCapacidade()
     	associarFornecedorAndGrupo()
     }
 }

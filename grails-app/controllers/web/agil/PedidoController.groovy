@@ -2,18 +2,70 @@ package web.agil
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
-import web.agil.*
 import web.agil.enums.*
-import web.agil.util.Util
 
 @Transactional(readOnly = true)
 class PedidoController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
+    @Transactional
+    def negarPedidos() {
+        def ids = []
+        params.each { entry ->
+            def matcher = entry.key =~ /^check(\d*)/
+            if ( matcher.find() )
+                ids << (matcher[0][1] as Long)
+        }
+        Pedido.getAll(ids).each { it.statusPedido = StatusPedido.NEGADO }
+        redirect(action: 'index')
+    }
+
+    def confirmarPedidos() {
+        def ids = []
+        params.each { entry ->
+            def matcher = entry.key =~ /^check(\d*)/
+            if ( matcher.find() )
+                ids << (matcher[0][1] as Long)
+        }
+        Pedido.getAll(ids).each { p ->
+            p.statusPedido = StatusPedido.CONFIRMADO
+            p.itensPedido.each { item ->
+                item.unidade.estoque -= item.quantidade - item.bonificacao
+            }
+        }
+        redirect(action: 'index')
+    }
+
     def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond Pedido.list(params), model:[pedidoCount: Pedido.count()]
+        params.max = Math.min(max ?: 30, 100)
+        def criteria = {
+            if (params.search_codigo_pedido)
+                ilike('codigo', "%${params.search_codigo_pedido}%")
+            if (params.search_status)
+                eq( 'statusPedido',  StatusPedido.valueOf( params.search_status ) )
+            cliente {
+                participante {
+                    if (params.search_codigo)
+                        ilike('codigo', "%${params.search_codigo}%")
+                    if (params.search_bairro)
+                        ilike('bairro', "%${params.search_bairro}%")
+                    if (params.search_nome)
+                        ilike('nome', "%${params.search_nome}%")
+                    if (params.search_nomeFantasia)
+                        ilike('nomeFantasia', "%${params.search_nomeFantasia}%")
+                    if (params.search_razaoSocial)
+                        ilike('razaoSocial', "%${params.search_razaoSocial}%")
+                    if (params.search_cpf)
+                        ilike('cpf', "%${params.search_cpf}%")
+                    if (params.search_cnpj)
+                        ilike('cnpj', "%${params.search_cnpj}%")
+                } // end participante
+            } // end cliente
+        } // end criteria
+        def pedidoList = Pedido.createCriteria().list(params, criteria)
+        def pedidoCount = Pedido.createCriteria().count(criteria)
+        respond pedidoList, model:[pedidoCount: pedidoCount] + params
     }
 
     def show(Pedido pedido) {
@@ -21,7 +73,7 @@ class PedidoController {
     }
 
     def create() {
-        respond new Pedido(params)
+        respond new Pedido(params), model: [loteList: Unidade.findAllByStatusLote(StatusLote.DISPONIVEL)]
     }
 
     @Transactional
@@ -31,8 +83,6 @@ class PedidoController {
             notFound()
             return
         }
-
-        pedido.codigo = Util.generateCodigo(12, Pedido.count() + 1)
 
         if (params.item?.quantidade?.class?.isArray()) {
             def itens = params.item

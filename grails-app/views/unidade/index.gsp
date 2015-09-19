@@ -1,3 +1,4 @@
+<%@ page import="web.agil.enums.StatusLote" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,13 +14,34 @@
             </ul>
         </div>
         <div id="list-unidade" class="content scaffold-list" role="main">
+            <fieldset>
+                <g:form action="index">
+                    <fieldset class="embedded">
+                            <legend>Filtros</legend>
+                            <label for="search_codigo">Codigo</label>
+                        <g:textField name="search_codigo" value="${search_codigo}" />
+
+                        <label for="search_produto">Produto</label>
+                        <g:textField name="search_produto" value="${search_produto}" />
+
+                        <label for="search_status">Status</label>
+                        <g:select name="search_status" from="${StatusLote.values()}" value="${search_status}" noSelection="['': 'TODOS']" />
+                    </fieldset>
+                    <fieldset>
+                        <input type="submit" value="Procurar">
+                    </fieldset>
+                </g:form>
+            </fieldset>
+
             <h1>Lote Listagem</h1>
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
             <table>
                 <thead>
+                    <g:sortableColumn property="codigo" title="Codigo" />
                     <g:sortableColumn property="dataCriacao" title="Dt. Entrada" />
+                    <g:sortableColumn property="vencimento" title="Dt. Vencimento" />
                     <g:sortableColumn property="estoque" title="Estoque" />
                     <g:sortableColumn property="produto" title="Produto" />
                     <g:sortableColumn property="statusLote" title="Status" />
@@ -31,7 +53,9 @@
                 <tbody>
                     <g:each in="${unidadeList}" var="unidade">
                         <tr>
-                            <td><g:formatDate date="${unidade.dataCriacao}" format="dd/MM/yyyy HH:mm" /></td>
+                            <td>${unidade?.codigo}</td>
+                            <td><g:formatDate date="${unidade?.dataCriacao}" format="dd/MM/yyyy HH:mm" /></td>
+                            <td><g:formatDate date="${unidade?.vencimento}" format="dd/MM/yyyy" /></td>
                             <td>${unidade?.estoque}</td>
                             <td><g:link controller="produto" action="show" id="${unidade?.produto?.id}">${unidade?.produto}</g:link></td>
                             <td>${unidade?.statusLote}</td>
@@ -44,7 +68,7 @@
                 </tbody>
             </table>
             <div class="pagination">
-                <g:paginate total="${unidadeCount ?: 0}" />
+                <g:paginate total="${unidadeCount ?: 0}" params="${params}" />
             </div>
         </div>
     </body>

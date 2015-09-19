@@ -1,4 +1,4 @@
-<%@ import="web.agil.*" %>
+<%@ page import="web.agil.Pessoa; web.agil.Organizacao" %>
 <!DOCTYPE html>
 <html>
     <head>

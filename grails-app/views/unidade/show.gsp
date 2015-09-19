@@ -22,8 +22,32 @@
             <fieldset>
                 <div class="property-list">
                     <div class="fieldcontain">
+                        <span class="property-label">Codigo</span>
+                        <span class="property-value">${unidade?.codigo}</span>
+                    </div>
+                    <div class="fieldcontain">
+                        <span class="property-label">Produto</span>
+                        <span class="property-value">${unidade?.produto}</span>
+                    </div>
+                    <div class="fieldcontain">
+                        <span class="property-label">Data de Entrada</span>
+                        <span class="property-value">${g.formatDate(date: unidade?.dataCriacao, format: 'dd/MM/yyyy HH:mm')}</span>
+                    </div>
+                    <div class="fieldcontain">
+                        <span class="property-label">Data de Vencimento</span>
+                        <span class="property-value">${g.formatDate(date: unidade?.vencimento, format: 'dd/MM/yyyy')}</span>
+                    </div>
+                    <div class="fieldcontain">
+                        <span class="property-label">Status</span>
+                        <span class="property-value">${unidade?.statusLote}</span>
+                    </div>
+                    <div class="fieldcontain">
                         <span class="property-label">Tipo</span>
                         <span class="property-value">${unidade?.tipoUnidade?.tipo}</span>
+                    </div>
+                    <div class="fieldcontain">
+                        <span class="property-label">Preço de Compra</span>
+                        <span class="property-value">${unidade?.valorDeCompra}</span>
                     </div>
                     <div class="fieldcontain">
                         <span class="property-label">Preço</span>
@@ -32,10 +56,6 @@
                     <div class="fieldcontain">
                         <span class="property-label">Preço Mínimo</span>
                         <span class="property-value">${unidade?.valorMinimo}</span>
-                    </div>
-                    <div class="fieldcontain">
-                        <span class="property-label">Quant. em Unidade</span>
-                        <span class="property-value">${unidade?.quantidade}</span>
                     </div>
                     <div class="fieldcontain">
                         <span class="property-label">Quant. em Estoque</span>

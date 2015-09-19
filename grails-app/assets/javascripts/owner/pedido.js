@@ -20,7 +20,7 @@ $(function() {
 		var quantidade = row.find('#item\\.quantidade').val();
 		var desconto = row.find('#item\\.desconto').val();
 		var bonificacao = row.find('#item\\.bonificacao').val();
-		var preco = parseInt( row.find('#preco').text() );
+		var preco = parseFloat( row.find('#preco').text() );
 
 		if (quantidade == 0) quantidade = 0
 		if (desconto == 0) desconto = 0
@@ -28,6 +28,7 @@ $(function() {
 
 		quantidade = parseInt(quantidade);
 		bonificacao = parseInt(bonificacao);
+		desconto = parseFloat(desconto);
 		var subtotal = preco * quantidade * ( 1 - ( desconto / 100 ) );
 		if (bonificacao + quantidade != 0)
 			row.find( '#pv' ).text( ( subtotal / ( bonificacao + quantidade ) ).toFixed(2) , 2 );
@@ -66,5 +67,7 @@ $(function() {
 		$('#itens tbody').append( row.find("tr") );
 	});
 
-
+    $('#geral').change(function() {
+        $('table input:checkbox').prop('checked', this.checked);
+    });
 });

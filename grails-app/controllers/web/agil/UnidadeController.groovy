@@ -1,5 +1,8 @@
 package web.agil
 
+import web.agil.enums.StatusLote
+import web.agil.enums.TipoMovimento
+
 import static org.springframework.http.HttpStatus.*
 import grails.converters.JSON
 import grails.transaction.Transactional
@@ -9,14 +12,35 @@ class UnidadeController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
-    def tiposUnidadeByProduto(Long id) {
+    def tiposUnidadeByProduto(Long id, Long tipoUnidadeId) {
         def produto = Produto.get(id)
-        render template: '/unidade/form', model: [tipoUnidadeList: produto?.tiposUnidade]
+        def tipoUnidade
+        if (tipoUnidadeId)
+            tipoUnidade = TipoUnidade.get(tipoUnidadeId)
+        else
+            tipoUnidade = produto.tiposUnidade[0]
+        def unidade = Unidade.executeQuery("select o from Unidade o where o.produto = :produto and o.tipoUnidade = :tipoUnidade " +
+                "and o.dataCriacao = (select max(u.dataCriacao) from Unidade u where u.produto = :produto and u.tipoUnidade = :tipoUnidade)",
+                [produto: produto, tipoUnidade: tipoUnidade])[0]
+        unidade.vencimento = null
+        render template: '/unidade/form', model: [unidade: unidade, tipoUnidadeList: produto?.tiposUnidade?.sort()]
     }
 
     def index(Integer max) {
         params.max = Math.min(max ?: 25, 100)
-        respond Unidade.list(params), model:[unidadeCount: Unidade.count()]
+        def criteria = {
+            if (params.search_codigo)
+                ilike('codigo', params.search_codigo)
+            if (params.search_status)
+                eq( 'statusLote', StatusLote.valueOf(params.search_status))
+            if (params.search_produto)
+                produto {
+                    ilike('descricao', params.search_produto)
+                }
+        }
+        def unidadeList = Unidade.createCriteria().list(params, criteria)
+        def unidadeCount = Unidade.createCriteria().count(criteria)
+        respond unidadeList, model:[unidadeCount: unidadeCount] + params
     }
 
     def show(Unidade unidade) {

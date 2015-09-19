@@ -1,3 +1,4 @@
+<%@ page import="web.agil.Unidade" %>
 <%@ import="web.agil.*; web.agil.enums.*" %>
 
 <style type="text/css">
@@ -46,7 +47,7 @@
 	<table>
 		<tbody>
 			<tr>
-				<td><g:select name="item.unidade.id" style="max-width: 400px" from="${Unidade.list()}" optionKey="id" /></td>
+				<td><g:select name="item.unidade.id" style="max-width: 400px" from="${loteList}" optionKey="id" /></td>
 				<td>R$ <span id="preco">3</span></td>
 				<td><g:field type="number" name="item.quantidade" autocomplete="off" value="0" style="max-width: 70px" /></td>
 				<td><g:field type="number" name="item.desconto" autocomplete="off" value="0" style="max-width: 70px" /></td>
