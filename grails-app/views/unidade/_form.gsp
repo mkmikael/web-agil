@@ -1,5 +1,3 @@
-<%@ page import="web.agil.*; web.agil.enums.*" %>
-
 <g:hiddenField name="id" value="${unidade?.id}" />
 <g:if test="${params?.produto?.id}">
 	<g:hiddenField name="produto.id" value="${unidade?.produto?.id ?: params?.produto?.id}" />
@@ -7,7 +5,7 @@
 <g:else>
 	<div class="fieldcontain">
 		<label for="produto.id">Produto</label>
-		<g:select name="produto.id" value="${unidade?.produto?.id}" from="${Produto.list()}" optionKey="id" required="required" />
+		<g:select name="produto.id" value="${unidade?.produto?.id}" from="${web.agil.Produto.list()}" optionKey="id" required="required" />
 	</div>
 </g:else>
 <div class="fieldcontain">
@@ -37,5 +35,5 @@
 </div>
 <div class="fieldcontain">
 	<label for="statusLote">Status</label>
-	<g:select name="statusLote" value="${unidade?.statusLote}" from="${StatusLote.values()}" required="required" />
+	<g:select name="statusLote" value="${unidade?.statusLote}" from="${web.agil.enums.StatusLote.values()}" required="required" />
 </div>
