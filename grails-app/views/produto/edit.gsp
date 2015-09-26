@@ -19,6 +19,7 @@
             <g:if test="${flash.message}">
             <div class="message" role="status">${flash.message}</div>
             </g:if>
+
             <g:hasErrors bean="${this.produto}">
             <ul class="errors" role="alert">
                 <g:eachError bean="${this.produto}" var="error">
@@ -26,10 +27,11 @@
                 </g:eachError>
             </ul>
             </g:hasErrors>
+
             <g:form resource="${this.produto}" method="PUT">
                 <g:hiddenField name="version" value="${this.produto?.version}" />
                 <fieldset class="form">
-                    <f:all bean="produto"/>
+                    <g:render template="/produto/form" bean="produto" />
                 </fieldset>
                 <fieldset class="buttons">
                     <input class="save" type="submit" value="${message(code: 'default.button.update.label', default: 'Update')}" />

@@ -28,4 +28,26 @@ $(function() {
 		pessoaFisica.prop('disabled', true);
 		pessoaFisica.prop('required', false);
 	});
+
+    $('#filter-pj').hide();
+    $('input[name="tipoPessoa"]').change(function() {
+        console.log(this.value);
+        if (this.value == 'PF') {
+            $('#filter-pf').show();
+            $('#filter-pj').hide();
+            $('#filter-pj input').val("");
+        } else if (this.value == 'PJ') {
+            $('#filter-pj').show();
+            $('#filter-pf').hide();
+            $('#filter-pf input').val("");
+        }
+    });
+
+    if ($('input[name="tipoPessoa"]:checked').val() == 'PF') {
+        $('#filter-pf').show();
+        $('#filter-pj').hide();
+    } else if ($('input[name="tipoPessoa"]:checked').val() == 'PJ') {
+        $('#filter-pj').show();
+        $('#filter-pf').hide();
+    }
 });

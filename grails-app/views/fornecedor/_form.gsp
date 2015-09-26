@@ -3,7 +3,9 @@
 	<label>
 		Grupos
 	</label>
-	<g:each in="${grupoList}" var="grupo" status="i">
-    	<g:checkBox name="grupos[${i}]" value="${grupo?.id}" checked="" />${grupo?.descricao}
-	</g:each>
+    <g:each in="${grupoList}" var="grupo" status="i">
+        <div class="property-value">
+            <g:checkBox name="grupos[${i}]" value="${grupo?.id}" checked="" />${grupo?.descricao}
+        </div>
+    </g:each>
 </div>

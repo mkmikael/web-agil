@@ -34,7 +34,7 @@
                         <g:textField name="search_nome" value="${search_nome}" />
 
                         <label>CPF</label>
-                        <g:textField name="search_cpf" value="${search_cpf}" />
+                        <g:textField name="search_cpf" class="cpf" value="${search_cpf}" />
                     </fieldset>
 
                     <fieldset class="embedded">
@@ -46,7 +46,7 @@
                         <g:textField name="search_razaoSocial" value="${search_razaoSocial}" />
 
                         <label>CNPJ</label>
-                        <g:textField name="search_cnpj" value="${search_cnpj}" />
+                        <g:textField name="search_cnpj" class="cnpj" value="${search_cnpj}" />
                     </fieldset>
                 </fieldset>
 

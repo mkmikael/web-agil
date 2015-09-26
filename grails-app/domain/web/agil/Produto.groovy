@@ -16,6 +16,10 @@ class Produto {
     static constraints = {
     	codigo nullable: true
     }
+    static mapping = {
+        unidades sort: 'dataCriacao', order: 'desc'
+        tiposUnidade sort: 'tipo'
+    }
 
     String toString() {
     	"$codigo - $descricao"

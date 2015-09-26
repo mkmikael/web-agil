@@ -2,15 +2,15 @@
 <g:hiddenField name="participante.id" value="${participanteInstance?.version ?: 0}" />
 <div class="fieldcontain">
 	<label for="participante.endereco">Endereço</label>
-	<g:textField name="participante.endereco" value="${participanteInstance?.endereco}" size="50" />
+	<g:textField name="participante.endereco" value="${participanteInstance?.endereco}" size="50" required="required" />
 </div>
 <div class="fieldcontain">
 	<label for="participante.cidade">Cidade</label>
-	<g:textField name="participante.cidade" value="${participanteInstance?.cidade}" />
+	<g:textField name="participante.cidade" value="${participanteInstance?.cidade}" required="required" />
 </div>
 <div class="fieldcontain">
 	<label for="participante.bairro">Bairro</label>
-	<g:textField name="participante.bairro" value="${participanteInstance?.bairro}" />
+	<g:textField name="participante.bairro" value="${participanteInstance?.bairro}" required="required" />
 </div>
 <div class="fieldcontain">
 	<label for="participante.referencia">Referência</label>
@@ -22,7 +22,7 @@
 </div>
 <div class="fieldcontain">
 	<label for="participante.telefone">Telefone</label>
-	<g:field type="phone" name="participante.telefone" value="${participanteInstance?.telefone}" />
+	<g:field type="phone" name="participante.telefone" value="${participanteInstance?.telefone}" required="required" />
 </div>
 <div class="fieldcontain">
 	<label for="participante.contato">Contato</label>

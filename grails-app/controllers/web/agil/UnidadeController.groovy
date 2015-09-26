@@ -15,14 +15,17 @@ class UnidadeController {
     def tiposUnidadeByProduto(Long id, Long tipoUnidadeId) {
         def produto = Produto.get(id)
         def tipoUnidade
-        if (tipoUnidadeId)
+        if (tipoUnidadeId) {
             tipoUnidade = TipoUnidade.get(tipoUnidadeId)
-        else
+            if ( !(tipoUnidade in produto.tiposUnidade) )
+                tipoUnidade = produto.tiposUnidade[0]
+        } else
             tipoUnidade = produto.tiposUnidade[0]
         def unidade = Unidade.executeQuery("select o from Unidade o where o.produto = :produto and o.tipoUnidade = :tipoUnidade " +
                 "and o.dataCriacao = (select max(u.dataCriacao) from Unidade u where u.produto = :produto and u.tipoUnidade = :tipoUnidade)",
                 [produto: produto, tipoUnidade: tipoUnidade])[0]
-        unidade.vencimento = null
+        if (unidade)
+            unidade.vencimento = null
         render template: '/unidade/form', model: [unidade: unidade, tipoUnidadeList: produto?.tiposUnidade?.sort()]
     }
 
@@ -30,12 +33,12 @@ class UnidadeController {
         params.max = Math.min(max ?: 25, 100)
         def criteria = {
             if (params.search_codigo)
-                ilike('codigo', params.search_codigo)
+                ilike('codigo', "%${params.search_codigo}%")
             if (params.search_status)
                 eq( 'statusLote', StatusLote.valueOf(params.search_status))
             if (params.search_produto)
                 produto {
-                    ilike('descricao', params.search_produto)
+                    ilike('descricao', "%${params.search_produto}%")
                 }
         }
         def unidadeList = Unidade.createCriteria().list(params, criteria)
@@ -70,7 +73,7 @@ class UnidadeController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'unidade.label', default: 'Unidade'), unidade.id])
-                redirect url: "/produto/show/${unidade.produto.id}#fragment-2"
+                redirect unidade
             }
             '*' { respond unidade, [status: CREATED] }
         }
@@ -99,7 +102,7 @@ class UnidadeController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'unidade.label', default: 'Unidade'), unidade.id])
-                redirect url: "/produto/show/${unidade.produto.id}#fragment-2"
+                redirect unidade
             }
             '*'{ respond unidade, [status: OK] }
         }

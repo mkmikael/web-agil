@@ -7,7 +7,7 @@ import web.agil.enums.*
 @Transactional(readOnly = true)
 class PedidoController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [test: "POST", save: "POST", update: "PUT", delete: "DELETE"]
 
     @Transactional
     def negarPedidos() {
@@ -74,6 +74,13 @@ class PedidoController {
 
     def create() {
         respond new Pedido(params), model: [loteList: Unidade.findAllByStatusLote(StatusLote.DISPONIVEL)]
+    }
+
+    def test(Pedido pedido) {
+        println pedido.codigo
+        render {
+            "LOL"
+        }
     }
 
     @Transactional

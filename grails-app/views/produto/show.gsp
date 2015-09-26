@@ -50,20 +50,27 @@
                         <br/><br/>
                         <table>
                             <thead>
-                                <th>ID</th>
+                                <th>Codigo</th>
+                                <th>Dt. Entrada</th>
                                 <th>Tipo</th>
+                                <th>Preço Compra</th>
                                 <th>Preço</th>
                                 <th>Preço Mínimo</th>
                                 <th>Quant. em Estoque</th>
+                                <th>Status</th>
                             </thead>
                             <tbody>
                                 <g:each in="${produto?.unidades}" var="uni">
                                     <tr>
-                                        <td><g:link controller="unidade" action="show" id="${uni.id}">${uni?.id}</g:link></td>
+
+                                        <td><g:link controller="unidade" action="show" id="${uni.id}">${uni?.codigo}</g:link></td>
+                                        <td>${g.formatDate(date: uni?.dataCriacao, format: 'dd/MM/yyyy')}</td>
                                         <td>${uni?.tipoUnidade?.tipo}</td>
-                                        <td>${uni?.valor}</td>
-                                        <td>${uni?.valorMinimo}</td>
+                                        <td><g:formatNumber number="${uni?.valorDeCompra}" type="currency"/></td>
+                                        <td><g:formatNumber number="${uni?.valor}" type="currency"/></td>
+                                        <td><g:formatNumber number="${uni?.valorMinimo}" type="currency"/></td>
                                         <td>${uni?.estoque}</td>
+                                        <td>${uni?.statusLote}</td>
                                     </tr>
                                 </g:each>
                             </tbody>

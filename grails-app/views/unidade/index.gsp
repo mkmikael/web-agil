@@ -42,7 +42,7 @@
                     <g:sortableColumn property="dataCriacao" title="Dt. Entrada" />
                     <g:sortableColumn property="vencimento" title="Dt. Vencimento" />
                     <g:sortableColumn property="estoque" title="Estoque" />
-                    <g:sortableColumn property="produto" title="Produto" />
+                    <g:sortableColumn property="produto.descricao" title="Produto" />
                     <g:sortableColumn property="statusLote" title="Status" />
                     <g:sortableColumn property="tipoUnidade" title="Unidade" />
                     <g:sortableColumn property="valorDeCompra" title="Prc Compra" />
@@ -52,16 +52,16 @@
                 <tbody>
                     <g:each in="${unidadeList}" var="unidade">
                         <tr>
-                            <td>${unidade?.codigo}</td>
+                            <td><g:link action="show" id="${unidade?.id}">${unidade?.codigo}</g:link></td>
                             <td><g:formatDate date="${unidade?.dataCriacao}" format="dd/MM/yyyy HH:mm" /></td>
                             <td><g:formatDate date="${unidade?.vencimento}" format="dd/MM/yyyy" /></td>
                             <td>${unidade?.estoque}</td>
                             <td><g:link controller="produto" action="show" id="${unidade?.produto?.id}">${unidade?.produto}</g:link></td>
                             <td>${unidade?.statusLote}</td>
                             <td>${unidade?.tipoUnidade?.tipo}</td>
-                            <td>${unidade?.valorDeCompra}</td>
-                            <td>${unidade?.valor}</td>
-                            <td>${unidade?.valorMinimo}</td>
+                            <td>${g.formatNumber(number: unidade?.valorDeCompra, type: 'currency')}</td>
+                            <td>${g.formatNumber(number: unidade?.valor, type: 'currency')}</td>
+                            <td>${g.formatNumber(number: unidade?.valorMinimo, type: 'currency')}</td>
                         </tr>
                     </g:each>
                 </tbody>

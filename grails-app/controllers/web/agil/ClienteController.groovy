@@ -13,8 +13,14 @@ class ClienteController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 30, 100)
+        params.tipoPessoa = params.tipoPessoa ?: 'PF'
         def criteria = {
             participante {
+                if (params.tipoPessoa == 'PF') {
+                    eq('class', Pessoa.class.getName())
+                } else if (params.tipoPessoa == 'PJ') {
+                    eq('class', Organizacao.class.getName())
+                }
                 if (params.search_codigo)
                     ilike('codigo', "%${params.search_codigo}%")
                 if (params.search_bairro)

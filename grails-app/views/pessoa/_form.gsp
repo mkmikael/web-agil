@@ -4,6 +4,6 @@
 </div>
 <div class="fieldcontain">
 	<label for="participante.cpf">CPF</label>
-	<g:textField name="participante.cpf" value="${participanteInstance?.cpf}" />
+	<g:textField name="participante.cpf" class="cpf" value="${participanteInstance?.cpf}" />
 </div>
 <g:render template="/participante/form" model="[participanteInstance: participanteInstance]" />

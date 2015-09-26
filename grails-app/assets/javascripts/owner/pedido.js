@@ -1,5 +1,4 @@
 $(function() {
-	var count = 0;
 	var rowHtml;
 	rowHtml = $('#row-pedido tbody').clone();
 	$('#row-pedido').remove();

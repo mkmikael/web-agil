@@ -12,8 +12,6 @@
             <ul>
                 <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
                 <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-                <li><a class="create" onclick="$('#estoque').dialog('open')">Estoque</a></li>
-                <li><a class="create" onclick="$('#info-cxa').dialog('open')">Informar Capacidade CXA</a></li>
             </ul>
         </div>
         <div id="list-produto" class="content scaffold-list" role="main">
@@ -39,9 +37,9 @@
                     <input type="submit" value="Procurar" />
                 </fieldset>
                 <fieldset>
-                    <p>
-                        * Os produtos que estão marcados de amarelo são os que ainda não foram definido a quantidade de unidades que uma caixa capacita. Por favor informe o que foi pedido para poder contabilizar o estoque corretamente. Para poder informar a quantidade de unidades que uma caixa capacita, marque o(s) produtos e clique em 'Informar Capacidade CXA' ou <a href="#" onclick="$('#info-cxa').dialog('open')">Aqui</a>
-                    </p>
+                    %{--<p>--}%
+                        %{--* Os produtos que estão marcados de amarelo são os que ainda não foram definido a quantidade de unidades que uma caixa capacita. Por favor informe o que foi pedido para poder contabilizar o estoque corretamente. Para poder informar a quantidade de unidades que uma caixa capacita, marque o(s) produtos e clique em 'Informar Capacidade CXA' ou <a href="#" onclick="$('#info-cxa').dialog('open')">Aqui</a>--}%
+                    %{--</p>--}%
                 </fieldset>
             </g:form>
             <g:form name="form-info-cxa" action="informarCXA" method="post">
@@ -54,17 +52,15 @@
                         <g:sortableColumn property="produto.descricao" title="Descrição" />
                         <g:sortableColumn property="produto.fornecedor" title="Fornecedor" />
                         <g:sortableColumn property="produto.grupo" title="Grupo" />
-                        <th></th>
                     </thead>
                     <tbody>
                         <g:each in="${produtoList}" var="produto">
                             <tr style="background-color: ${quantidade == 0 ? 'yellow' : 'transparent'}">
                                 <td><g:checkBox name="unidade_${produto?.id}" /></td>
-                                <td>${produto?.codigo}</td>
+                                <td><g:link action="show" id="${produto?.id}">${produto?.codigo}</g:link></td>
                                 <td>${produto?.descricao}</td>
                                 <td>${produto?.fornecedor?.descricao}</td>
                                 <td>${produto?.grupo?.descricao}</td>
-                                <td><g:link action="show" id="${produto?.id}">Visualizar</g:link></td>
                             </tr>
                         </g:each>
                     </tbody>
@@ -72,40 +68,6 @@
             </g:form>
             <div class="pagination">
                 <g:paginate total="${produtoCount ?: 0}" params="${params}" />
-            </div>
-            
-            <div id="movimentacao" hidden="true">
-                <g:form name="form-movimentacao" action="index" params="${params}">
-                    <div class="fieldcontain">
-                        <label>Quantidade</label>
-                        <g:field name="quantidade" required="required" />
-                    </div>
-                    <div class="fieldcontain">
-                        <label>Movimentação</label>
-                        <select>
-                            <option>ENTRADA</option>
-                            <option>SAIDA</option>
-                        </select>
-                    </div>
-                    <div class="fieldcontain">
-                        <label>Produto</label>
-                        <g:select name="unidade" from="${Unidade.list()}" optionKey="id" />
-                    </div>
-                </g:form>
-            </div>
-
-            <div id="estoque" hidden="true">
-                <div class="fieldcontain">
-                    <label>Quantidade</label>
-                    <g:field name="quantidadeEstoque" required="required" />
-                </div>
-            </div>
-
-            <div id="info-cxa">
-                <div class="fieldcontain">
-                    <label>Quantidade</label>
-                    <g:field name="quantidadeINFO" required="required" />
-                </div>
             </div>
 
         </div>
