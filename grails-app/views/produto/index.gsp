@@ -19,10 +19,13 @@
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
-            <g:form action="index">
+            <g:form action="index" method="GET">
                 <fieldset class="form">
                     <label>Código</label>
                     <g:textField name="search_codigo" value="${search_codigo}" />
+
+                    <label>NCM</label>
+                    <g:textField name="search_ncm" value="${search_ncm}" />
 
                     <label>Descrição</label>
                     <g:textField name="search_descricao" value="${search_descricao}" />
@@ -47,17 +50,17 @@
                 <g:hiddenField name="acao" value="0"/>
                 <table>
                     <thead>
-                        <th><g:checkBox name="geral"/> </th>
-                        <g:sortableColumn property="produto.codigo" title="Código" />
-                        <g:sortableColumn property="produto.descricao" title="Descrição" />
-                        <g:sortableColumn property="produto.fornecedor" title="Fornecedor" />
-                        <g:sortableColumn property="produto.grupo" title="Grupo" />
+                        <g:sortableColumn property="codigo" title="Código" />
+                        <g:sortableColumn property="ncm" title="NCM" />
+                        <g:sortableColumn property="descricao" title="Descrição" />
+                        <g:sortableColumn property="fornecedor.descricao" title="Fornecedor" />
+                        <g:sortableColumn property="grupo.descricao" title="Grupo" />
                     </thead>
                     <tbody>
                         <g:each in="${produtoList}" var="produto">
                             <tr style="background-color: ${quantidade == 0 ? 'yellow' : 'transparent'}">
-                                <td><g:checkBox name="unidade_${produto?.id}" /></td>
                                 <td><g:link action="show" id="${produto?.id}">${produto?.codigo}</g:link></td>
+                                <td>${produto?.ncm}</td>
                                 <td>${produto?.descricao}</td>
                                 <td>${produto?.fornecedor?.descricao}</td>
                                 <td>${produto?.grupo?.descricao}</td>

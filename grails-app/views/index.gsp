@@ -30,6 +30,7 @@
                         <li><g:link controller="fornecedor">Fornecedores</g:link> </li>
                         <li><g:link controller="grupo">Grupos</g:link> </li>
                         <li><g:link controller="prazo">Prazos</g:link> </li>
+                        <li><g:link controller="tributo">Tributos</g:link> </li>
                     </ol>
                 </li>
             </ul>

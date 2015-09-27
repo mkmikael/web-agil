@@ -6,18 +6,22 @@ class Produto {
 
 	String codigo
 	String descricao
+    String ncm
 
 	def beforeInsert = {
-		codigo = Util.generateCodigo(12, this.count() + 1)
+        if (!codigo)
+            codigo = Util.generateCodigo(12, this.count() + 1)
 	}
 
-	static hasMany = [unidades: Unidade, tiposUnidade: TipoUnidade]
+	static hasMany = [unidades: Unidade, tiposUnidade: TipoUnidade, tributos: ProdutoTributo]
 	static belongsTo = [fornecedor: Fornecedor, grupo: Grupo]
     static constraints = {
     	codigo nullable: true
+        ncm nullable: true
     }
     static mapping = {
         unidades sort: 'dataCriacao', order: 'desc'
+        tributos sort: 'tributo.id'
         tiposUnidade sort: 'tipo'
     }
 

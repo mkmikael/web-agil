@@ -1,6 +1,10 @@
 <%@ page import="web.agil.*; web.agil.enums.*;" %>
 
 <div class="fieldcontain">
+    <label for="ncm">NCM</label>
+    <g:textField name="ncm" value="${produto?.ncm}" required="required" />
+</div>
+<div class="fieldcontain">
 	<label for="descricao">Descrição</label>
 	<g:textField name="descricao" value="${produto?.descricao}" required="required" size="50" />
 </div>

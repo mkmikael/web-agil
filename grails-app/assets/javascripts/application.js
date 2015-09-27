@@ -42,6 +42,7 @@ $(function() {
 	$('.cnpj').mask('00.000.000/0000-00', { reverse: true, placeholder: '__.___.___/____-__' });
 	$('.money2').mask('000.000.000.000,00', { reverse: true });
 	$(".money").maskMoney({prefix:'R$ ', allowNegative: true, allowZero: true, thousands:'.', decimal:',', affixesStay: false});
+    $(".taxa").maskMoney({suffix:'% ', allowNegative: false, allowZero: true, thousands:'.', decimal:',', affixesStay: false});
 });
 
 if (typeof jQuery !== 'undefined') {

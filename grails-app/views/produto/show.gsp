@@ -22,10 +22,11 @@
             <fieldset>
                 <div class="tabs">
                     <ul>
-                        <li><a href="#fragment-1">Produto</a></li>
-                        <li><a href="#fragment-2">Lotes</a></li>
+                        <li><a href="#produto">Produto</a></li>
+                        <li><a href="#lotes">Lotes</a></li>
+                        <li><a href="#tributos">Tributos</a></li>
                     </ul>
-                    <div id="fragment-1">
+                    <div id="produto">
                         <div class="property-list">
                             <div class="fieldcontain">
                                 <span class="property-label">Código</span>
@@ -45,7 +46,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="fragment-2">
+                    <div id="lotes">
                         <g:link controller="unidade" action="create" class="btn" params="['produto.id': produto?.id]">Novo Lote</g:link>
                         <br/><br/>
                         <table>
@@ -76,6 +77,28 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <div id="tributos">
+                        <fieldset>
+                            <table style="width: auto">
+                                <thead>
+                                    <tr>
+                                        <th>Tributo</th>
+                                        <th>Taxa</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <g:each in="${produto.tributos}" var="produtoTributo" status="i">
+                                        <tr>
+                                            <td>${produtoTributo.tributo?.descricao}</td>
+                                            <td><g:textField name="tributo" onblur="saveTributo(this, ${produtoTributo.id})" class="taxa" value="${g.formatNumber(number: produtoTributo.taxa, type: 'currency', currencySymbol: '')}" size="5" /></td>
+                                        </tr>
+                                    </g:each>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                    </div> <!-- end tab tributos -->
+
                 </div> <!-- tabs -->
             </fieldset>
             <g:form resource="${this.produto}" method="DELETE">

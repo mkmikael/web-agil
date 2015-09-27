@@ -8,7 +8,14 @@ import web.agil.util.Util
 @Transactional(readOnly = true)
 class ProdutoController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", informarCXA: "POST"]
+    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", saveTributo: "POST"]
+
+    @Transactional
+    def saveTributo(Long id, Double taxa) {
+        def tributo = ProdutoTributo.get(id)
+        tributo.taxa = taxa
+        render { "OK" }
+    }
 
     def index(Integer max) {
         params.max = Math.min(max ?: 25, 100)
@@ -16,6 +23,8 @@ class ProdutoController {
         def criteria = {
             if (params.search_descricao)
                 ilike('descricao', "%${params.search_descricao}%")
+            if (params.search_ncm)
+                ilike('ncm', "%${params.search_ncm}%")
             if (params.search_codigo)
                 ilike('codigo', "%${params.search_codigo}%")
             if (params.search_fornecedor)
@@ -25,10 +34,18 @@ class ProdutoController {
         }
         def produtoList = Produto.createCriteria().list(params, criteria)
         def produtoCount = Produto.createCriteria().count(criteria)
-        respond produtoList, model:[produtoCount: produtoCount] + params
+        respond produtoList, model:[produtoCount: produtoCount], params: params
     }
 
+    @Transactional
     def show(Produto produto) {
+        def list = produto.tributos*.tributo*.id
+        Tributo.list().each {
+            if (!list.contains(it.id)) {
+                produto.addToTributos(new ProdutoTributo(produto: produto, tributo: it))
+            }
+        }
+        produto.save()
         respond produto
     }
 

@@ -9,6 +9,12 @@ class PedidoController {
 
     static allowedMethods = [test: "POST", save: "POST", update: "PUT", delete: "DELETE"]
 
+    def test(Pedido pedido) {
+        println params
+        println pedido.properties
+        render { "OK!" }
+    }
+
     @Transactional
     def negarPedidos() {
         def ids = []
@@ -74,13 +80,6 @@ class PedidoController {
 
     def create() {
         respond new Pedido(params), model: [loteList: Unidade.findAllByStatusLote(StatusLote.DISPONIVEL)]
-    }
-
-    def test(Pedido pedido) {
-        println pedido.codigo
-        render {
-            "LOL"
-        }
     }
 
     @Transactional
