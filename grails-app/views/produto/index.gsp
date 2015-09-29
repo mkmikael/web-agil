@@ -1,4 +1,3 @@
-<%@ import="web.agil.*; web.agil.enums.*" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -31,18 +30,13 @@
                     <g:textField name="search_descricao" value="${search_descricao}" />
 
                     <label>Fornecedor</label>
-                    <g:select name="search_fornecedor" value="${search_fornecedor}" from="${Fornecedor.list()}" optionKey="id" optionValue="descricao" noSelection="['': 'Selecione']"/>
+                    <g:select name="search_fornecedor" value="${search_fornecedor}" from="${web.agil.Fornecedor.list()}" optionKey="id" optionValue="descricao" noSelection="['': 'Selecione']"/>
 
                     <label>Grupo</label>
-                    <g:select name="search_grupo" value="${search_grupo}" from="${Grupo.list()}" optionKey="id" optionValue="descricao" noSelection="['': 'Selecione']" />
+                    <g:select name="search_grupo" value="${search_grupo}" from="${web.agil.Grupo.list()}" optionKey="id" optionValue="descricao" noSelection="['': 'Selecione']" />
                 </fieldset>
                 <fieldset>
                     <input type="submit" value="Procurar" />
-                </fieldset>
-                <fieldset>
-                    %{--<p>--}%
-                        %{--* Os produtos que estão marcados de amarelo são os que ainda não foram definido a quantidade de unidades que uma caixa capacita. Por favor informe o que foi pedido para poder contabilizar o estoque corretamente. Para poder informar a quantidade de unidades que uma caixa capacita, marque o(s) produtos e clique em 'Informar Capacidade CXA' ou <a href="#" onclick="$('#info-cxa').dialog('open')">Aqui</a>--}%
-                    %{--</p>--}%
                 </fieldset>
             </g:form>
             <g:form name="form-info-cxa" action="informarCXA" method="post">
