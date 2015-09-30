@@ -1,5 +1,7 @@
 package web.agil
 
+import grails.converters.JSON
+
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 import web.agil.*
@@ -10,6 +12,30 @@ class ProdutoController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", saveTributo: "POST"]
 
+    def listJson() {
+        def list = []
+        Produto.list().each { p ->
+            def produto = [:]
+            produto.id = p.id
+            produto.codigo = p.codigo
+            produto.nome = p.descricao
+            produto.fornecedor = p.fornecedor?.descricao
+            produto.grupo = p.grupo?.descricao
+            def unidades = []
+            p.unidades?.each { u ->
+                def unidade = [:]
+                unidade.id = u.id
+                unidade.tipo = u.tipoUnidade?.tipo
+                unidade.valor = u.valor
+                unidade.valorMinimo = u.valorMinimo
+                unidades << unidade
+            }
+            produto.unidades = unidades
+            list << produto
+        }
+        render list as JSON
+    }
+
     @Transactional
     def saveTributo(Long id, Double taxa) {
         def tributo = ProdutoTributo.get(id)
@@ -17,8 +43,8 @@ class ProdutoController {
         render { "OK" }
     }
 
-    def index(Integer max) {
-        params.max = Math.min(max ?: 25, 100)
+    def index() {
+        params.max = Math.min(params.max ?: 25, 100)
         params.offset = params.offset ?: 0
         def criteria = {
             if (params.search_descricao)

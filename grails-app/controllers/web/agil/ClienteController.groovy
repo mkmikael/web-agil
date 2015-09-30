@@ -1,5 +1,7 @@
 package web.agil
 
+import grails.converters.JSON
+
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 import web.agil.*
@@ -10,6 +12,34 @@ import web.agil.util.Util
 class ClienteController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", create: ["POST", "GET"]]
+
+    def listJson() {
+        def clientes = []
+        Cliente.list().each { c ->
+            def cliente = [:]
+            cliente.id = c.id
+            cliente.codigo = c.codigo
+            cliente.endereco = c.participante.endereco
+            cliente.bairro = c.participante.bairro
+            cliente.referencia = c.participante.referencia
+            cliente.cidade = c.participante.cidade
+            cliente.limite = c.limite
+            cliente.telefone = c.participante.telefone
+            cliente.responsavel = c.participante.contato
+            if (c.participante.class == Organizacao) {
+                cliente.cnpj = c.participante.cnpj
+                cliente.nomeFantasia = c.participante.nomeFantasia
+                cliente.razaoSocial = c.participante.razaoSocial
+                cliente.inscricaoEstadual = c.participante.inscricaoEstadual
+            } else if (c.participante.class == Pessoa) {
+                cliente.cnpj = c.participante.cpf
+                cliente.nomeFantasia = c.participante.nome
+                cliente.razaoSocial = c.participante.nome
+            }
+            clientes << cliente
+        }
+        render clientes as JSON
+    }
 
     def index(Integer max) {
         params.max = Math.min(max ?: 30, 100)

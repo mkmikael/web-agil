@@ -1,5 +1,6 @@
 package web.agil
 
+import grails.rest.*
 import web.agil.util.Util
 
 class Produto {
