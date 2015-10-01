@@ -5,7 +5,7 @@
 <g:else>
 	<div class="fieldcontain">
 		<label for="produto.id">Produto</label>
-		<g:select name="produto.id" value="${unidade?.produto?.id}" from="${web.agil.Produto.list()}"
+		<g:select name="produto.id" value="${unidade?.produto?.id}" from="${produtoList}"
 				  optionKey="id" required="required" disabled="${params.edit ?: false}" />
 	</div>
 </g:else>
@@ -31,7 +31,6 @@
 </div>
 <div class="fieldcontain">
 	<label for="estoque">Quant. Estoque</label>
-	<g:textField name="estoque" value="${unidade?.estoque}" required="required" />
 	<g:textField name="estoque" value="${unidade?.estoque}" required="required" />
 </div>
 <div class="fieldcontain">

@@ -24,7 +24,7 @@
                         <g:textField name="search_produto" value="${search_produto}" />
 
                         <label for="search_status">Status</label>
-                        <g:select name="search_status" from="${web.agil.enums.StatusLote.values()}" value="${search_status}" noSelection="['': 'TODOS']" />
+                        <g:select name="search_status" from="${statusLote}" value="${search_status}" noSelection="['': 'TODOS']" />
                     </fieldset>
                     <fieldset>
                         <input type="submit" value="Procurar">

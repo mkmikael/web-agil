@@ -18,7 +18,7 @@ class ClienteController {
         Cliente.list().each { c ->
             def cliente = [:]
             cliente.id = c.id
-            cliente.codigo = c.codigo
+            cliente.codigo = c.participante.codigo
             cliente.endereco = c.participante.endereco
             cliente.bairro = c.participante.bairro
             cliente.referencia = c.participante.referencia

@@ -28,6 +28,7 @@ class ProdutoController {
                 unidade.tipo = u.tipoUnidade?.tipo
                 unidade.valor = u.valor
                 unidade.valorMinimo = u.valorMinimo
+                unidade.produto = [id: p.id]
                 unidades << unidade
             }
             produto.unidades = unidades
@@ -44,7 +45,7 @@ class ProdutoController {
     }
 
     def index() {
-        params.max = Math.min(params.max ?: 25, 100)
+        params.max = Math.min(params.int('max')?: 25, 100)
         params.offset = params.offset ?: 0
         def criteria = {
             if (params.search_descricao)
@@ -60,7 +61,7 @@ class ProdutoController {
         }
         def produtoList = Produto.createCriteria().list(params, criteria)
         def produtoCount = Produto.createCriteria().count(criteria)
-        respond produtoList, model:[produtoCount: produtoCount], params: params
+        respond produtoList, model:[produtoCount: produtoCount, fornecedorList: Fornecedor.list(), grupoList: Grupo.list()], params: params
     }
 
     @Transactional
@@ -76,7 +77,7 @@ class ProdutoController {
     }
 
     def create() {
-        respond new Produto(params)
+        respond new Produto(params), model: [fornecedorList: Fornecedor.list(), grupoList: Grupo.list()]
     }
 
     @Transactional
@@ -107,7 +108,7 @@ class ProdutoController {
     }
 
     def edit(Produto produto) {
-        respond produto
+        respond produto, model: [fornecedorList: Fornecedor.list(), grupoList: Grupo.list()]
     }
 
     @Transactional

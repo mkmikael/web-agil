@@ -1,5 +1,7 @@
 package web.agil
 
+import grails.converters.JSON
+
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
@@ -7,6 +9,14 @@ import grails.transaction.Transactional
 class PrazoController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+
+    def listJson() {
+        def list = []
+        Prazo.list().each {
+           list << [id: it.id, parcelas: it.parcela, periodicidade: it.periodicidade]
+        }
+        render list as JSON
+    }
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)

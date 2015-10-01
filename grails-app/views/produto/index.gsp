@@ -30,10 +30,10 @@
                     <g:textField name="search_descricao" value="${search_descricao}" />
 
                     <label>Fornecedor</label>
-                    <g:select name="search_fornecedor" value="${search_fornecedor}" from="${web.agil.Fornecedor.list()}" optionKey="id" optionValue="descricao" noSelection="['': 'Selecione']"/>
+                    <g:select name="search_fornecedor" value="${search_fornecedor}" from="${fornecedorList}" optionKey="id" optionValue="descricao" noSelection="['': 'Selecione']"/>
 
                     <label>Grupo</label>
-                    <g:select name="search_grupo" value="${search_grupo}" from="${web.agil.Grupo.list()}" optionKey="id" optionValue="descricao" noSelection="['': 'Selecione']" />
+                    <g:select name="search_grupo" value="${search_grupo}" from="${grupoList}" optionKey="id" optionValue="descricao" noSelection="['': 'Selecione']" />
                 </fieldset>
                 <fieldset>
                     <input type="submit" value="Procurar" />

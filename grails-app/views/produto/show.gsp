@@ -25,6 +25,7 @@
                         <li><a href="#produto">Produto</a></li>
                         <li><a href="#lotes">Lotes</a></li>
                         <li><a href="#tributos">Tributos</a></li>
+                        <li><a href="#unidades">Unidades</a></li>
                     </ul>
                     <div id="produto">
                         <div class="property-list">
@@ -92,6 +93,27 @@
                                         <tr>
                                             <td>${produtoTributo.tributo?.descricao}</td>
                                             <td><g:textField name="tributo" onblur="saveTributo(this, ${produtoTributo.id})" class="taxa" value="${g.formatNumber(number: produtoTributo.taxa, type: 'currency', currencySymbol: '')}" size="5" /></td>
+                                        </tr>
+                                    </g:each>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                    </div>
+
+                    <div id="unidades">
+                        <fieldset>
+                            <table style="width: auto">
+                                <thead>
+                                    <tr>
+                                        <th>Tipo</th>
+                                        <th>Capacidade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <g:each in="${produto.tiposUnidade}" var="unidade" status="i">
+                                        <tr>
+                                            <td>${unidade.tipo}</td>
+                                            <td>${unidade.capacidade}</td>
                                         </tr>
                                     </g:each>
                                 </tbody>

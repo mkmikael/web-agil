@@ -43,7 +43,7 @@ class UnidadeController {
         }
         def unidadeList = Unidade.createCriteria().list(params, criteria)
         def unidadeCount = Unidade.createCriteria().count(criteria)
-        respond unidadeList, model:[unidadeCount: unidadeCount] + params
+        respond unidadeList, model:[unidadeCount: unidadeCount, statusLote: StatusLote.values()] + params
     }
 
     def show(Unidade unidade) {
@@ -51,7 +51,7 @@ class UnidadeController {
     }
 
     def create() {
-        respond new Unidade(params)
+        respond new Unidade(params), model: [produtoList: Produto.list()]
     }
 
     @Transactional
@@ -80,7 +80,7 @@ class UnidadeController {
     }
 
     def edit(Unidade unidade) {
-        respond unidade
+        respond unidade, model: [produtoList: Produto.list()]
     }
 
     @Transactional

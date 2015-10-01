@@ -1,4 +1,4 @@
-<%@ page import="web.agil.*; web.agil.enums.*;" %>
+<%@ page import="web.agil.*; web.agil.enums.*;" defaultCodec="html" %>
 
 <div class="fieldcontain">
     <label for="ncm">NCM</label>
@@ -10,9 +10,9 @@
 </div>
 <div class="fieldcontain">
 	<label for="fornecedor.id">Fornecedor</label>
-	<g:select name="fornecedor.id" value="${produto?.fornecedor?.id}" required="required" from="${Fornecedor.list()}" optionKey="id" optionValue="descricao" noSelection="${['': 'Selecione']}" />
+	<g:select name="fornecedor.id" value="${produto?.fornecedor?.id}" required="required" from="${fornecedorList}" optionKey="id" optionValue="descricao" noSelection="${['': 'Selecione']}" />
 </div>
 <div class="fieldcontain">
 	<label for="grupo.id">Grupo</label>
-	<g:select name="grupo.id" value="${produto?.grupo?.id}" required="required" from="${Grupo.list()}" optionKey="id" optionValue="descricao" noSelection="${['': 'Selecione']}" />
+	<g:select name="grupo.id" value="${produto?.grupo?.id}" required="required" from="${grupoList}" optionKey="id" optionValue="descricao" noSelection="${['': 'Selecione']}" />
 </div>
