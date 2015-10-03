@@ -7,7 +7,7 @@ class Movimento {
 	Date dataCriacao = new Date()
 	TipoMovimento tipo
 
-	static belongsTo = [unidade: Unidade]
+	static belongsTo = [unidade: Lote]
     static constraints = {
     }
 }

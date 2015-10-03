@@ -1,6 +1,5 @@
 package web.agil
 
-import grails.rest.*
 import web.agil.util.Util
 
 class Produto {
@@ -14,7 +13,7 @@ class Produto {
             codigo = Util.generateCodigo(12, this.count() + 1)
 	}
 
-	static hasMany = [unidades: Unidade, tiposUnidade: TipoUnidade, tributos: ProdutoTributo]
+	static hasMany = [unidades: Lote, tiposUnidade: Unidade, tributos: ProdutoTributo]
 	static belongsTo = [fornecedor: Fornecedor, grupo: Grupo]
     static constraints = {
     	codigo nullable: true

@@ -1,19 +1,11 @@
 package web.agil
 
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.IOException
-
-import org.apache.poi.hssf.usermodel.HSSFCell
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
-import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 
 import grails.transaction.Transactional
-
-import web.agil.*
 import web.agil.enums.*
 import web.agil.util.Util
 
@@ -140,7 +132,7 @@ class ExcelService {
 			def tipo = row.getCell(2)?.getStringCellValue()
 			if (tipo == "DP" || tipo == "PT")
 				continue
-			def unidade  = new Unidade()
+			def unidade  = new Lote()
 			unidade.id = row.getCell(0)?.getNumericCellValue() as Long
 			unidade.vencimento = new Date()
 			def produtoInstance = Produto.get( row.getCell(1)?.getStringCellValue() as Long )
@@ -148,9 +140,9 @@ class ExcelService {
 			unidade.valor = row.getCell(3)?.getNumericCellValue()
 			unidade.valorMinimo = row.getCell(4)?.getNumericCellValue()
 			if (tipo?.trim() == "UNI") {
-				unidade.tipoUnidade = new TipoUnidade(id: 1, tipo: "UNI", capacidade: 1, produto: produtoInstance)
+				unidade.tipoUnidade = new Unidade(id: 1, tipo: "UNI", capacidade: 1, produto: produtoInstance)
 			} else if (tipo?.trim() == "CXA") {
-				unidade.tipoUnidade = new TipoUnidade(tipo: 'CXA', capacidade: 0, produto: produtoInstance)
+				unidade.tipoUnidade = new Unidade(tipo: 'CXA', capacidade: 0, produto: produtoInstance)
 			}
 			produtoInstance.addToTiposUnidade(unidade.tipoUnidade)
 			produtoInstance.save(flush: true)

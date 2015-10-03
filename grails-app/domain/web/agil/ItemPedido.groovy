@@ -7,7 +7,8 @@ class ItemPedido {
 	Double desconto = 0
 	Double precoNegociado = 0
 	Double total = 0
-	Unidade unidade
+	Produto produto
+    Unidade unidade
 
 	static belongsTo = [pedido: Pedido]
     static constraints = {

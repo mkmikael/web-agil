@@ -4,7 +4,7 @@ import grails.test.mixin.*
 import spock.lang.*
 
 @TestFor(UnidadeController)
-@Mock(Unidade)
+@Mock(Lote)
 class UnidadeControllerSpec extends Specification {
 
     def populateValidParams(params) {
@@ -36,7 +36,7 @@ class UnidadeControllerSpec extends Specification {
         when:"The save action is executed with an invalid instance"
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'POST'
-            def unidade = new Unidade()
+            def unidade = new Lote()
             unidade.validate()
             controller.save(unidade)
 
@@ -47,14 +47,14 @@ class UnidadeControllerSpec extends Specification {
         when:"The save action is executed with a valid instance"
             response.reset()
             populateValidParams(params)
-            unidade = new Unidade(params)
+            unidade = new Lote(params)
 
             controller.save(unidade)
 
         then:"A redirect is issued to the show action"
             response.redirectedUrl == '/unidade/show/1'
             controller.flash.message != null
-            Unidade.count() == 1
+            Lote.count() == 1
     }
 
     void "Test that the show action returns the correct model"() {
@@ -66,7 +66,7 @@ class UnidadeControllerSpec extends Specification {
 
         when:"A domain instance is passed to the show action"
             populateValidParams(params)
-            def unidade = new Unidade(params)
+            def unidade = new Lote(params)
             controller.show(unidade)
 
         then:"A model is populated containing the domain instance"
@@ -82,7 +82,7 @@ class UnidadeControllerSpec extends Specification {
 
         when:"A domain instance is passed to the edit action"
             populateValidParams(params)
-            def unidade = new Unidade(params)
+            def unidade = new Lote(params)
             controller.edit(unidade)
 
         then:"A model is populated containing the domain instance"
@@ -101,7 +101,7 @@ class UnidadeControllerSpec extends Specification {
 
         when:"An invalid domain instance is passed to the update action"
             response.reset()
-            def unidade = new Unidade()
+            def unidade = new Lote()
             unidade.validate()
             controller.update(unidade)
 
@@ -112,7 +112,7 @@ class UnidadeControllerSpec extends Specification {
         when:"A valid domain instance is passed to the update action"
             response.reset()
             populateValidParams(params)
-            unidade = new Unidade(params).save(flush: true)
+            unidade = new Lote(params).save(flush: true)
             controller.update(unidade)
 
         then:"A redirect is issued to the show action"
@@ -134,16 +134,16 @@ class UnidadeControllerSpec extends Specification {
         when:"A domain instance is created"
             response.reset()
             populateValidParams(params)
-            def unidade = new Unidade(params).save(flush: true)
+            def unidade = new Lote(params).save(flush: true)
 
         then:"It exists"
-            Unidade.count() == 1
+            Lote.count() == 1
 
         when:"The domain instance is passed to the delete action"
             controller.delete(unidade)
 
         then:"The instance is deleted"
-            Unidade.count() == 0
+            Lote.count() == 0
             response.redirectedUrl == '/unidade/index'
             flash.message != null
     }

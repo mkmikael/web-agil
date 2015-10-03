@@ -4,7 +4,6 @@ import grails.converters.JSON
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
-import web.agil.*
 import web.agil.util.Util
 
 @Transactional(readOnly = true)
@@ -165,7 +164,7 @@ class ProdutoController {
             }
         }
 
-        Unidade.getAll(ids).each {
+        Lote.getAll(ids).each {
             if (params.acao == "quantidade") {
                 it.quantidade = new Integer( params.quantidade )
             } else if (params.acao == "estoque") {

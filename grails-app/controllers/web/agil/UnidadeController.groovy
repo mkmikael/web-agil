@@ -1,7 +1,6 @@
 package web.agil
 
 import web.agil.enums.StatusLote
-import web.agil.enums.TipoMovimento
 
 import static org.springframework.http.HttpStatus.*
 import grails.converters.JSON
@@ -16,13 +15,13 @@ class UnidadeController {
         def produto = Produto.get(id)
         def tipoUnidade
         if (tipoUnidadeId) {
-            tipoUnidade = TipoUnidade.get(tipoUnidadeId)
+            tipoUnidade = Unidade.get(tipoUnidadeId)
             if ( !(tipoUnidade in produto.tiposUnidade) )
                 tipoUnidade = produto.tiposUnidade[0]
         } else
             tipoUnidade = produto.tiposUnidade[0]
-        def unidade = Unidade.executeQuery("select o from Unidade o where o.produto = :produto and o.tipoUnidade = :tipoUnidade " +
-                "and o.dataCriacao = (select max(u.dataCriacao) from Unidade u where u.produto = :produto and u.tipoUnidade = :tipoUnidade)",
+        def unidade = Lote.executeQuery("select o from Lote o where o.produto = :produto and o.tipoUnidade = :tipoUnidade " +
+                "and o.dataCriacao = (select max(u.dataCriacao) from Lote u where u.produto = :produto and u.tipoUnidade = :tipoUnidade)",
                 [produto: produto, tipoUnidade: tipoUnidade])[0]
         if (unidade)
             unidade.vencimento = null
@@ -41,21 +40,21 @@ class UnidadeController {
                     ilike('descricao', "%${params.search_produto}%")
                 }
         }
-        def unidadeList = Unidade.createCriteria().list(params, criteria)
-        def unidadeCount = Unidade.createCriteria().count(criteria)
+        def unidadeList = Lote.createCriteria().list(params, criteria)
+        def unidadeCount = Lote.createCriteria().count(criteria)
         respond unidadeList, model:[unidadeCount: unidadeCount, statusLote: StatusLote.values()] + params
     }
 
-    def show(Unidade unidade) {
+    def show(Lote unidade) {
         respond unidade
     }
 
     def create() {
-        respond new Unidade(params), model: [produtoList: Produto.list()]
+        respond new Lote(params), model: [produtoList: Produto.list()]
     }
 
     @Transactional
-    def save(Unidade unidade) {
+    def save(Lote unidade) {
         if (unidade == null) {
             transactionStatus.setRollbackOnly()
             notFound()
@@ -72,19 +71,19 @@ class UnidadeController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'unidade.label', default: 'Unidade'), unidade.id])
+                flash.message = message(code: 'default.created.message', args: [message(code: 'unidade.label', default: 'Lote'), unidade.id])
                 redirect unidade
             }
             '*' { respond unidade, [status: CREATED] }
         }
     }
 
-    def edit(Unidade unidade) {
+    def edit(Lote unidade) {
         respond unidade, model: [produtoList: Produto.list()]
     }
 
     @Transactional
-    def update(Unidade unidade) {
+    def update(Lote unidade) {
         if (unidade == null) {
             transactionStatus.setRollbackOnly()
             notFound()
@@ -101,7 +100,7 @@ class UnidadeController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'unidade.label', default: 'Unidade'), unidade.id])
+                flash.message = message(code: 'default.updated.message', args: [message(code: 'unidade.label', default: 'Lote'), unidade.id])
                 redirect unidade
             }
             '*'{ respond unidade, [status: OK] }
@@ -109,7 +108,7 @@ class UnidadeController {
     }
 
     @Transactional
-    def delete(Unidade unidade) {
+    def delete(Lote unidade) {
 
         if (unidade == null) {
             transactionStatus.setRollbackOnly()
@@ -121,7 +120,7 @@ class UnidadeController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'unidade.label', default: 'Unidade'), unidade.id])
+                flash.message = message(code: 'default.deleted.message', args: [message(code: 'unidade.label', default: 'Lote'), unidade.id])
                 redirect url: "/produto/show/${unidade.produto.id}#fragment-2"
             }
             '*'{ render status: NO_CONTENT }
@@ -129,13 +128,13 @@ class UnidadeController {
     }
 
     def getUnidade(Long id) {
-        render Unidade.get(id) as JSON
+        render Lote.get(id) as JSON
     }
 
     protected void notFound() {
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'unidade.label', default: 'Unidade'), params.id])
+                flash.message = message(code: 'default.not.found.message', args: [message(code: 'unidade.label', default: 'Lote'), params.id])
                 redirect action: "index", method: "GET"
             }
             '*'{ render status: NOT_FOUND }

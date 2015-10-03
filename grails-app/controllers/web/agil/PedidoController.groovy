@@ -1,5 +1,8 @@
 package web.agil
 
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
+
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 import web.agil.enums.*
@@ -7,11 +10,31 @@ import web.agil.enums.*
 @Transactional(readOnly = true)
 class PedidoController {
 
-    static allowedMethods = [test: "POST", save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [savePedidos: "POST", save: "POST", update: "PUT", delete: "DELETE"]
 
-    def test(Pedido pedido) {
-        println params
-        println pedido.properties
+    def savePedidos(String pedidos) {
+        def pedidosJA = new JSONArray(pedidos);
+        for (JSONObject pedidoJO : pedidosJA) {
+            def pedido = new Pedido()
+            pedido.dataCriacao = new Date(pedidoJO.getString("dataCriacao"))
+            pedido.dataFaturamento = new Date(pedidoJO.getString("dataDeFaturamento"))
+            pedido.cliente = Cliente.get(pedidoJO.getLong("cliente"))
+            pedido.prazo = Prazo.get(pedidoJO.getLong("prazo"))
+            pedido.total = pedidoJO.getDouble("total")
+
+            JSONArray itensJA = pedidoJO.getJSONArray("itensPedido")
+            for (JSONObject itemJO : itensJA) {
+                def itemPedido = new ItemPedido(
+                    bonificacao: itemJO.getInt("bonificacao"),
+                    desconto: itemJO.getDouble("desconto"),
+                    precoNegociado: itemJO.getDouble("precoNegociado"),
+                    quantidade: itemJO.getInt("quantidade"),
+                    total: itemJO.getDouble("total"),
+                )
+                pedido.addToItensPedido(itemPedido)
+            }
+        }
+        println pedidosJson.toString();
         render { "OK!" }
     }
 
@@ -79,7 +102,7 @@ class PedidoController {
     }
 
     def create() {
-        respond new Pedido(params), model: [loteList: Unidade.findAllByStatusLote(StatusLote.DISPONIVEL)]
+        respond new Pedido(params), model: [loteList: Lote.findAllByStatusLote(StatusLote.DISPONIVEL)]
     }
 
     @Transactional
@@ -94,7 +117,7 @@ class PedidoController {
             def itens = params.item
             for (i in 0..itens.quantidade.length - 1) {
                 def itemPedido = new ItemPedido()
-                itemPedido.unidade = Unidade.get(params.item.unidade.id[i] as Long)
+                itemPedido.unidade = Lote.get(params.item.unidade.id[i] as Long)
                 itemPedido.quantidade = params.item.quantidade[i] as Integer
                 itemPedido.bonificacao = params.item.bonificacao[i] as Integer
                 itemPedido.desconto = params.item.desconto[i] as Double
@@ -102,7 +125,7 @@ class PedidoController {
             }
         } else {
             def itemPedido = new ItemPedido()
-            itemPedido.unidade = Unidade.get(params.item.unidade.id as Long)
+            itemPedido.unidade = Lote.get(params.item.unidade.id as Long)
             itemPedido.quantidade = params.item.quantidade as Integer
             itemPedido.bonificacao = params.item.bonificacao as Integer
             itemPedido.desconto = params.item.desconto as Double
