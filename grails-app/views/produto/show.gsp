@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     <div id="lotes">
-                        <g:link controller="unidade" action="create" class="btn" params="['produto.id': produto?.id]">Novo Lote</g:link>
+                        <g:link controller="lote" action="create" class="btn" params="['produto.id': produto?.id]">Novo Lote</g:link>
                         <br/><br/>
                         <table>
                             <thead>
@@ -62,17 +62,16 @@
                                 <th>Status</th>
                             </thead>
                             <tbody>
-                                <g:each in="${produto?.unidades}" var="uni">
+                                <g:each in="${produto?.lotes}" var="lote">
                                     <tr>
-
-                                        <td><g:link controller="unidade" action="show" id="${uni.id}">${uni?.codigo}</g:link></td>
-                                        <td>${g.formatDate(date: uni?.dataCriacao, format: 'dd/MM/yyyy')}</td>
-                                        <td>${uni?.tipoUnidade?.tipo}</td>
-                                        <td><g:formatNumber number="${uni?.valorDeCompra}" type="currency"/></td>
-                                        <td><g:formatNumber number="${uni?.valor}" type="currency"/></td>
-                                        <td><g:formatNumber number="${uni?.valorMinimo}" type="currency"/></td>
-                                        <td>${uni?.estoque}</td>
-                                        <td>${uni?.statusLote}</td>
+                                        <td><g:link controller="lote" action="show" id="${lote.id}">${lote?.codigo}</g:link></td>
+                                        <td>${g.formatDate(date: lote?.dataCriacao, format: 'dd/MM/yyyy')}</td>
+                                        <td>${lote?.unidade?.tipo}</td>
+                                        <td><g:formatNumber number="${lote?.valorDeCompra}" type="currency"/></td>
+                                        <td><g:formatNumber number="${lote?.valor}" type="currency"/></td>
+                                        <td><g:formatNumber number="${lote?.valorMinimo}" type="currency"/></td>
+                                        <td>${lote?.estoque}</td>
+                                        <td>${lote?.statusLote}</td>
                                     </tr>
                                 </g:each>
                             </tbody>
@@ -110,7 +109,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <g:each in="${produto.tiposUnidade}" var="unidade" status="i">
+                                    <g:each in="${produto.unidades}" var="unidade" status="i">
                                         <tr>
                                             <td>${unidade.tipo}</td>
                                             <td>${unidade.capacidade}</td>

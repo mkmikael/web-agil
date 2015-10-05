@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta name="layout" content="main" />
-        <g:set var="entityName" value="${message(code: 'unidade.label', default: 'Lote')}" />
+        <g:set var="entityName" value="${message(code: 'lote.label', default: 'Lote')}" />
         <title><g:message code="default.edit.label" args="[entityName]" /></title>
     </head>
     <body>
@@ -33,7 +33,7 @@
             <g:form action="update" method="PUT">
                 <g:hiddenField name="version" value="${this.unidade?.version}" />
                 <fieldset class="form">
-                    <g:render template="/unidade/form" model="[unidade: unidade]" />
+                    <g:render template="/lote/form" model="[unidade: unidade]" />
                 </fieldset>
                 <fieldset class="buttons">
                     <input class="save" type="submit" value="${message(code: 'default.button.update.label', default: 'Update')}" />

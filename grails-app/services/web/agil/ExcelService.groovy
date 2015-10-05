@@ -75,24 +75,23 @@ class ExcelService {
         Produto.withTransaction {
             Produto.list().each { p ->
                 def m = p.descricao =~ /\d*?X\d*?X?\d*?$/
-                if (m.find()) {
-                    p.unidades.each { u ->
+                if ( m.find() ) {
+                    p.unidades.each { unidade ->
                         def list = m.group(0).split('X')
-                        if (u.tipoUnidade.tipo == "CXA") {
+                        if (unidade.tipo.descricao == "CXA") {
                             if (list.length == 2) {
-                                u.tipoUnidade.capacidade = list[0].trim() as Integer
+                                unidade.capacidade = list[0].trim() as Integer
                             } else if (list.length == 3) {
-                                u.tipoUnidade.capacidade = list[2].trim() as Integer
+                                unidade.capacidade = list[2].trim() as Integer
                             }
                         } else {
-                            u.tipoUnidade.capacidade = 1
+                            unidade.capacidade = 1
                         }
-                        println "${u.tipoUnidade.tipo} - ${u.tipoUnidade.capacidade} - ${u.estoque} - ${m.group(0).split('X')} - ${p.descricao}"
-                    } // each unidades
+                        println "${unidade.tipo} - ${unidade.capacidade} - ${m.group(0).split('X')} - ${p.descricao}"
+                    } // each lotes
                 } // if
-            }
-
-        }
+            } // end each
+        } // end transaction
 	}
 
     def loadProdutos() {
@@ -130,8 +129,6 @@ class ExcelService {
 		for (i in 1..181) {
 			row = sheet.getRow(i)
 			def tipo = row.getCell(2)?.getStringCellValue()
-			if (tipo == "DP" || tipo == "PT")
-				continue
 			def unidade  = new Lote()
 			unidade.id = row.getCell(0)?.getNumericCellValue() as Long
 			unidade.vencimento = new Date()
@@ -139,12 +136,12 @@ class ExcelService {
 			unidade.produto = produtoInstance
 			unidade.valor = row.getCell(3)?.getNumericCellValue()
 			unidade.valorMinimo = row.getCell(4)?.getNumericCellValue()
-			if (tipo?.trim() == "UNI") {
-				unidade.tipoUnidade = new Unidade(id: 1, tipo: "UNI", capacidade: 1, produto: produtoInstance)
+			if (tipo?.trim() in ["UNI", "DP", "PT"]) {
+				unidade.unidade = new Unidade(id: 1, tipo: TipoUnidade.get(1), capacidade: 1, produto: produtoInstance)
 			} else if (tipo?.trim() == "CXA") {
-				unidade.tipoUnidade = new Unidade(tipo: 'CXA', capacidade: 0, produto: produtoInstance)
+				unidade.unidade = new Unidade(tipo: TipoUnidade.get(2), capacidade: 0, produto: produtoInstance)
 			}
-			produtoInstance.addToTiposUnidade(unidade.tipoUnidade)
+			produtoInstance.addToUnidades(unidade.unidade)
 			produtoInstance.save(flush: true)
 			unidade.statusLote = StatusLote.ESGOTADO
 			unidade.save(insert: true, flush: true)
@@ -171,22 +168,7 @@ class ExcelService {
 		fileInputStream.close();
     }
 
-    def inserts() {
-    	new Prazo(id: 1, parcela: 0, periodicidade: "AVISTA" ).save(insert: true, flush: true)
-		new Prazo(id: 2, parcela: 1, periodicidade: "7" ).save(insert: true, flush: true)
-		new Prazo(id: 3, parcela: 1, periodicidade: "14" ).save(insert: true, flush: true)
-		new Prazo(id: 4, parcela: 1, periodicidade: "21" ).save(insert: true, flush: true)
-		new Prazo(id: 5, parcela: 2, periodicidade: "7 - 14" ).save(insert: true, flush: true)
-		new Prazo(id: 6, parcela: 2, periodicidade: "7 - 21" ).save(insert: true, flush: true)
-		new Prazo(id: 7, parcela: 2, periodicidade: "14 - 21" ).save(insert: true, flush: true)
-		new Prazo(id: 8, parcela: 3, periodicidade: "7 - 14 - 21" ).save(insert: true, flush: true)
-
-    	new Vendedor(id: 1, codigo: "001").save(flush: true)
-    	new Vendedor(id: 2, codigo: "002").save(flush: true)
-    }
-
     def load() {
-    	inserts()
     	loadClientes()
     	loadProdutos()
     	loadUnidades()

@@ -2,6 +2,8 @@ package web.agil
 
 class ItemPedido {
 
+    transient Boolean calcular = true
+    transient Lote loteTemp
 	Integer quantidade = 0
 	Integer bonificacao = 0
 	Double desconto = 0
@@ -15,7 +17,7 @@ class ItemPedido {
     }
 
 	def isAbaixoDoMinimo() {
-		precoNegociado < unidade.valorMinimo
+		precoNegociado < loteTemp?.valorMinimo
 	}
 
 	def isBonificado() {
@@ -37,10 +39,19 @@ class ItemPedido {
     	calc();
     }
 
+    Lote getLoteTemp() {
+        if (!loteTemp)
+            loteTemp = Lote.executeQuery("from Lote l where l.produto = ? and l.unidade = ? order by l.dataCriacao desc",
+                    [produto, unidade], [max: 1]).first()
+        loteTemp
+    }
+
     private calc() {
-    	if (quantidade == 0 || !unidade) return 0
-    	total = quantidade * unidade?.valor * ( 1 - ( desconto / 100 ) )
-    	precoNegociado = total / (bonificacao + quantidade)
+        if (calcular) {
+            if (quantidade == 0 && !loteTemp) return 0
+            total = quantidade * loteTemp?.valor * ( 1 - ( desconto / 100 ) )
+            precoNegociado = total / (bonificacao + quantidade)
+        }
     }
 
 }

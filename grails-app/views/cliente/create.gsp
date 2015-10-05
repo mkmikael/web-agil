@@ -28,7 +28,7 @@
             
             <g:form action="save">
                 <fieldset class="form">
-                    <g:render template="/cliente/form" model="[clienteInstance: cliente]" />
+                    <g:render template="/cliente/form" model="[clienteInstance: cliente, participanteType: participanteType]" />
                 </fieldset>
                 <fieldset class="buttons">
                     <g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />

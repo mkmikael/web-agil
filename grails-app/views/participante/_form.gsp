@@ -18,11 +18,11 @@
 </div>
 <div class="fieldcontain">
 	<label for="participante.email">E-mail</label>
-	<g:field type="email" name="participante.email" value="${participanteInstance?.email}" />
+	<g:textField type="email" name="participante.email" value="${participanteInstance?.email}" />
 </div>
 <div class="fieldcontain">
 	<label for="participante.telefone">Telefone</label>
-	<g:field type="phone" name="participante.telefone" value="${participanteInstance?.telefone}" required="required" />
+	<g:textField type="phone" name="participante.telefone" class="telefone" value="${participanteInstance?.telefone}" required="required" />
 </div>
 <div class="fieldcontain">
 	<label for="participante.contato">Contato</label>

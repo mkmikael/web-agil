@@ -4,7 +4,7 @@
         <meta name="layout" content="main" />
         <g:set var="entityName" value="${message(code: 'cliente.label', default: 'Cliente')}" />
         <title><g:message code="default.create.label" args="[entityName]" /></title>
-        <asset:javascript src="owner/cliente-choose.js" />
+        <asset:javascript src="/owner/cliente-choose.js" />
     </head>
     <body>
         <a href="#create-cliente" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
@@ -33,15 +33,15 @@
                     </div>
                     <div class="fieldcontain">
                         <label for="cpf">CPF</label>
-                        <g:field name="cpf"/>
+                        <g:textField name="cpf" class="cpf"/>
                     </div>
 
                     <div class="fieldcontain">
                         <label for="juridica"><input id="juridica" name="choose" value="PJ" type="radio"/>Pessoa Jurídica </label>
                     </div>
-                    <div class="fieldcontain">                
+                    <div class="fieldcontain">
                         <label for="cnpj">CNPJ</label>
-                        <g:field name="cnpj"/>
+                        <g:textField name="cnpj" class="cnpj"/>
                     </div>
                 </fieldset>
                 <fieldset class="buttons">

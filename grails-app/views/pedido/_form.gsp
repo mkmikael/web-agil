@@ -11,7 +11,7 @@
 </div>
 <div class="fieldcontain">
 	<label for="prazo.id">Prazo</label>
-	<g:select name="prazo.id" from="${web.agil.Prazo.list()}" optionKey="id" optionValue="periodicidade" />
+	<g:select name="prazo.id" from="${prazoList}" optionKey="id" optionValue="periodicidade" />
 </div>
 
 <div style="float: right; font-size: 1.8em">
@@ -46,9 +46,9 @@
 			<tr>
 				<td><g:select name="item.unidade.id" style="width: 100%" from="${loteList}" optionKey="id" /></td>
 				<td>R$ <span id="preco">3</span></td>
-				<td><g:field type="number" name="item.quantidade" autocomplete="off" value="0" style="max-width: 70px" /></td>
-				<td><g:field type="number" name="item.desconto" autocomplete="off" value="0" style="max-width: 70px" /></td>
-				<td><g:field type="number" name="item.bonificacao" autocomplete="off" value="0" style="max-width: 70px" /></td>
+				<td><g:textField class="money" name="item.quantidade" autocomplete="off" value="0" style="max-width: 70px" /></td>
+				<td><g:textField class="money" name="item.desconto" autocomplete="off" value="0" style="max-width: 70px" /></td>
+				<td><g:textField class="money" name="item.bonificacao" autocomplete="off" value="0" style="max-width: 70px" /></td>
 				<td>R$ <span id="pv">0</span></td>
 				<td>R$ <span id="subtotal" class="subtotal">0</span></td>
 			</tr>

@@ -1,6 +1,7 @@
 package web.agil
 
 import grails.converters.JSON
+import web.agil.enums.StatusLote
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
@@ -21,13 +22,20 @@ class ProdutoController {
             produto.fornecedor = p.fornecedor?.descricao
             produto.grupo = p.grupo?.descricao
             def unidades = []
-            p.unidades?.each { u ->
+            def lotes = Lote.executeQuery("""
+                      select l.id, l.produto.id, l.unidade.tipo.descricao,
+                        l.valor, l.valorMinimo, sum(l.estoque)
+                        from Lote l where l.produto = :produto
+                        group by l.unidade""", [produto: p])
+            println lotes
+            lotes?.each { lote ->
                 def unidade = [:]
-                unidade.id = u.id
-                unidade.tipo = u.tipoUnidade?.tipo
-                unidade.valor = u.valor
-                unidade.valorMinimo = u.valorMinimo
-                unidade.produto = [id: p.id]
+                unidade.id = lote[0]
+                unidade.produto = [id: lote[1]]
+                unidade.tipo = lote[2]
+                unidade.valor = lote[3]
+                unidade.valorMinimo = lote[4]
+                unidade.quantidade = lote[5]
                 unidades << unidade
             }
             produto.unidades = unidades
@@ -71,6 +79,7 @@ class ProdutoController {
                 produto.addToTributos(new ProdutoTributo(produto: produto, tributo: it))
             }
         }
+        println(produto.tributos)
         produto.save()
         respond produto
     }

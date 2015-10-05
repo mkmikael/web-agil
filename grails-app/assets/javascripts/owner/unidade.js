@@ -10,16 +10,16 @@ $(function() {
 		}
 	});
 
-	$('#produto\\.id, #tipoUnidade\\.id').change(function() {
+	$('#produto\\.id, #unidade\\.id').change(function() {
 		var produtoId = $('#produto\\.id').val();
         var id = this.id;
-		var unidade = $('#tipoUnidade\\.id').val();
-		$.ajax('/web-agil/unidade/tiposUnidadeByProduto/' + produtoId, {
-            data: { tipoUnidadeId: unidade },
+		var unidade = $('#unidade\\.id').val();
+		$.ajax('/web-agil/lote/tiposUnidadeByProduto/' + produtoId, {
+            data: { unidadeId: unidade },
 			success: function(data) {
-				if (id != "tipoUnidade.id") {
-					var tipoUnidade = $(data).find('#tipoUnidade\\.id').html();
-					$('#tipoUnidade\\.id').html( tipoUnidade );
+				if (id != "unidade.id") {
+					var unidade = $(data).find('#unidade\\.id').html();
+					$('#unidade\\.id').html( unidade );
 				}
 
                 var valorMinimo = $(data).find('#valorMinimo').val();

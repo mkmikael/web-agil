@@ -3,9 +3,9 @@ package web.agil
 import grails.test.mixin.*
 import spock.lang.*
 
-@TestFor(UnidadeController)
+@TestFor(LoteController)
 @Mock(Lote)
-class UnidadeControllerSpec extends Specification {
+class LoteControllerSpec extends Specification {
 
     def populateValidParams(params) {
         assert params != null
@@ -52,7 +52,7 @@ class UnidadeControllerSpec extends Specification {
             controller.save(unidade)
 
         then:"A redirect is issued to the show action"
-            response.redirectedUrl == '/unidade/show/1'
+            response.redirectedUrl == '/lote/show/1'
             controller.flash.message != null
             Lote.count() == 1
     }
@@ -96,7 +96,7 @@ class UnidadeControllerSpec extends Specification {
             controller.update(null)
 
         then:"A 404 error is returned"
-            response.redirectedUrl == '/unidade/index'
+            response.redirectedUrl == '/lote/index'
             flash.message != null
 
         when:"An invalid domain instance is passed to the update action"
@@ -117,7 +117,7 @@ class UnidadeControllerSpec extends Specification {
 
         then:"A redirect is issued to the show action"
             unidade != null
-            response.redirectedUrl == "/unidade/show/$unidade.id"
+            response.redirectedUrl == "/lote/show/$unidade.id"
             flash.message != null
     }
 
@@ -128,7 +128,7 @@ class UnidadeControllerSpec extends Specification {
             controller.delete(null)
 
         then:"A 404 is returned"
-            response.redirectedUrl == '/unidade/index'
+            response.redirectedUrl == '/lote/index'
             flash.message != null
 
         when:"A domain instance is created"
@@ -144,7 +144,7 @@ class UnidadeControllerSpec extends Specification {
 
         then:"The instance is deleted"
             Lote.count() == 0
-            response.redirectedUrl == '/unidade/index'
+            response.redirectedUrl == '/lote/index'
             flash.message != null
     }
 }

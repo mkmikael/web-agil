@@ -5,7 +5,7 @@ $(function() {
 
 	function updateItem(select) {
 		var spanPreco = $(select).parent().parent();
-		$.ajax('/web-agil/unidade/getUnidade/' + $(select).val(), 
+		$.ajax('/web-agil/lote/getUnidade/' + $(select).val(),
 		{
 			success: function(data) {
 				spanPreco.find('#preco').html(data.valor);
@@ -57,12 +57,12 @@ $(function() {
 			calcular(this);
 		});
 
-		row.find("#item\\.unidade\\.id").change(function() {
+		row.find("#item\\.lote\\.id").change(function() {
 			updateItem(this);
 			calcular(this);
 		});
 
-		updateItem(row.find("#item\\.unidade\\.id"));
+		updateItem(row.find("#item\\.lote\\.id"));
 		$('#itens tbody').append( row.find("tr") );
 	});
 

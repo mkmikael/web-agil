@@ -13,6 +13,22 @@ class Participante {
 	String telefone
 	String contato
 
+    void setTelefone(String telefone) {
+        this.telefone = Util.onlyNumber(telefone)
+    }
+
+    String getTelefone() {
+        telefone
+    }
+
+    Boolean isOrganizacao() {
+        this.class == Organizacao
+    }
+
+    Boolean isPessoa() {
+        this.class == Pessoa
+    }
+
 	static hasMany = [papeis: Papel]
 
     static constraints = {

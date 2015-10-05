@@ -4,7 +4,6 @@ import grails.converters.JSON
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
-import web.agil.*
 import web.agil.enums.*
 import web.agil.util.Util
 
@@ -62,9 +61,9 @@ class ClienteController {
                 if (params.search_razaoSocial)
                     ilike('razaoSocial', "%${params.search_razaoSocial}%")
                 if (params.search_cpf)
-                    ilike('cpf', "%${params.search_cpf}%")
+                    ilike('cpf', "%${ Util.onlyNumber( params.search_cpf ) }%")
                 if (params.search_cnpj)
-                    ilike('cnpj', "%${params.search_cnpj}%")
+                    ilike('cnpj', "%${ Util.onlyNumber( params.search_cnpj ) }%")
             } // participante
         } // criteria
         def clienteList = Cliente.createCriteria().list(params, criteria)
@@ -78,12 +77,26 @@ class ClienteController {
 
     def create() {
         def cliente = new Cliente(params)
+        def participante
+        def participanteType
         if (params.cpf) {
-            cliente.participante = new Pessoa(params)
+            participanteType = "PF"
+            participante = Pessoa.findByCpf( Util.onlyNumber( params.cpf ) )
+            if (!participante)
+                participante = new Pessoa(params)
         } else if (params.cnpj) {
-            cliente.participante = new Organizacao(params)
+            participanteType = "PJ"
+            participante = Organizacao.findByCnpj( Util.onlyNumber( params.cnpj ) )
+            if (!participante)
+                participante = new Organizacao(params)
         }
-        respond cliente
+        if (participante.isAttached() && Cliente.findByParticipante(participante)) {
+            flash.message = "O Cliente ja esta cadastrado no sistema!"
+            redirect(action: 'choose')
+            return
+        }
+        cliente.participante = participante
+        respond cliente, model: [participanteType: participanteType,situacaoList: Situacao.values(), semanaList: Semana.values(), vendedorList: Vendedor.list()]
     }
 
     @Transactional
@@ -121,7 +134,7 @@ class ClienteController {
     }
 
     def edit(Cliente cliente) {
-        respond cliente
+        respond cliente, model: [situacaoList: Situacao.values(), semanaList: Semana.values(), vendedorList: Vendedor.list()]
     }
 
     @Transactional

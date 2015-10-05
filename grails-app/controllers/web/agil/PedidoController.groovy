@@ -1,7 +1,9 @@
 package web.agil
 
+import grails.converters.JSON
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
+import web.agil.util.Util
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
@@ -12,30 +14,41 @@ class PedidoController {
 
     static allowedMethods = [savePedidos: "POST", save: "POST", update: "PUT", delete: "DELETE"]
 
+    @Transactional
     def savePedidos(String pedidos) {
+        println pedidos
         def pedidosJA = new JSONArray(pedidos);
+        def response = []
         for (JSONObject pedidoJO : pedidosJA) {
             def pedido = new Pedido()
             pedido.dataCriacao = new Date(pedidoJO.getString("dataCriacao"))
             pedido.dataFaturamento = new Date(pedidoJO.getString("dataDeFaturamento"))
+            pedido.dataSincronizacao = new Date()
             pedido.cliente = Cliente.get(pedidoJO.getLong("cliente"))
             pedido.prazo = Prazo.get(pedidoJO.getLong("prazo"))
             pedido.total = pedidoJO.getDouble("total")
+            pedido.codigo = Util.generateCodigo(12, Pedido.count() + 1)
 
             JSONArray itensJA = pedidoJO.getJSONArray("itensPedido")
             for (JSONObject itemJO : itensJA) {
-                def itemPedido = new ItemPedido(
-                    bonificacao: itemJO.getInt("bonificacao"),
-                    desconto: itemJO.getDouble("desconto"),
-                    precoNegociado: itemJO.getDouble("precoNegociado"),
-                    quantidade: itemJO.getInt("quantidade"),
-                    total: itemJO.getDouble("total"),
-                )
+                def produto = Produto.get(itemJO.getLong("produto"))
+                def unidade = produto.unidades.find { it.tipo.descricao == itemJO.getString("unidade") }
+                def itemPedido = new ItemPedido()
+                itemPedido.calcular = false
+                itemPedido.bonificacao = itemJO.getInt("bonificacao")
+                itemPedido.desconto = itemJO.getDouble("desconto")
+                itemPedido.precoNegociado = itemJO.getDouble("precoNegociado")
+                itemPedido.quantidade = itemJO.getInt("quantidade")
+                itemPedido.total = itemJO.getDouble("total")
+                itemPedido.produto = produto
+                itemPedido.unidade = unidade
                 pedido.addToItensPedido(itemPedido)
             }
+            pedido.save()
+            response << [codigo: pedido.getCodigo(), id: pedidoJO.getLong('id')]
         }
-        println pedidosJson.toString();
-        render { "OK!" }
+        println response
+        render response as JSON
     }
 
     @Transactional
@@ -94,7 +107,7 @@ class PedidoController {
         } // end criteria
         def pedidoList = Pedido.createCriteria().list(params, criteria)
         def pedidoCount = Pedido.createCriteria().count(criteria)
-        respond pedidoList, model:[pedidoCount: pedidoCount] + params
+        respond pedidoList, model:[pedidoCount: pedidoCount, statusPedidoList: StatusPedido.values(), semanaList: Semana.values()] + params
     }
 
     def show(Pedido pedido) {
@@ -102,7 +115,7 @@ class PedidoController {
     }
 
     def create() {
-        respond new Pedido(params), model: [loteList: Lote.findAllByStatusLote(StatusLote.DISPONIVEL)]
+        respond new Pedido(params), model: [loteList: Lote.findAllByStatusLote(StatusLote.DISPONIVEL), prazoList: Prazo.list()]
     }
 
     @Transactional
@@ -161,7 +174,7 @@ class PedidoController {
     }
 
     def edit(Pedido pedido) {
-        respond pedido
+        respond pedido, model: [prazoList: Prazo.list(), loteList: Lote.findAllByStatusLote(StatusLote.DISPONIVEL)]
     }
 
     @Transactional

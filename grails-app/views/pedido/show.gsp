@@ -68,7 +68,7 @@
                     <g:each in="${pedido.itensPedido}" var="item">
                         <tr>
                             <td>${item.unidade?.produto?.descricao}</td>
-                            <td>R$ <g:formatNumber number="${item.unidade?.valor}" maxFractionDigits="2" /></td>
+                            %{--<td>R$ <g:formatNumber number="${item.unidade?.valor}" maxFractionDigits="2" /></td>--}%
                             <td>${item?.quantidade}</td>
                             <td><g:formatNumber number="${item?.desconto}" maxFractionDigits="2" />%</td>
                             <td>${item?.bonificacao}</td>

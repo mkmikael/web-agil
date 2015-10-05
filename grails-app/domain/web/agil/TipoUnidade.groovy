@@ -6,4 +6,8 @@ class TipoUnidade {
 
     static constraints = {
     }
+
+    String toString() {
+        descricao
+    }
 }

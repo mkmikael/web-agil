@@ -8,7 +8,7 @@ class Lote {
 	String codigo
 	Date dataCriacao = new Date()
 	Date vencimento
-	Unidade tipoUnidade
+	Unidade unidade
 	Double valorDeCompra = 0
 	Double valor = 0
 	Double valorMinimo = 0
@@ -28,7 +28,7 @@ class Lote {
 	}
 
     String toString() {
-    	produto?.codigo + " - " + produto?.descricao + " - " + tipoUnidade.tipo
+    	produto?.codigo + " - " + produto?.descricao + " - " + unidade.tipo
     }
 
 }

@@ -13,16 +13,16 @@ class Produto {
             codigo = Util.generateCodigo(12, this.count() + 1)
 	}
 
-	static hasMany = [unidades: Lote, tiposUnidade: Unidade, tributos: ProdutoTributo]
+	static hasMany = [lotes: Lote, unidades: Unidade, tributos: ProdutoTributo]
 	static belongsTo = [fornecedor: Fornecedor, grupo: Grupo]
     static constraints = {
     	codigo nullable: true
         ncm nullable: true
     }
     static mapping = {
-        unidades sort: 'dataCriacao', order: 'desc'
+        lotes sort: 'dataCriacao', order: 'desc'
         tributos sort: 'tributo.id'
-        tiposUnidade sort: 'tipo'
+        unidades sort: 'tipo'
     }
 
     String toString() {

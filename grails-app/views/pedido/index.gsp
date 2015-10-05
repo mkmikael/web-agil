@@ -1,3 +1,4 @@
+<%@ page import="web.agil.*" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -6,7 +7,6 @@
         <title><g:message code="default.list.label" args="[entityName]" /></title>
     </head>
     <body>
-        <a href="#list-pedido" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
         <div class="nav" role="navigation">
             <ul>
                 <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
@@ -56,7 +56,7 @@
                     <g:textField name="search_codigo_pedido" value="${search_codigo_pedido}" />
 
                     <label>Status</label>
-                    <g:select name="search_status" from="${web.agil.enums.StatusPedido.values()}" value="${search_status}" noSelection="['': 'TODOS']" />
+                    <g:select name="search_status" from="${statusPedidoList}" value="${search_status}" noSelection="['': 'TODOS']" />
                 </fieldset>
 
                 <fieldset>
@@ -72,13 +72,13 @@
                 <table>
                     <thead>
                         <th><g:checkBox name="geral" /></th>
-                        <g:sortableColumn property="participante.codigo" title="Código" />
-                        <g:sortableColumn property="participante.cliente" title="Cliente" />
-                        <g:sortableColumn property="participante.dataCriacao" title="Dt do Pedido" />
-                        <g:sortableColumn property="participante.dataFaturamento" title="Faturamento" />
-                        <g:sortableColumn property="statusPedido" title="Status" />
-                        <g:sortableColumn property="participante.prazo" title="Prazo" />
-                        <g:sortableColumn property="participante.total" title="Total" />
+                        <g:sortableColumn params="${params}" property="participante.codigo" title="Código" />
+                        <g:sortableColumn params="${params}" property="participante.cliente" title="Cliente" />
+                        <g:sortableColumn params="${params}" property="participante.dataCriacao" title="Dt do Pedido" />
+                        <g:sortableColumn params="${params}" property="participante.dataFaturamento" title="Faturamento" />
+                        <g:sortableColumn params="${params}" property="statusPedido" title="Status" />
+                        <g:sortableColumn params="${params}" property="participante.prazo" title="Prazo" />
+                        <g:sortableColumn params="${params}" property="participante.total" title="Total" />
                         <th>Abaixo Min.</th>
                         <th>Campanha</th>
                     </thead>
@@ -87,12 +87,12 @@
                             <tr>
                                 <td><g:checkBox name="check${pedido.id}" /></td>
                                 <td><g:link action="show" id="${pedido.id}">${pedido.codigo}</g:link></td>
-                                <g:if test="${pedido.cliente?.participante.class == web.agil.Organizacao}">
+                                <g:if test="${pedido.cliente?.participante.isOrganizacao()}">
                                     <td>
                                         <g:link controller="cliente" action="show" id="${pedido.cliente?.id}">${pedido.cliente?.participante?.codigo} - ${pedido.cliente?.participante?.razaoSocial}</g:link>
                                     </td>
                                 </g:if>
-                                <g:elseif test="${pedido.cliente?.participante.class == web.agil.Pessoa}">
+                                <g:elseif test="${pedido.cliente?.participante.isPessoa()}">
                                     <td>
                                         <g:link controller="cliente" action="show" id="${pedido.cliente?.id}">
                                             ${pedido.cliente?.participante?.codigo} - ${pedido.cliente?.participante?.nome}
