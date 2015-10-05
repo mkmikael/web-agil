@@ -44,7 +44,7 @@
 	<table>
 		<tbody>
 			<tr>
-				<td><g:select name="item.unidade.id" style="width: 100%" from="${loteList}" optionKey="id" /></td>
+				<td><g:select name="item.lote.id" style="width: 100%" from="${loteList}" optionKey="id" /></td>
 				<td>R$ <span id="preco">3</span></td>
 				<td><g:textField class="money" name="item.quantidade" autocomplete="off" value="0" style="max-width: 70px" /></td>
 				<td><g:textField class="money" name="item.desconto" autocomplete="off" value="0" style="max-width: 70px" /></td>
