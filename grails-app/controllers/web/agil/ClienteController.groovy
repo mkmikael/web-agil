@@ -96,7 +96,7 @@ class ClienteController {
             return
         }
         cliente.participante = participante
-        respond cliente, model: [participanteType: participanteType,situacaoList: Situacao.values(), semanaList: Semana.values(), vendedorList: Vendedor.list()]
+        respond cliente, model: [participanteType: participanteType,situacaoList: Situacao.values()*.name(), semanaList: Semana.values(), vendedorList: Vendedor.list()]
     }
 
     @Transactional

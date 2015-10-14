@@ -30,6 +30,7 @@ html.no-cssgradients {
 
 html * {
     margin: 0;
+    font-size: small;
 }
 
 body {

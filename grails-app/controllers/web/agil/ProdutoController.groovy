@@ -44,6 +44,26 @@ class ProdutoController {
         render list as JSON
     }
 
+    def listEstoque() {
+        params.max = Math.min(params.int('max')?: 25, 100)
+        params.offset = params.offset ?: 0
+        def criteria = {
+            projections {
+                property "produto", "produto"
+                unidade { tipo { property "descricao", "unidade" } }
+                property "valor", "valor"
+                property "valorMinimo", "valorMinimo"
+                sum "estoque", "total"
+            }
+            groupProperty "unidade"
+            if (params.search_produto)
+                produto { ilike "descricao", "%${params.search_produto}%" }
+        }
+        def estoqueList = Lote.createCriteria().list(params, criteria)
+        def estoqueCount = Lote.createCriteria().count(criteria)
+        [estoqueList: estoqueList, estoqueCount: estoqueCount] + params
+    }
+
     @Transactional
     def saveTributo(Long id, Double taxa) {
         def tributo = ProdutoTributo.get(id)

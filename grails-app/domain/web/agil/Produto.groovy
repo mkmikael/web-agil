@@ -7,6 +7,7 @@ class Produto {
 	String codigo
 	String descricao
     String ncm
+    Integer estoque
 
 	def beforeInsert = {
         if (!codigo)

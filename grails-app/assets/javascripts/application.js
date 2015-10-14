@@ -7,6 +7,7 @@
 //
 //= require jquery-2.1.3.js
 //= require jquery-ui.min.js
+//= require validar-cnpj-cpf.js
 //= require_tree .
 //= require_self
 

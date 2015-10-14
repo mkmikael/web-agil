@@ -37,6 +37,10 @@
                     </span>
                 </li>
                 <li class="fieldcontain">
+                    <span class="property-label">Data de Sincrinizacao</span>
+                    <span class="property-value">${g.formatDate(date: pedido.dataSincronizacao, format: "dd/MM/yyyy HH:mm")}</span>
+                </li>
+                <li class="fieldcontain">
                     <span class="property-label">Data do Pedido</span>
                     <span class="property-value">${g.formatDate(date: pedido.dataCriacao, format: "dd/MM/yyyy HH:mm")}</span>
                 </li>
@@ -57,23 +61,36 @@
             <table id="itens">
                 <thead>
                     <th>Produto</th>
-                    <th>Preço</th>
+                    <th>Unidade</th>
                     <th>Quant.</th>
+                    <th>Estoque</th>
+                    <th>Novo Estoque</th>
                     <th>Desconto</th>
                     <th>Bonificação</th>
+                    <th>Preço</th>
+                    <th>Preço Minimo</th>
+                    <th>PP</th>
                     <th>PV</th>
                     <th>Total</th>
+                    <th>Abaixo Min</th>
                 </thead>
                 <tbody>
                     <g:each in="${pedido.itensPedido}" var="item">
+                        <g:set var="novoEstoque" value="${item?.estoque - item?.quantidade}"/>
                         <tr>
-                            <td>${item.unidade?.produto?.descricao}</td>
-                            %{--<td>R$ <g:formatNumber number="${item.unidade?.valor}" maxFractionDigits="2" /></td>--}%
+                            <td>${item?.produto?.descricao}</td>
+                            <td>${item?.unidade}</td>
                             <td>${item?.quantidade}</td>
+                            <td>${item?.estoque}</td>
+                            <td>${novoEstoque < 0 ? 'INDISPONIVEL' : novoEstoque}</td>
                             <td><g:formatNumber number="${item?.desconto}" maxFractionDigits="2" />%</td>
                             <td>${item?.bonificacao}</td>
+                            <td>R$ <g:formatNumber number="${item?.valor}" maxFractionDigits="2" /></td>
+                            <td>R$ <g:formatNumber number="${item?.valorMinimo}" maxFractionDigits="2" /></td>
+                            <td>R$ <g:formatNumber number="${item?.valor - (item?.valor * (item?.desconto / 100))}" maxFractionDigits="2" /></td>
                             <td>R$ <g:formatNumber number="${item?.precoNegociado}" maxFractionDigits="2" /></td>
                             <td>R$ <g:formatNumber number="${item?.total}" maxFractionDigits="2" /></td>
+                            <td><g:formatBoolean boolean="${item?.valorMinimo > item?.precoNegociado}" /></td>
                         </tr>
                     </g:each>
                 </tbody>

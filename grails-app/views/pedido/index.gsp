@@ -69,16 +69,17 @@
                     <g:actionSubmit class="btn" value="Negar" action="negarPedidos"/>
                     <g:actionSubmit class="btn" value="Confirmar" action="negarPedidos"/>
                 </fieldset>
-                <table>
+                <table id="table-pedido">
                     <thead>
                         <th><g:checkBox name="geral" /></th>
-                        <g:sortableColumn params="${params}" property="participante.codigo" title="Código" />
+                        <g:sortableColumn params="${params}" property="codigo" title="Código" />
                         <g:sortableColumn params="${params}" property="participante.cliente" title="Cliente" />
-                        <g:sortableColumn params="${params}" property="participante.dataCriacao" title="Dt do Pedido" />
-                        <g:sortableColumn params="${params}" property="participante.dataFaturamento" title="Faturamento" />
+                        <g:sortableColumn params="${params}" property="dataSincronizacao" title="Dt de Sincronizacao" />
+                        <g:sortableColumn params="${params}" property="dataCriacao" title="Dt do Pedido" />
+                        <g:sortableColumn params="${params}" property="dataFaturamento" title="Faturamento" />
                         <g:sortableColumn params="${params}" property="statusPedido" title="Status" />
-                        <g:sortableColumn params="${params}" property="participante.prazo" title="Prazo" />
-                        <g:sortableColumn params="${params}" property="participante.total" title="Total" />
+                        <g:sortableColumn params="${params}" property="prazo" title="Prazo" />
+                        <g:sortableColumn params="${params}" property="total" title="Total" />
                         <th>Abaixo Min.</th>
                         <th>Campanha</th>
                     </thead>
@@ -89,7 +90,9 @@
                                 <td><g:link action="show" id="${pedido.id}">${pedido.codigo}</g:link></td>
                                 <g:if test="${pedido.cliente?.participante.isOrganizacao()}">
                                     <td>
-                                        <g:link controller="cliente" action="show" id="${pedido.cliente?.id}">${pedido.cliente?.participante?.codigo} - ${pedido.cliente?.participante?.razaoSocial}</g:link>
+                                        <g:link controller="cliente" action="show" id="${pedido.cliente?.id}">
+                                            ${pedido.cliente?.participante?.codigo} - ${pedido.cliente?.participante?.razaoSocial}
+                                        </g:link>
                                     </td>
                                 </g:if>
                                 <g:elseif test="${pedido.cliente?.participante.isPessoa()}">
@@ -99,6 +102,7 @@
                                         </g:link>
                                     </td>
                                 </g:elseif>
+                                <td>${g.formatDate(date: pedido.dataSincronizacao, format: "dd/MM/yyyy HH:mm")}</td>
                                 <td>${g.formatDate(date: pedido.dataCriacao, format: "dd/MM/yyyy HH:mm")}</td>
                                 <td>${g.formatDate(date: pedido.dataFaturamento, format: "dd/MM/yyyy")}</td>
                                 <td>${pedido.statusPedido}</td>

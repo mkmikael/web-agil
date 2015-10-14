@@ -4,7 +4,6 @@ import grails.converters.JSON
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
 import web.agil.util.Util
-
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 import web.agil.enums.*
@@ -21,9 +20,15 @@ class PedidoController {
         def response = []
         for (JSONObject pedidoJO : pedidosJA) {
             def pedido = new Pedido()
-            pedido.dataCriacao = new Date(pedidoJO.getString("dataCriacao"))
-            pedido.dataFaturamento = new Date(pedidoJO.getString("dataDeFaturamento"))
-            pedido.dataSincronizacao = new Date()
+            try {
+                pedido.dataCriacao = new Date(pedidoJO.getString("dataCriacao"))
+                pedido.dataFaturamento = new Date(pedidoJO.getString("dataDeFaturamento"))
+                pedido.dataSincronizacao = new Date()
+            } catch (Exception e) {
+                pedido.dataCriacao = new Date()
+                pedido.dataFaturamento = new Date()
+                pedido.dataSincronizacao = new Date()
+            }
             pedido.cliente = Cliente.get(pedidoJO.getLong("cliente"))
             pedido.prazo = Prazo.get(pedidoJO.getLong("prazo"))
             pedido.total = pedidoJO.getDouble("total")
@@ -34,12 +39,15 @@ class PedidoController {
                 def produto = Produto.get(itemJO.getLong("produto"))
                 def unidade = produto.unidades.find { it.tipo.descricao == itemJO.getString("unidade") }
                 def itemPedido = new ItemPedido()
+                itemPedido.confirmado = false
                 itemPedido.calcular = false
                 itemPedido.bonificacao = itemJO.getInt("bonificacao")
                 itemPedido.desconto = itemJO.getDouble("desconto")
                 itemPedido.precoNegociado = itemJO.getDouble("precoNegociado")
                 itemPedido.quantidade = itemJO.getInt("quantidade")
                 itemPedido.total = itemJO.getDouble("total")
+                itemPedido.valor = itemJO.getDouble("valor")
+                itemPedido.valorMinimo = itemJO.getDouble("valorMinimo")
                 itemPedido.produto = produto
                 itemPedido.unidade = unidade
                 pedido.addToItensPedido(itemPedido)
@@ -81,6 +89,8 @@ class PedidoController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 30, 100)
+        params.sort = params.sort ?: "dataSincronizacao"
+        params.order = params.order ?: "desc"
         def criteria = {
             if (params.search_codigo_pedido)
                 ilike('codigo', "%${params.search_codigo_pedido}%")
