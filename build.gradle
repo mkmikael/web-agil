@@ -6,9 +6,10 @@ buildscript {
         mavenLocal()
         maven { url "https://repo.grails.org/grails/core" }
     }
-    dependencies {
+    dependencies {        
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
         classpath 'com.bertramlabs.plugins:asset-pipeline-gradle:2.5.0'
+        classpath "org.grails.plugins:hibernate:4.3.10.5"
     }
 }
 
@@ -53,7 +54,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-logging"
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-autoconfigure"
-    provided "org.springframework.boot:spring-boot-starter-tomcat"
+    compile "org.springframework.boot:spring-boot-starter-tomcat"
     compile "org.grails:grails-dependencies"
     compile "org.grails:grails-web-boot"
 
@@ -62,15 +63,14 @@ dependencies {
     compile "org.hibernate:hibernate-ehcache"
     compile "org.grails.plugins:scaffolding"
 
-    // *** My Dependencies
-    compile 'org.apache.poi:poi:3.7'
-    runtime 'mysql:mysql-connector-java:5.1.33'
+    runtime "org.grails.plugins:asset-pipeline"
+
+    // My
+    compile "org.apache.poi:poi:3.7"
+    runtime "mysql:mysql-connector-java:5.1.33"
     compile "org.grails.plugins:mail:2.0.0.RC2"
     compile "org.grails.plugins:export:2.0.0"
     compile "org.grails.plugins:spring-security-core:3.0.0.M1"
-    runtime 'org.grails.plugins:grails-console:2.0.2'
-    // ***
-    runtime "org.grails.plugins:asset-pipeline"
 
     testCompile "org.grails:grails-plugin-testing"
     testCompile "org.grails.plugins:geb"
