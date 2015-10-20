@@ -48,15 +48,19 @@
                         <g:sortableColumn property="descricao" title="Descrição" />
                         <g:sortableColumn property="fornecedor.descricao" title="Fornecedor" />
                         <g:sortableColumn property="grupo.descricao" title="Grupo" />
+                        <g:sortableColumn property="estoque" title="CXA" />
+                        <th>UNI</th>
                     </thead>
                     <tbody>
-                        <g:each in="${produtoList}" var="produto">
-                            <tr style="background-color: ${quantidade == 0 ? 'yellow' : 'transparent'}">
+                        <g:each in="${produtoList}" var="produto" status="i">
+                            <tr>
                                 <td><g:link action="show" id="${produto?.id}">${produto?.codigo}</g:link></td>
                                 <td>${produto?.ncm}</td>
                                 <td>${produto?.descricao}</td>
                                 <td>${produto?.fornecedor?.descricao}</td>
                                 <td>${produto?.grupo?.descricao}</td>
+                                <td>${produto?.estoqueTipo?.caixa}</td>
+                                <td>${produto?.estoqueTipo?.unidade}</td>
                             </tr>
                         </g:each>
                     </tbody>

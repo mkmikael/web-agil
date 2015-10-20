@@ -14,7 +14,7 @@ class ItemPedido {
     Double valorMinimo
 	Produto produto
     Unidade unidade
-    Boolean confirmado
+    Boolean confirmado = false
 
 	static belongsTo = [pedido: Pedido]
     static constraints = {

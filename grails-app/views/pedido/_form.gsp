@@ -1,5 +1,6 @@
+<%@ page import="web.agil.ItemPedido" %>
 <style type="text/css">
-	table { border: none; }
+	table { border: none; text-align: center; vertical-align: middle  }
 	table tr:hover { background-color: transparent; }
 </style>
 
@@ -15,7 +16,7 @@
 </div>
 
 <div style="float: right; font-size: 1.8em">
-	Total: R$ <span id="total">0</span>
+	Total: R$ <span id="total" style="font-size: 1.8em">0</span>
 </div>
 <br/><br/>
 <p>
@@ -26,32 +27,41 @@
 	*PV = Preço de Venda
 </p>
 <br/>
+<div>
+    Produto <input id="produtoFilter">
+    Itens Vendidos <input id="vendidosFilter" type="checkbox">
+</div>
 <table id="itens">
 	<thead>
-		<th>Produto</th>
-		<th>Preço</th>
-		<th>Quant.</th>
-		<th>Desconto</th>
-		<th>Bonificação</th>
-		<th>PV</th>
-		<th>Total</th>
+        <tr>
+            <th>Produto</th>
+            <th>Unidade</th>
+            <th>Preço</th>
+            <th>Preço Minimo</th>
+            <th>Quant.</th>
+            <th>Desconto</th>
+            <th>Bonificação</th>
+            <th>PP</th>
+            <th>PV</th>
+            <th>Total</th>
+        </tr>
 	</thead>
 	<tbody>
+        <g:each in="${itensList}" var="item" status="i">
+            <tr style="background-color: ${i % 2 == 0 ? transparent : '#efefef'}">
+                <td>
+                    <g:hiddenField name="item.produto.id" value="${item.produto.id}" />${item.produto.descricao}
+                </td>
+                <td><g:select name="item.unidade.id" from="${item.produto.unidades}" optionKey="id" style="width: 100%"></g:select></td>
+                <td>R$ <span id="preco"><g:hiddenField name="item.valor" value="${item.valor}" />${item.valor}</span></td>
+                <td>R$ <span id="precoMinimo"><g:hiddenField name="item.valorMinimo" value="${item.valorMinimo}" />${item.valorMinimo}</span></td>
+                <td><g:textField name="item.quantidade" autocomplete="off" value="0" style="max-width: 70px" /></td>
+                <td><g:textField name="item.desconto" autocomplete="off" value="0" style="max-width: 70px" /></td>
+                <td><g:textField name="item.bonificacao" autocomplete="off" value="0" style="max-width: 70px" /></td>
+                <td>R$ <span id="pp">0</span></td>
+                <td>R$ <span id="pv">0</span></td>
+                <td>R$ <span id="subtotal" class="subtotal">0</span></td>
+            </tr>
+        </g:each>
 	</tbody>
 </table>
-
-<div id="row-pedido">
-	<table>
-		<tbody>
-			<tr>
-				<td><g:select name="item.lote.id" style="width: 100%" from="${loteList}" optionKey="id" /></td>
-				<td>R$ <span id="preco">3</span></td>
-				<td><g:textField class="money" name="item.quantidade" autocomplete="off" value="0" style="max-width: 70px" /></td>
-				<td><g:textField class="money" name="item.desconto" autocomplete="off" value="0" style="max-width: 70px" /></td>
-				<td><g:textField class="money" name="item.bonificacao" autocomplete="off" value="0" style="max-width: 70px" /></td>
-				<td>R$ <span id="pv">0</span></td>
-				<td>R$ <span id="subtotal" class="subtotal">0</span></td>
-			</tr>
-		</tbody>
-	</table>
-</div>

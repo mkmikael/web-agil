@@ -6,7 +6,7 @@ import web.agil.util.Util
 class Pedido {
 
 	Date dataCriacao = new Date()
-    Date dataSincronizacao
+    Date dataSincronizacao = new Date()
 	Date dataFaturamento = new Date()
 	String codigo = ""
 	Double total = 0

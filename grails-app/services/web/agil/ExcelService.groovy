@@ -127,25 +127,30 @@ class ExcelService {
 		Sheet sheet = workbook.getSheet("precos")
 		Row row
 		for (i in 1..181) {
+            println i
 			row = sheet.getRow(i)
 			def tipo = row.getCell(2)?.getStringCellValue()
-			def unidade  = new Lote()
-			unidade.id = row.getCell(0)?.getNumericCellValue() as Long
-			unidade.vencimento = new Date()
+			def lote  = new Lote()
+			lote.id = row.getCell(0)?.getNumericCellValue() as Long
+			lote.vencimento = new Date()
 			def produtoInstance = Produto.get( row.getCell(1)?.getStringCellValue() as Long )
-			unidade.produto = produtoInstance
-			unidade.valor = row.getCell(3)?.getNumericCellValue()
-			unidade.valorMinimo = row.getCell(4)?.getNumericCellValue()
-			if (tipo?.trim() in ["UNI", "DP", "PT"]) {
-				unidade.unidade = new Unidade(id: 1, tipo: TipoUnidade.get(1), capacidade: 1, produto: produtoInstance)
+            if (!produtoInstance)
+                continue
+			lote.produto = produtoInstance
+			lote.valor = row.getCell(3)?.getNumericCellValue()
+			lote.valorMinimo = row.getCell(4)?.getNumericCellValue()
+			if (tipo?.trim() == "UNI") {
+				lote.unidade = new Unidade(tipo: TipoUnidade.get(1), capacidade: 1, produto: produtoInstance)
 			} else if (tipo?.trim() == "CXA") {
-				unidade.unidade = new Unidade(tipo: TipoUnidade.get(2), capacidade: 0, produto: produtoInstance)
-			}
-			produtoInstance.addToUnidades(unidade.unidade)
+				lote.unidade = new Unidade(tipo: TipoUnidade.get(2), capacidade: 0, produto: produtoInstance)
+			} else {
+                continue
+            }
+            produtoInstance.addToUnidades(lote.unidade)
 			produtoInstance.save(flush: true)
-			unidade.statusLote = StatusLote.ESGOTADO
-			unidade.save(insert: true, flush: true)
-			println unidade.properties
+			lote.statusLote = StatusLote.ESGOTADO
+			lote.save(insert: true, flush: true)
+			println lote.properties
 		}
 		fileInputStream.close();
     }

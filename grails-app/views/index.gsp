@@ -5,7 +5,6 @@
         <title>Agil</title>
     </head>
     <body>
-        ${web.agil.Prazo.list()}
         <fieldset>
             <ul>
                 <li>

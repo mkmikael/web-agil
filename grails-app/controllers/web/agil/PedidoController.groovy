@@ -4,6 +4,9 @@ import grails.converters.JSON
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
 import web.agil.util.Util
+
+import java.text.SimpleDateFormat
+
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 import web.agil.enums.*
@@ -20,15 +23,10 @@ class PedidoController {
         def response = []
         for (JSONObject pedidoJO : pedidosJA) {
             def pedido = new Pedido()
-            try {
-                pedido.dataCriacao = new Date(pedidoJO.getString("dataCriacao"))
-                pedido.dataFaturamento = new Date(pedidoJO.getString("dataDeFaturamento"))
-                pedido.dataSincronizacao = new Date()
-            } catch (Exception e) {
-                pedido.dataCriacao = new Date()
-                pedido.dataFaturamento = new Date()
-                pedido.dataSincronizacao = new Date()
-            }
+            def sdf = new SimpleDateFormat("ddMMyyyHHmmss")
+            pedido.dataCriacao = sdf.parse( pedidoJO.getString("dataCriacao") )
+            pedido.dataFaturamento = sdf.parse( pedidoJO.getString("dataDeFaturamento") )
+            pedido.dataSincronizacao = new Date()
             pedido.cliente = Cliente.get(pedidoJO.getLong("cliente"))
             pedido.prazo = Prazo.get(pedidoJO.getLong("prazo"))
             pedido.total = pedidoJO.getDouble("total")
@@ -120,12 +118,40 @@ class PedidoController {
         respond pedidoList, model:[pedidoCount: pedidoCount, statusPedidoList: StatusPedido.values(), semanaList: Semana.values()] + params
     }
 
+    def unidadesByProduto(Long id) {
+        def produto = Produto.get(id)
+        def list = []
+        produto.unidades.each {
+            def entity = [:]
+            entity.id = it.id
+            entity.unidade = it.tipo.descricao
+            list << entity
+        }
+        render {
+            produto.unidades.each {
+                option(it.tipo.descricao, value: it.id)
+            }
+        }
+    }
+
+    def precoByProdutoAndUnidade(Long produto, Long unidade) {
+        def produtoO = Produto.get(produto)
+        def unidadeO = Unidade.get(unidade)
+        def lote = Lote.findByProdutoAndUnidade(produtoO, unidadeO, [sort: 'dataCriacao', order: 'desc'])
+        render lote as JSON
+    }
+
     def show(Pedido pedido) {
         respond pedido
     }
 
     def create() {
-        respond new Pedido(params), model: [loteList: Lote.findAllByStatusLote(StatusLote.DISPONIVEL), prazoList: Prazo.list()]
+        def itens = []
+        Produto.list(sort: 'descricao').each {
+            itens << new ItemPedido(produto: it, unidade: it.unidades[0],
+                    valor: it.lote?.valor, valorMinimo: it.lote?.valorMinimo)
+        }
+        respond new Pedido(params), model: [itensList: itens, prazoList: Prazo.list()]
     }
 
     @Transactional
@@ -140,7 +166,10 @@ class PedidoController {
             def itens = params.item
             for (i in 0..itens.quantidade.length - 1) {
                 def itemPedido = new ItemPedido()
-                itemPedido.unidade = Lote.get(params.item.unidade.id[i] as Long)
+                itemPedido.valor = params.item.valor[i] as Double
+                itemPedido.valorMinimo = params.item.valorMinimo[i] as Double
+                itemPedido.produto = Produto.get(params.item.produto.id[i] as Long)
+                itemPedido.unidade = Unidade.get(params.item.unidade.id[i] as Long)
                 itemPedido.quantidade = params.item.quantidade[i] as Integer
                 itemPedido.bonificacao = params.item.bonificacao[i] as Integer
                 itemPedido.desconto = params.item.desconto[i] as Double
@@ -148,7 +177,10 @@ class PedidoController {
             }
         } else {
             def itemPedido = new ItemPedido()
-            itemPedido.unidade = Lote.get(params.item.unidade.id as Long)
+            itemPedido.produto = Produto.get(params.item.produto.id as Long)
+            itemPedido.valor = params.item.valor as Double
+            itemPedido.valorMinimo = params.item.valorMinimo as Double
+            itemPedido.unidade = Unidade.get(params.item.unidade.id as Long)
             itemPedido.quantidade = params.item.quantidade as Integer
             itemPedido.bonificacao = params.item.bonificacao as Integer
             itemPedido.desconto = params.item.desconto as Double
@@ -172,7 +204,6 @@ class PedidoController {
         }
 
         pedido.save flush: true, failOnError: true
-        println "Pedido ID: ${pedido.id}"
 
         request.withFormat {
             form multipartForm {

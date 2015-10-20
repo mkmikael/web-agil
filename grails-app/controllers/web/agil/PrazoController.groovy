@@ -8,7 +8,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class PrazoController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [saveAtivo: "POST", save: "POST", update: "PUT", delete: "DELETE"]
 
     def listJson() {
         def list = []
@@ -16,6 +16,13 @@ class PrazoController {
            list << [id: it.id, parcelas: it.parcela, periodicidade: it.periodicidade]
         }
         render list as JSON
+    }
+
+    @Transactional
+    def saveAtivo(Long id) {
+        def prazo = Prazo.get(id)
+        prazo.ativo = params.boolean('ativo')
+        render 'OK'
     }
 
     def index(Integer max) {

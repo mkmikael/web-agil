@@ -77,7 +77,7 @@
                 <tbody>
                     <g:each in="${pedido.itensPedido}" var="item">
                         <g:set var="novoEstoque" value="${item?.estoque - item?.quantidade}"/>
-                        <tr>
+                        <tr style="background-color: ${item.isAbaixoDoMinimo() ? 'rgba(255, 10, 27, 0.79)': 'transparent'}">
                             <td>${item?.produto?.descricao}</td>
                             <td>${item?.unidade}</td>
                             <td>${item?.quantidade}</td>
