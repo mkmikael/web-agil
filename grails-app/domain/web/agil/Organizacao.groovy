@@ -22,4 +22,8 @@ class Organizacao extends Participante {
     	cnpj nullable: true
     	inscricaoEstadual nullable: true
     }
+
+    String toString() {
+        razaoSocial
+    }
 }

@@ -19,4 +19,8 @@ class Pessoa extends Participante 	 {
     	nome nullable: true
     	cpf nullable: true
     }
+
+    String toString() {
+        nome
+    }
 }

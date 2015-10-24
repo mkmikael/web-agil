@@ -67,6 +67,9 @@ class LoteController {
             return
         }
 
+        lote.produto.estoque = lote.unidade.capacidade * lote.estoque
+        lote.produto.save()
+
         lote.save flush:true
 
         request.withFormat {

@@ -8,7 +8,6 @@ class Produto {
 	String descricao
     String ncm
     Integer estoque = 0
-
     static transients = ['estoqueTipo', 'lote']
 
     def getEstoqueTipo() {

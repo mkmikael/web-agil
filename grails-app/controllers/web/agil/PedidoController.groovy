@@ -58,6 +58,13 @@ class PedidoController {
     }
 
     @Transactional
+    def changeItemPedido(Long id, Boolean checked) {
+        def item = ItemPedido.get(id)
+        item.confirmado = checked
+        render item as JSON
+    }
+
+    @Transactional
     def negarPedidos() {
         def ids = []
         params.each { entry ->
@@ -65,7 +72,10 @@ class PedidoController {
             if ( matcher.find() )
                 ids << (matcher[0][1] as Long)
         }
-        Pedido.getAll(ids).each { it.statusPedido = StatusPedido.NEGADO }
+        Pedido.getAll(ids).each { p ->
+            p.statusPedido = StatusPedido.NEGADO
+            p.itensPedido.each { item -> item.confirmado = false }
+        }
         redirect(action: 'index')
     }
 
@@ -79,7 +89,8 @@ class PedidoController {
         Pedido.getAll(ids).each { p ->
             p.statusPedido = StatusPedido.CONFIRMADO
             p.itensPedido.each { item ->
-                item.unidade.estoque -= item.quantidade - item.bonificacao
+                if (item.confirmado)
+                    item.produto.estoque -= item.quantidade - item.bonificacao
             }
         }
         redirect(action: 'index')
@@ -146,12 +157,24 @@ class PedidoController {
     }
 
     def create() {
+        def pedido = new Pedido()
         def itens = []
-        Produto.list(sort: 'descricao').each {
-            itens << new ItemPedido(produto: it, unidade: it.unidades[0],
-                    valor: it.lote?.valor, valorMinimo: it.lote?.valorMinimo)
+        def produtosId = []
+        if (pedido.itensPedido)
+            produtosId = pedido.itensPedido*.produto.id
+        def produtList = Produto.executeQuery("""
+            select distinct p from Produto p inner join fetch p.unidades order by p.descricao
+        """)
+        produtList.each { p ->
+            if (p.id in produtosId) {
+                itens << pedido.itensPedido.find { item -> item.produto.id == p.id }
+            } else {
+                def lote = p.lote
+                itens << new ItemPedido(produto: p, unidade: p.unidades[0],
+                        valor: lote?.valor, valorMinimo: lote?.valorMinimo)
+            }
         }
-        respond new Pedido(params), model: [itensList: itens, prazoList: Prazo.list()]
+        respond pedido, model: [prazoList: Prazo.list(), itensList: itens]
     }
 
     @Transactional
@@ -215,7 +238,19 @@ class PedidoController {
     }
 
     def edit(Pedido pedido) {
-        respond pedido, model: [prazoList: Prazo.list(), loteList: Lote.findAllByStatusLote(StatusLote.DISPONIVEL)]
+        def itens = []
+        def produtosId = pedido.itensPedido*.produto.id
+        def produtList = Produto.executeQuery("""
+            select distinct p from Produto p inner join fetch p.unidades order by p.descricao
+        """)
+        produtList.each { p ->
+            if (p.id in produtosId) {
+                itens << pedido.itensPedido.find { item -> item.produto.id == p.id }
+            } else
+                itens << new ItemPedido(produto: p, unidade: p.unidades[0],
+                        valor: p.lote?.valor, valorMinimo: p.lote?.valorMinimo)
+        }
+        respond pedido, model: [prazoList: Prazo.list(), itensList: itens]
     }
 
     @Transactional
@@ -225,6 +260,37 @@ class PedidoController {
             notFound()
             return
         }
+
+        pedido.itensPedido.clear()
+
+        if (params.item?.quantidade?.class?.isArray()) {
+            def itens = params.item
+            for (i in 0..itens.quantidade.length - 1) {
+                def itemPedido = itens?.id[i] ? ItemPedido.get(itens?.id[i] as Long) : new ItemPedido()
+                itemPedido.valor = itens?.valor[i] as Double
+                itemPedido.valorMinimo = itens?.valorMinimo[i] as Double
+                itemPedido.produto = Produto.get(itens?.produto?.id[i] as Long)
+                itemPedido.unidade = Unidade.get(itens?.unidade?.id[i] as Long)
+                itemPedido.quantidade = itens?.quantidade[i] as Integer
+                itemPedido.bonificacao = itens?.bonificacao[i] as Integer
+                itemPedido.desconto = itens?.desconto[i] as Double
+                itemPedido.calc()
+                pedido.addToItensPedido(itemPedido)
+            }
+        } else {
+            def itemPedido = params.item?.id ? ItemPedido.get(params.item?.id as Long) : new ItemPedido()
+            itemPedido.produto = Produto.get(params.item?.produto?.id as Long)
+            itemPedido.valor = params.item?.valor as Double
+            itemPedido.valorMinimo = params.item?.valorMinimo as Double
+            itemPedido.unidade = Unidade.get(params.item?.unidade?.id as Long)
+            itemPedido.quantidade = params.item?.quantidade as Integer
+            itemPedido.bonificacao = params.item?.bonificacao as Integer
+            itemPedido.desconto = params.item?.desconto as Double
+            itemPedido.calc()
+            pedido.addToItensPedido(itemPedido)
+        }
+
+        pedido.calcularTotal()
 
         if (pedido.hasErrors()) {
             transactionStatus.setRollbackOnly()

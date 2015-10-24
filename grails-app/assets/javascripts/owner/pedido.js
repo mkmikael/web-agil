@@ -8,11 +8,10 @@ $(function() {
                 unidade: this.value
             },
 			success: function(data) {
-
 				row.find('#preco').html(data.valor);
 				row.find('#precoMinimo').html(data.valorMinimo);
-				row.find('#item\\.valor').html(data.valor);
-				row.find('#item\\.valorMinimo').html(data.valorMinimo);
+				row.find('#item\\.valor').val(data.valor);
+				row.find('#item\\.valorMinimo').val(data.valorMinimo);
 	        	calcular(row);
 			}
 		}); // end ajax
@@ -21,6 +20,12 @@ $(function() {
     $('#item\\.quantidade, #item\\.desconto, #item\\.bonificacao').keyup(function() {
 		var row = $(this).parent().parent();
 		calcular(row);
+    });
+
+    $('#item\\.quantidade, #item\\.desconto, #item\\.bonificacao').blur(function () {
+        if (this.value == 0) {
+            this.value = 0;
+        }
     });
 
     function calcular(row) {
@@ -52,6 +57,13 @@ $(function() {
         });
         $('#total').text(sum.toFixed(2));
     }
+
+    $('table tbody tr td input[name="item.quantidade"]').each(function () {
+        if (this.value > 0) {
+            var row = $(this).parent().parent();
+            calcular(row);
+        }
+    }); // end each
 
     $('#produtoFilter').keyup(function() {
         var content = this.value.toUpperCase();

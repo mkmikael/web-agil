@@ -10,8 +10,8 @@ class ItemPedido {
 	Double desconto = 0
 	Double precoNegociado = 0
 	Double total = 0
-    Double valor
-    Double valorMinimo
+    Double valor = 0
+    Double valorMinimo = 0
 	Produto produto
     Unidade unidade
     Boolean confirmado = false
@@ -21,7 +21,7 @@ class ItemPedido {
     }
 
 	def isAbaixoDoMinimo() {
-		precoNegociado < valorMinimo
+		getPrecoNegociado() < valorMinimo
 	}
 
 	def isBonificado() {
@@ -30,17 +30,24 @@ class ItemPedido {
 
     void setQuantidade(Integer quantidade) {
     	this.quantidade = quantidade
-    	calc()
+        getPrecoNegociado()
     }
 
     void setBonificacao(Integer bonificacao) {
     	this.bonificacao = bonificacao
-    	calc();
+        getPrecoNegociado()
     }
 
     void setDesconto(Double desconto) {
     	this.desconto = desconto
-    	calc();
+        getPrecoNegociado()
+    }
+
+    Double getPrecoNegociado() {
+        if (quantidade == 0) return 0
+        total = quantidade * valor * ( 1 - ( desconto / 100 ) )
+        precoNegociado = total / (bonificacao + quantidade)
+        precoNegociado
     }
 
     def getEstoque() {
@@ -59,7 +66,7 @@ class ItemPedido {
         null
     }
 
-    private calc() {
+    def calc() {
         if (calcular) {
             try {
                 if (quantidade == 0) return 0

@@ -18,6 +18,9 @@ class Pedido {
     static constraints = {
     	codigo nullable: true
     }
+    static mapping = {
+        itensPedido cascade: 'all-delete-orphan'
+    }
 
 	def isItemAbaixoDoMinimo() {
         def valid = false

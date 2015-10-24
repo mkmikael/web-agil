@@ -1,10 +1,19 @@
-<%@ page import="web.agil.ItemPedido" %>
+<%@ page import="web.agil.Cliente; web.agil.ItemPedido" %>
 <style type="text/css">
 	table { border: none; text-align: center; vertical-align: middle  }
 	table tr:hover { background-color: transparent; }
+    .toolkit { position: fixed; bottom: 20px; padding: 10px; left: 40%; border: 1px solid #006dba; background-color: #fff; z-index: 10 }
 </style>
 
-<g:hiddenField name="cliente.id" value="${pedido?.cliente?.id ?: params?.cliente?.id}" />
+<g:if test="${pedido?.cliente?.id}">
+    <g:hiddenField name="cliente.id" value="${pedido?.cliente?.id}" />
+</g:if>
+<g:else>
+    <div class="fieldcontain">
+        <label for="cliente.id">Cliente</label>
+        <g:select from="${Cliente.list()}" name="cliente.id" optionKey="id" optionValue="participante" />
+    </div>
+</g:else>
 
 <div class="fieldcontain">
 	<label for="dataFaturamento">Data de Faturamento</label>
@@ -16,18 +25,12 @@
 </div>
 
 <div style="float: right; font-size: 1.8em">
-	Total: R$ <span id="total" style="font-size: 1.8em">0</span>
+	Total R$ <span id="total" style="font-size: 1.8em">${g.formatNumber(number: pedido.total, format: '#,##0.00') ?: 0}</span>
 </div>
 <br/><br/>
-<p>
-	<button type="button" class="btn" onclick="">Adicionar Item</button>
-</p>
-<br/>
-<p style="font-size: 0.8em">
-	*PV = Preço de Venda
-</p>
-<br/>
-<div>
+<p style="font-size: 0.8em">*PV = Preço de Venda</p>
+<p style="font-size: 0.8em">*PP = Preço Praticado</p>
+<div class="toolkit">
     Produto <input id="produtoFilter">
     Itens Vendidos <input id="vendidosFilter" type="checkbox">
 </div>
@@ -50,14 +53,15 @@
         <g:each in="${itensList}" var="item" status="i">
             <tr style="background-color: ${i % 2 == 0 ? transparent : '#efefef'}">
                 <td>
+                    <g:hiddenField name="item.id" value="${item.id}" />
                     <g:hiddenField name="item.produto.id" value="${item.produto.id}" />${item.produto.descricao}
                 </td>
-                <td><g:select name="item.unidade.id" from="${item.produto.unidades}" optionKey="id" style="width: 100%"></g:select></td>
-                <td>R$ <span id="preco"><g:hiddenField name="item.valor" value="${item.valor}" />${item.valor}</span></td>
-                <td>R$ <span id="precoMinimo"><g:hiddenField name="item.valorMinimo" value="${item.valorMinimo}" />${item.valorMinimo}</span></td>
-                <td><g:textField name="item.quantidade" autocomplete="off" value="0" style="max-width: 70px" /></td>
-                <td><g:textField name="item.desconto" autocomplete="off" value="0" style="max-width: 70px" /></td>
-                <td><g:textField name="item.bonificacao" autocomplete="off" value="0" style="max-width: 70px" /></td>
+                <td><g:select name="item.unidade.id" from="${item.produto.unidades}" value="${item.unidade.id}" optionKey="id" style="width: 100%"></g:select></td>
+                <td>R$ <g:hiddenField name="item.valor" value="${item.valor}" /><span id="preco">${item.valor}</span></td>
+                <td>R$ <g:hiddenField name="item.valorMinimo" value="${item.valorMinimo}" /><span id="precoMinimo">${item.valorMinimo}</span></td>
+                <td><g:textField name="item.quantidade" value="${item.quantidade}" autocomplete="off" style="max-width: 70px" /></td>
+                <td><g:textField name="item.desconto" value="${item.desconto}" autocomplete="off" style="max-width: 70px" /></td>
+                <td><g:textField name="item.bonificacao" value="${item.bonificacao}" autocomplete="off" style="max-width: 70px" /></td>
                 <td>R$ <span id="pp">0</span></td>
                 <td>R$ <span id="pv">0</span></td>
                 <td>R$ <span id="subtotal" class="subtotal">0</span></td>
