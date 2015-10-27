@@ -1,5 +1,5 @@
 package web.agil.enums
 
 enum StatusPedido {
-	PENDENTE, CONFIRMADO, NEGADO
+	PENDENTE, CONFIRMADO, NEGADO, DESFEITO
 }

@@ -7,7 +7,10 @@
 //
 //= require jquery-2.1.3.js
 //= require jquery-ui.min.js
+//= require jquery.mask.min.js
+//= require jquery.maskMoney.min.js
 //= require validar-cnpj-cpf.js
+//= require material.js
 //= require_tree .
 //= require_self
 
@@ -39,9 +42,9 @@ $(function() {
 	$('.tabs').tabs();
 	$('button, input:submit, .btn').button();
 
-	$('.telefone').mask('(00)0000-0000', { placeholder: '(__)____-____' });
-	$('.cpf').mask('000.000.000-00', { placeholder: '___.___.___-__' });
-	$('.cnpj').mask('00.000.000/0000-00', { placeholder: '__.___.___/____-__' });
+	$('.telefone').mask('(00)0000-0000');
+	$('.cpf').mask('000.000.000-00');
+	$('.cnpj').mask('00.000.000/0000-00');
 	$('.money2').mask('000.000.000.000,00', { reverse: true });
 	$(".money").maskMoney({prefix:'R$ ', allowNegative: true, allowZero: true, thousands:'.', decimal:',', affixesStay: false});
     $(".taxa").maskMoney({suffix:'% ', allowNegative: false, allowZero: true, thousands:'.', decimal:',', affixesStay: false});

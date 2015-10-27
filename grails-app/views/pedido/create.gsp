@@ -25,7 +25,7 @@
                 </g:eachError>
             </ul>
             </g:hasErrors>
-            <g:form action="save" onsubmit="return confirm('Enviar pedido?')">
+            <g:form action="save">
                 <fieldset class="form">
                     <g:render template="/pedido/form" model="[pedido: pedido]" />
                 </fieldset>

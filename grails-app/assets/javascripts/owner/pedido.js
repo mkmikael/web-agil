@@ -1,4 +1,16 @@
 $(function() {
+    $('#show-pedido #itens input:checkbox').change(function() {
+        $.ajax('/web-agil/pedido/changeItemPedido',
+            {
+                data: {
+                    id: this.name.replace('check', ''),
+                    checked: this.checked
+                }, success: function (data) {
+                    $('#totalAvaliado').html(data.totalAvaliado);
+                }
+            }); // end ajax
+    });
+
     $('#item\\.unidade\\.id').change(function() {
         var row = $(this).parent().parent();
 		$.ajax('/web-agil/pedido/precoByProdutoAndUnidade',
@@ -95,9 +107,13 @@ $(function() {
     });
 
     $('input:submit').click(function () {
-        $('table tbody tr td input[name="item.quantidade"]').each(function () {
-            if (this.value == null || this.value == "0")
-                $(this).parent().parent().remove();
-        }); // end each
+        var b = confirm('Enviar pedido?');
+        if (b) {
+            $('table tbody tr td input[name="item.quantidade"]').each(function () {
+                if (this.value == null || this.value == "0")
+                    $(this).parent().parent().remove();
+            }); // end each
+        }
+        return b;
     }); // end click
 });

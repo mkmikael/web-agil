@@ -2,9 +2,11 @@ package web.agil
 
 class ItemPedido {
 
-    transient Boolean calcular = true
-    transient Integer estoque = 0
-    transient Integer caixas
+    Boolean calcular = true
+    Integer estoque = 0
+    Integer caixas
+    Integer estoqueAtual
+
 	Integer quantidade = 0
 	Integer bonificacao = 0
 	Double desconto = 0
@@ -14,10 +16,21 @@ class ItemPedido {
     Double valorMinimo = 0
 	Produto produto
     Unidade unidade
-    Boolean confirmado = false
+    Boolean confirmado = true
 
+    static transients = ['estoqueAtual', 'caixas', 'estoque', 'calcular']
 	static belongsTo = [pedido: Pedido]
     static constraints = {
+    }
+
+    def getEstoqueAtual() {
+        if (unidade.tipo.descricao == "CXA") {
+            return produto?.estoqueTipo?.caixa
+        } else if (unidade.tipo.descricao == "UNI") {
+            return produto?.estoqueTipo?.unidade
+        } else {
+            return 0
+        }
     }
 
 	def isAbaixoDoMinimo() {

@@ -2,14 +2,15 @@
 <html>
     <head>
         <meta name="layout" content="main" />
-        <g:set var="entityName" value="${message(code: 'produto.label', default: 'Produto')}" />
+        <g:set var="entityName" value="Estoque" />
         <title><g:message code="default.list.label" args="[entityName]" /></title>
     </head>
     <body>
         <div class="nav" role="navigation">
             <ul>
                 <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-                <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
+                <li><g:link class="create" action="create">Novo Produto</g:link></li>
+                <li><g:link class="create" controller="lote" action="create">Novo Lote</g:link></li>
             </ul>
         </div>
         <div id="list-produto" class="content scaffold-list" role="main">
@@ -18,21 +19,31 @@
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
             <g:form action="index" method="GET">
-                <fieldset class="form">
-                    <label>Código</label>
-                    <g:textField name="search_codigo" value="${search_codigo}" />
+                <fieldset class="search">
+                    <div class="fieldcontain">
+                        <label>Código</label>
+                        <g:textField name="search_codigo" value="${search_codigo}" />
+                    </div>
 
-                    <label>NCM</label>
-                    <g:textField name="search_ncm" value="${search_ncm}" />
+                    <div class="fieldcontain">
+                        <label>NCM</label>
+                        <g:textField name="search_ncm" value="${search_ncm}" />
+                    </div>
 
-                    <label>Descrição</label>
-                    <g:textField name="search_descricao" value="${search_descricao}" />
+                    <div class="fieldcontain">
+                        <label>Descrição</label>
+                        <g:textField name="search_descricao" value="${search_descricao}" />
+                    </div>
 
-                    <label>Fornecedor</label>
-                    <g:select name="search_fornecedor" value="${search_fornecedor}" from="${fornecedorList}" optionKey="id" optionValue="descricao" noSelection="['': 'Selecione']"/>
+                    <div class="fieldcontain">
+                        <label>Fornecedor</label>
+                        <g:select name="search_fornecedor" value="${search_fornecedor}" from="${fornecedorList}" optionKey="id" optionValue="descricao" noSelection="['': 'Selecione']"/>
+                    </div>
 
-                    <label>Grupo</label>
-                    <g:select name="search_grupo" value="${search_grupo}" from="${grupoList}" optionKey="id" optionValue="descricao" noSelection="['': 'Selecione']" />
+                    <div class="fieldcontain">
+                        <label>Grupo</label>
+                        <g:select name="search_grupo" value="${search_grupo}" from="${grupoList}" optionKey="id" optionValue="descricao" noSelection="['': 'Selecione']" />
+                    </div>
                 </fieldset>
                 <fieldset>
                     <input type="submit" value="Procurar" />

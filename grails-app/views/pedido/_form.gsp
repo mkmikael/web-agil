@@ -31,6 +31,7 @@
 <p style="font-size: 0.8em">*PV = Preço de Venda</p>
 <p style="font-size: 0.8em">*PP = Preço Praticado</p>
 <div class="toolkit">
+    <input type="submit" class="save" value="Enviar">
     Produto <input id="produtoFilter">
     Itens Vendidos <input id="vendidosFilter" type="checkbox">
 </div>

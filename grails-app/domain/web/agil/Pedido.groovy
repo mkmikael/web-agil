@@ -10,6 +10,7 @@ class Pedido {
 	Date dataFaturamento = new Date()
 	String codigo = ""
 	Double total = 0
+	Double totalAvaliado = 0
     Prazo prazo
     StatusPedido statusPedido = StatusPedido.PENDENTE
 
@@ -45,14 +46,23 @@ class Pedido {
 	}
 
     def calcularTotal() {
-    	def total = 0
+    	total = 0
     	if (itensPedido) {
     		itensPedido.each {
     			total += it.total
     		}
-    		this.total = total
     	}
     	total
+    }
+    def calcularTotalAvaliado() {
+    	totalAvaliado = 0
+    	if (itensPedido) {
+    		itensPedido.each {
+                if (it.confirmado)
+                    totalAvaliado += it.total
+    		}
+    	}
+        totalAvaliado
     }
 
 }

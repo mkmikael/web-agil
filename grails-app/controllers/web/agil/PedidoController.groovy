@@ -61,7 +61,9 @@ class PedidoController {
     def changeItemPedido(Long id, Boolean checked) {
         def item = ItemPedido.get(id)
         item.confirmado = checked
-        render item as JSON
+        item.pedido.calcularTotalAvaliado()
+        def data = [totalAvaliado: item.pedido.totalAvaliado]
+        render data as JSON
     }
 
     @Transactional
@@ -79,6 +81,7 @@ class PedidoController {
         redirect(action: 'index')
     }
 
+    @Transactional
     def confirmarPedidos() {
         def ids = []
         params.each { entry ->
@@ -94,6 +97,61 @@ class PedidoController {
             }
         }
         redirect(action: 'index')
+    }
+
+
+    @Transactional
+    def negarPedido(Long id) {
+        def p = Pedido.get(id)
+        if (p.statusPedido == StatusPedido.PENDENTE) {
+            p.statusPedido = StatusPedido.NEGADO
+            p.itensPedido.each { item -> item.confirmado = false }
+            p.calcularTotal()
+            p.calcularTotalAvaliado()
+        } else {
+            flash.message = "Voce so pode negar um pedido que esta pendente"
+        }
+        redirect(action: 'show', id: id)
+
+    }
+
+    @Transactional
+    def confirmarPedido(Long id) {
+        def p = Pedido.get(id)
+        if (p.statusPedido == StatusPedido.PENDENTE) {
+            p.statusPedido = StatusPedido.CONFIRMADO
+            p.itensPedido.each { item ->
+                if (item.confirmado) {
+                    item.produto.estoque -= ((item.quantidade + item.bonificacao) * item.unidade.capacidade )
+                    item.produto.save()
+                }
+            }
+            p.calcularTotal()
+            p.calcularTotalAvaliado()
+        } else {
+            flash.message = "Voce so pode confirmar um pedido que esta pendente"
+        }
+        redirect(action: 'show', id: id)
+    }
+
+    @Transactional
+    def desfazerPedido(Long id) {
+        def p = Pedido.get(id)
+        if (p.statusPedido == StatusPedido.CONFIRMADO) {
+            p.statusPedido = StatusPedido.DESFEITO
+            p.itensPedido.each { item ->
+                if (item.confirmado) {
+                    item.confirmado = false
+                    item.produto.estoque += ((item.quantidade + item.bonificacao) * item.unidade.capacidade )
+                    item.produto.save()
+                }
+            }
+            p.calcularTotal()
+            p.calcularTotalAvaliado()
+        } else {
+            flash.message = "Voce so pode desfazer um pedido que esta confirmado"
+        }
+        redirect(action: 'show', id: id)
     }
 
     def index(Integer max) {
@@ -153,6 +211,7 @@ class PedidoController {
     }
 
     def show(Pedido pedido) {
+        pedido.calcularTotalAvaliado()
         respond pedido
     }
 

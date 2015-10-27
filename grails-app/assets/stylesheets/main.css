@@ -192,6 +192,8 @@ img {
 
 /* CREATE/EDIT FORMS AND SHOW PAGES */
 
+fieldset { padding: 1em }
+fieldset.search .fieldcontain { display: inline-block }
 fieldset,
 .property-list {
     margin: 0.6em 1.25em 0 1.25em;
@@ -207,25 +209,11 @@ fieldset,
     zoom: 1;
 }
 
-.fieldcontain {
-    margin-top: 1em;
-}
-
-.fieldcontain label,
-.fieldcontain .property-label {
-    color: #666666;
-    text-align: right;
-    width: 25%;
-}
-
-.fieldcontain .property-label {
-    float: left;
-}
-
-.fieldcontain .property-value {
-    display: block;
-    margin-left: 27%;
-}
+.fieldcontain label { display: block; font-size: .85em; }
+.fieldcontain input { display: block; }
+.fieldcontain .property-label { color: #666666; text-align: right; width: 25%; }
+.fieldcontain .property-label { float: left }
+.fieldcontain .property-value { display: block; margin-left: 27%; }
 
 label {
     cursor: pointer;
@@ -283,15 +271,9 @@ input:focus, select:focus, textarea:focus {
     top: 0.1em;
 }
 
-ul.one-to-many {
-    display: inline-block;
-    list-style-position: inside;
-    vertical-align: top;
-}
+ul.one-to-many { display: inline-block; list-style-position: inside; vertical-align: top; }
 
-ul.one-to-many li.add {
-    list-style-type: none;
-}
+ul.one-to-many li.add { list-style-type: none; }
 
 /* EMBEDDED PROPERTIES */
 
@@ -300,8 +282,6 @@ fieldset.embedded {
     border: 1px solid #CCCCCC;
     margin-left: 0;
     margin-right: 0;
-    padding-left: 0;
-    padding-right: 0;
        -moz-box-shadow: none;
     -webkit-box-shadow: none;
             box-shadow: none;
@@ -385,36 +365,60 @@ input:invalid:focus, select:invalid:focus, textarea:invalid:focus {
 
 /* TABLES */
 
+.scroll-x { overflow-x: scroll; }
+
 table {
+    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 1px 8px 0 rgba(0, 0, 0, 0.12);
     border-top: 1px solid #DFDFDF;
+    border: 1px solid rgba(0, 0, 0, 0.12);
     border-collapse: collapse;
+    background-color: rgb(255,255,255);
+    font-size: 12px;
+    white-space: nowrap;
     width: 100%;
-    margin-bottom: 1em;
 }
 
 tr {
     border: 0;
+    position: relative;
+    -webkit-transition-duration: 0.28s;
+    transition-duration: 0.28s;
+    -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-transition-property: background-color;
+    transition-property: background-color;
 }
 
-tr>td:first-child, tr>th:first-child {
-    padding-left: 1.25em;
-}
+thead tr { height: 48px; }
 
-tr>td:last-child, tr>th:last-child {
-    padding-right: 1.25em;
-}
+tr>td:first-child, tr>th:first-child { padding-left: 1.25em; }
+
+tr>td:last-child, tr>th:last-child { padding-right: 1.25em; }
 
 td, th {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    box-sizing: border-box;
+
     line-height: 1.5em;
-    padding: 0.5em 0.6em;
     text-align: left;
     vertical-align: top;
 }
 
 th {
+    box-sizing: border-box;
     background-color: #efefef;
     background-image: -moz-linear-gradient(top, #ffffff, #eaeaea);
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(1, #eaeaea));
+    font-size: 12px;
+    font-weight: bold;
+    position: relative;
+    vertical-align: bottom;
+    text-overflow: ellipsis;
+    line-height: 24px;
+    letter-spacing: 0;
+    color: rgba(0, 0, 0, 0.54);
+    padding-bottom: 8px;
         filter: progid:DXImageTransform.Microsoft.gradient(startColorStr = '#ffffff', EndColorStr = '#eaeaea');
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#ffffff', EndColorStr='#eaeaea')";
     color: #666666;
@@ -424,6 +428,7 @@ th {
 }
 
 thead th {
+    padding-bottom: 3px;
     white-space: nowrap;
 }
 
@@ -437,7 +442,7 @@ th a:link, th a:visited {
 }
 
 th a:hover, th a:focus {
-    color: #333333;
+    color: #eeeeee;
 }
 
 th.sortable a {
@@ -462,8 +467,12 @@ th.desc a {
     background: #ffffff;
 }
 
-th:hover, tr:hover {
-    background: #7bcefb;
+th:hover {
+    background: #f3f3ff;
+}
+
+tr:hover {
+    background: #eeeeee;
 }
 
 /* PAGINATION */

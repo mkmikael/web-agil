@@ -22,6 +22,10 @@
 
             <ul class="property-list">
                 <li class="fieldcontain">
+                    <span class="property-label">Status</span>
+                    <span class="property-value">${pedido.statusPedido}</span>
+                </li>
+                <li class="fieldcontain">
                     <span class="property-label">Código do Pedido</span>
                     <span class="property-value">${pedido.codigo}</span>
                 </li>
@@ -55,42 +59,57 @@
                 <li class="fieldcontain">
                     <span class="property-label">Total</span>
                     <span class="property-value">R$ <g:formatNumber number="${pedido.total}" maxFractionDigits="2" /></span>
+                </li><li class="fieldcontain">
+                    <span class="property-label">Total Avaliado</span>
+                    <span class="property-value">R$ <span id="totalAvaliado"><g:formatNumber number="${pedido.totalAvaliado}" maxFractionDigits="2" /></span></span>
                 </li>
             </ul>
+
+            <g:form id="${pedido.id}">
+                <fieldset>
+                    <g:actionSubmit class="btn" onclick="return confirm('Voce tem certeza?')" value="Negar" action="negarPedido"  />
+                    <g:actionSubmit class="btn" onclick="return confirm('Voce tem certeza?')" value="Confirmar" action="confirmarPedido" />
+                    <g:actionSubmit class="btn" onclick="return confirm('Voce tem certeza?')" value="Desfazer" action="desfazerPedido" />
+                </fieldset>
+            </g:form>
 
             <table id="itens">
                 <thead>
                     <th>Produto</th>
                     <th>Unidade</th>
-                    <th>Quant.</th>
+                    <th>Quant.(Q)</th>
+                    <th>Bonif.(B)</th>
+                    <th>Q+B</th>
                     <th>Estoque</th>
-                    <th>Novo Estoque</th>
+                    <th>Nv Estoque</th>
                     <th>Desconto</th>
-                    <th>Bonificação</th>
                     <th>Preço</th>
                     <th>Preço Minimo</th>
                     <th>PP</th>
                     <th>PV</th>
                     <th>Total</th>
                     <th>Abaixo Min</th>
+                    <th>Confirmado</th>
                 </thead>
                 <tbody>
-                    <g:each in="${pedido.itensPedido}" var="item">
-                        <g:set var="novoEstoque" value="${item?.estoque - item?.quantidade}"/>
-                        <tr style="background-color: ${item.isAbaixoDoMinimo() ? 'rgba(255, 10, 27, 0.79)': 'transparent'}">
+                    <g:each in="${pedido.itensPedido.sort{ it.produto?.descricao } }" var="item">
+                        <g:set var="novoEstoque" value="${item.estoqueAtual  - item?.quantidade}"/>
+                        <tr style="background-color: ${item.isAbaixoDoMinimo() || novoEstoque < 0 ? 'rgba(255, 10, 27, 0.79)': 'transparent'}">
                             <td>${item?.produto?.descricao}</td>
                             <td>${item?.unidade}</td>
                             <td>${item?.quantidade}</td>
-                            <td>${item?.estoque}</td>
+                            <td>${item?.bonificacao}</td>
+                            <td>${item?.bonificacao + item.quantidade}</td>
+                            <td>${item.estoqueAtual}</td>
                             <td>${novoEstoque < 0 ? 'INDISPONIVEL' : novoEstoque}</td>
                             <td><g:formatNumber number="${item?.desconto}" maxFractionDigits="2" />%</td>
-                            <td>${item?.bonificacao}</td>
                             <td>R$ <g:formatNumber number="${item?.valor}" maxFractionDigits="2" /></td>
                             <td>R$ <g:formatNumber number="${item?.valorMinimo}" maxFractionDigits="2" /></td>
                             <td>R$ <g:formatNumber number="${item?.valor - (item?.valor * (item?.desconto / 100))}" maxFractionDigits="2" /></td>
                             <td>R$ <g:formatNumber number="${item?.precoNegociado}" maxFractionDigits="2" /></td>
                             <td>R$ <g:formatNumber number="${item?.total}" maxFractionDigits="2" /></td>
                             <td><g:formatBoolean boolean="${item?.valorMinimo > item?.precoNegociado}" /></td>
+                            <td><g:checkBox name="check${item?.id}" value="${item?.confirmado}" /></td>
                         </tr>
                     </g:each>
                 </tbody>
