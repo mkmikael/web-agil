@@ -5,6 +5,7 @@ import web.agil.util.Util
 class Pessoa extends Participante 	 {
 
 	String nome
+    String estabelecimento
 	String cpf
 
     void setCpf(String cpf) {
@@ -17,6 +18,7 @@ class Pessoa extends Participante 	 {
 
     static constraints = {
     	nome nullable: true
+    	estabelecimento nullable: true
     	cpf nullable: true
     }
 

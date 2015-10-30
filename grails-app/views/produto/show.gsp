@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<asset:javascript src="produto.js" />
 <html>
     <head>
         <meta name="layout" content="main" />

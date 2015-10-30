@@ -6,6 +6,7 @@
         <meta name="layout" content="main" />
         <g:set var="entityName" value="${message(code: 'cliente.label', default: 'Cliente')}" />
         <title><g:message code="default.list.label" args="[entityName]" /></title>
+        <asset:javascript src="/owner/cliente-choose.js" />
     </head>
     <body>
         <div class="nav" role="navigation">
@@ -22,9 +23,9 @@
 
             <g:form action="index">
                 <g:render template="search" />
-                <fieldset>
+                <div style="margin: .7em">
                     <input type="submit" value="Procurar" />
-                </fieldset>
+                </div>
             </g:form>
 
             <div class="scroll-x">

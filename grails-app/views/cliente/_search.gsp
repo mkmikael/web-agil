@@ -1,8 +1,9 @@
-<fieldset class="embedded">
+<fieldset class="search">
     <legend>Tipo Pessoa</legend>
     <g:radio value="PF" name="tipoPessoa" checked="${tipoPessoa == 'PF'}" /> Pessoa Fisica
     <g:radio value="PJ" name="tipoPessoa" checked="${tipoPessoa == 'PJ'}" /> Pessoa Juridica
 </fieldset>
+<br>
 <fieldset class="search">
     <legend>Geral</legend>
     <div class="fieldcontain">
@@ -30,7 +31,7 @@
     </div>
 </fieldset>
 
-<fieldset id="filter-pj" class="embedded">
+<fieldset id="filter-pj" class="search">
     <legend>Pessoa Jurídica</legend>
     <div class="fieldcontain">
         <label>Nome Fantasia</label>

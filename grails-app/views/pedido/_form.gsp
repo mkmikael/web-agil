@@ -1,4 +1,7 @@
 <%@ page import="web.agil.Cliente; web.agil.ItemPedido" %>
+
+<asset:javascript src="/owner/pedido.js"/>
+
 <style type="text/css">
 	table { border: none; text-align: center; vertical-align: middle  }
 	table tr:hover { background-color: transparent; }

@@ -46,20 +46,20 @@
                     </div>
                     <div class="fieldcontain">
                         <span class="property-label">Preço de Compra</span>
-                        <span class="property-value">R$ ${g.formatNumber(number: lote?.valorDeCompra, type: 'currency')}</span>
+                        <span class="property-value">${g.formatNumber(number: lote?.valorDeCompra, type: 'currency')}</span>
                     </div>
                     <div class="fieldcontain">
                         <span class="property-label">Preço</span>
-                        <span class="property-value">R$ ${g.formatNumber(number: lote?.valor, type: 'currency')}</span>
+                        <span class="property-value">${g.formatNumber(number: lote?.valor, type: 'currency')}</span>
                     </div>
                     <div class="fieldcontain">
                         <span class="property-label">Preço Mínimo</span>
-                        <span class="property-value">R$ ${g.formatNumber(number: lote?.valorMinimo, type: 'currency')}</span>
+                        <span class="property-value">${g.formatNumber(number: lote?.valorMinimo, type: 'currency')}</span>
                     </div>
-                    <div class="fieldcontain">
-                        <span class="property-label">Quant. em Estoque</span>
-                        <span class="property-value">${lote?.estoque}</span>
-                    </div>
+                    %{--<div class="fieldcontain">--}%
+                        %{--<span class="property-label">Quant. em Estoque</span>--}%
+                        %{--<span class="property-value">${lote?.estoque}</span>--}%
+                    %{--</div>--}%
                 </div>
                 <g:if test="${lote?.statusLote?.toString() == 'ESGOTADO'}">
                     <p >*NAO E PERMITIDO EDICAO DE LOTES ESGOTADOS</p>

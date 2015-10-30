@@ -37,18 +37,19 @@ class BootStrap {
         if (Prazo.count() == 0) {
             println "LOAD PRAZOS"
             new Prazo(id: 1, parcela: 0, periodicidade: "AVISTA", ativo: true ).save(insert: true, flush: true)
-            new Prazo(id: 2, parcela: 1, periodicidade: "7", ativo: true ).save(insert: true, flush: true)
-            new Prazo(id: 3, parcela: 1, periodicidade: "14", ativo: true ).save(insert: true, flush: true)
-            new Prazo(id: 4, parcela: 1, periodicidade: "21", ativo: true ).save(insert: true, flush: true)
-            new Prazo(id: 5, parcela: 2, periodicidade: "7 - 14", ativo: true ).save(insert: true, flush: true)
-            new Prazo(id: 6, parcela: 2, periodicidade: "7 - 21", ativo: true ).save(insert: true, flush: true)
-            new Prazo(id: 7, parcela: 2, periodicidade: "14 - 21", ativo: true ).save(insert: true, flush: true)
-            new Prazo(id: 8, parcela: 3, periodicidade: "7 - 14 - 21", ativo: true ).save(insert: true, flush: true)
+            new Prazo(id: 2, parcela: 1, periodicidade: "5", ativo: true ).save(insert: true, flush: true)
+            new Prazo(id: 3, parcela: 1, periodicidade: "10", ativo: true ).save(insert: true, flush: true)
+            new Prazo(id: 4, parcela: 1, periodicidade: "15", ativo: true ).save(insert: true, flush: true)
+            new Prazo(id: 5, parcela: 2, periodicidade: "5 - 10", ativo: true ).save(insert: true, flush: true)
+            new Prazo(id: 6, parcela: 2, periodicidade: "5 - 15", ativo: true ).save(insert: true, flush: true)
+            new Prazo(id: 7, parcela: 2, periodicidade: "10 - 15", ativo: true ).save(insert: true, flush: true)
+            new Prazo(id: 8, parcela: 3, periodicidade: "5 - 10 - 15", ativo: true ).save(insert: true, flush: true)
         }
         if (Vendedor.count() == 0) {
             println "LOAD VENDEDORES"
             new Vendedor(id: 1, codigo: "001").save(insert: true, flush: true)
             new Vendedor(id: 2, codigo: "002").save(insert: true, flush: true)
+            new Vendedor(id: 3, codigo: "003").save(insert: true, flush: true)
         }
         println "END FIXTURES"
     }

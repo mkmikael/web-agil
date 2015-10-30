@@ -14,7 +14,7 @@
     <tbody>
     <g:each in="${clienteList}" var="cliente">
         <tr>
-            <td><g:link action="show" id="${cliente?.id}">${cliente?.participante?.codigo}</g:link></td>
+            <td><g:link action="show" id="${cliente?.id}">${cliente?.codigo}</g:link></td>
             <td>${cliente?.participante?.nomeFantasia}</td>
             <td>${cliente?.participante?.razaoSocial}</td>
             <td>${cliente?.participante?.cnpj}</td>

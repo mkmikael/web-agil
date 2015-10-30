@@ -11,7 +11,6 @@
 //= require jquery.maskMoney.min.js
 //= require validar-cnpj-cpf.js
 //= require material.js
-//= require_tree .
 //= require_self
 
 $(function() {

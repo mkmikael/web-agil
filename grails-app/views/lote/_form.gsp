@@ -1,3 +1,4 @@
+<asset:javascript src="owner/unidade.js"/>
 <g:hiddenField name="id" value="${lote?.id}" />
 <g:if test="${params?.produto?.id}">
 	<g:hiddenField name="produto.id" value="${lote?.produto?.id ?: params?.produto?.id}" />

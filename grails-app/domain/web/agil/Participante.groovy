@@ -4,7 +4,6 @@ import web.agil.util.Util
 
 class Participante {
 
-	String codigo
 	String endereco
 	String bairro
 	String referencia // ou complemento

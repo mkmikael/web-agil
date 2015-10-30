@@ -112,7 +112,7 @@ class ClienteController {
         } else if (params.participante.cnpj) {
             cliente.participante = new Organizacao(params.participante)
         }
-        cliente.participante.codigo = Util.generateCodigo(12, Participante.count() + 1)
+        cliente.codigo = Util.generateCodigo(9, Participante.count() + 1)
 
         cliente.participante.save()
 

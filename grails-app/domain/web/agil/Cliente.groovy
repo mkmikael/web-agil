@@ -4,6 +4,7 @@ import web.agil.enums.*
 
 class Cliente extends Papel {
 
+    String codigo
 	Date dataCriacao = new Date()
 	Double limite = 0
 	Situacao situacao = Situacao.EM_DIA
