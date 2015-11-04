@@ -12,8 +12,7 @@ class BootStrap {
         println "****************************"
     	fixtures()
     }
-    def destroy = {
-    }
+    def destroy = {}
 
     def fixtures() {
         println "INIT FIXTURES"

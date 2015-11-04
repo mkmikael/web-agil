@@ -1,7 +1,7 @@
 <table>
     <thead>
         <tr>
-            <g:sortableColumn property="participante.codigo" title="Código" />
+            <g:sortableColumn property="codigo" title="Código" />
             <g:sortableColumn property="participante.nome" title="Nome" />
             <th>CPF</th>
             <g:sortableColumn property="participante.cidade" title="Cidade" />

@@ -1,6 +1,7 @@
 package web.agil
 
 import grails.converters.JSON
+import grails.plugin.springsecurity.annotation.Secured
 import web.agil.enums.StatusLote
 
 import static org.springframework.http.HttpStatus.*
@@ -12,6 +13,7 @@ class ProdutoController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", saveTributo: "POST"]
 
+    @Secured(['permitAll'])
     def listJson() {
         def list = []
         Produto.list().each { p ->
@@ -39,7 +41,8 @@ class ProdutoController {
                 unidades << unidade
             }
             produto.unidades = unidades
-            list << produto
+            if (lotes && !lotes?.empty)
+                list << produto
         }
         render list as JSON
     }

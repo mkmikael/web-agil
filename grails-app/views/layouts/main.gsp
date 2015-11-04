@@ -23,6 +23,7 @@
             %{--</sec:ifLoggedIn>--}%
         %{--</div>--}%
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+            <sec:ifLoggedIn>
             <header class="mdl-layout__header">
                 <div class="mdl-layout__header-row">
                     <!-- Title -->
@@ -34,6 +35,7 @@
                         <g:link class="mdl-navigation__link" controller="pedido">Pedidos</g:link>
                         <g:link class="mdl-navigation__link" controller="produto">Estoque</g:link>
                         <g:link class="mdl-navigation__link" controller="cliente">Clientes</g:link>
+                        <g:link class="mdl-navigation__link" controller="logout">Sair</g:link>
                     </nav>
                 </div>
             </header>
@@ -51,8 +53,10 @@
                     <g:link class="mdl-navigation__link" controller="console">Console</g:link>
                     <g:link class="mdl-navigation__link" controller="user">Usuários</g:link>
                     <a class="mdl-navigation__link" href="/web-agil/system">Informações</a>
+                    <g:link class="mdl-navigation__link" controller="logout">Sair</g:link>
                 </nav>
             </div>
+            </sec:ifLoggedIn>
             <main class="mdl-layout__content">
                 <div class="page-content" style="margin: 0 auto; margin: 0 1em">
                     <g:layoutBody/>

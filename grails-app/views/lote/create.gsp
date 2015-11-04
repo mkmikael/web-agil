@@ -18,9 +18,9 @@
                 </g:eachError>
             </ul>
             </g:hasErrors>
-            <g:form action="save" >
+            <g:form action="saveAll" >
                 <fieldset class="form">
-                    <g:render template="/lote/form" model="[unidade: unidade]" />
+                    <g:render template="/lote/formCreate" model="[unidade: unidade]" />
                 </fieldset>
                 <fieldset class="buttons">
                     <g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />

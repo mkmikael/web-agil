@@ -20,15 +20,15 @@
     </g:if>
 
     <g:form action="index">
-        <fieldset class="embedded" style="padding: 1em; margin: 1em">
+        <fieldset class="search" style="padding: 1em; margin: 1em">
             <legend>Filtro Cliente</legend>
-            <fieldset class="embedded">
+            <fieldset class="search">
                 <legend>Geral</legend>
                 <label>Código</label>
                 <g:textField name="search_codigo" value="${search_codigo}" />
             </fieldset>
 
-            <fieldset class="embedded">
+            <fieldset class="search">
                 <legend>Pessoa Física</legend>
                 <label>Nome</label>
                 <g:textField name="search_nome" value="${search_nome}" />
@@ -37,7 +37,7 @@
                 <g:textField name="search_cpf" class="cpf" value="${search_cpf}" />
             </fieldset>
 
-            <fieldset class="embedded">
+            <fieldset class="search">
                 <legend>Pessoa Jurídica</legend>
                 <label>Nome Fantasia</label>
                 <g:textField name="search_nomeFantasia" value="${search_nomeFantasia}" />
@@ -50,7 +50,7 @@
             </fieldset>
         </fieldset>
 
-        <fieldset class="embedded" style="padding: 1em; margin: 1em">
+        <fieldset class="search" style="padding: 1em; margin: 1em">
             <legend>Filtro Pedido</legend>
             <label>Codigo</label>
             <g:textField name="search_codigo_pedido" value="${search_codigo_pedido}" />
@@ -91,14 +91,14 @@
                     <g:if test="${pedido.cliente?.participante.isOrganizacao()}">
                         <td>
                             <g:link controller="cliente" action="show" id="${pedido.cliente?.id}">
-                                ${pedido.cliente?.participante?.codigo} - ${pedido.cliente?.participante?.razaoSocial}
+                                ${pedido.cliente?.codigo} - ${pedido.cliente?.participante?.razaoSocial}
                             </g:link>
                         </td>
                     </g:if>
                     <g:elseif test="${pedido.cliente?.participante.isPessoa()}">
                         <td>
                             <g:link controller="cliente" action="show" id="${pedido.cliente?.id}">
-                                ${pedido.cliente?.participante?.codigo} - ${pedido.cliente?.participante?.nome}
+                                ${pedido.cliente?.codigo} - ${pedido.cliente?.participante?.nome}
                             </g:link>
                         </td>
                     </g:elseif>

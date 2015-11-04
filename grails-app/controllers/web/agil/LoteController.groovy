@@ -2,6 +2,8 @@ package web.agil
 
 import web.agil.enums.StatusLote
 
+import java.text.SimpleDateFormat
+
 import static org.springframework.http.HttpStatus.*
 import grails.converters.JSON
 import grails.transaction.Transactional
@@ -20,11 +22,16 @@ class LoteController {
                 unidade = produto.unidades[0]
         } else
             unidade = produto.unidades[0]
-        def lote = Lote.executeQuery("select o from Lote o where o.produto = :produto and o.unidade = :unidade " +
+        def loteList = Lote.executeQuery("select o from Lote o where o.produto = :produto and o.unidade = :unidade " +
                 "and o.dataCriacao = (select max(u.dataCriacao) from Lote u where u.produto = :produto and u.unidade = :unidade)",
-                [produto: produto, unidade: unidade]).first()
-        if (lote)
+                [produto: produto, unidade: unidade]) ?: []
+        Lote lote
+        if (loteList.empty) {
+            lote = new Lote(produto: produto)
+        } else {
+            lote = loteList.first()
             lote.vencimento = null
+        }
         render template: '/lote/form', model: [lote: lote, tipoUnidadeList: produto?.unidades?.sort()]
     }
 
@@ -79,6 +86,41 @@ class LoteController {
             }
             '*' { respond lote, [status: CREATED] }
         }
+    }
+
+    @Transactional
+    def saveAll() {
+        if (params?.produto?.id?.class.array) {
+            for (int i = 0; i < params?.produto?.id.size(); i++) {
+                def lote = new Lote()
+                lote.produto = Produto.get(params?.produto?.id[i] as Long)
+                lote.unidade = Unidade.get(params?.unidade?.id[i] as Long)
+                lote.valor = params.valor[i]?.replace(',', '.') as Double
+                lote.valorDeCompra = params.valorDeCompra[i]?.replace(',', '.') as Double
+                lote.valorMinimo = params.valorMinimo[i]?.replace(',', '.') as Double
+                lote.estoque = params.estoque[i] as Integer
+                lote.vencimento = new SimpleDateFormat('dd/MM/yyyy').parse(params.vencimento[i])
+                lote.statusLote = StatusLote.valueOf(params.statusLote[i])
+                lote.produto.estoque = lote.unidade.capacidade * lote.estoque
+                lote.save()
+                lote.produto.save()
+            }
+        } else {
+            def lote = new Lote()
+            lote.produto = Produto.get(params?.produto?.id as Long)
+            lote.unidade = Unidade.get(params?.unidade?.id as Long)
+            lote.valor = params.double('valor')
+            lote.valorDeCompra = params.double('valorDeCompra')
+            lote.valorMinimo = params.double('valorMinimo')
+            lote.estoque = params.double('estoque')
+            lote.vencimento = new SimpleDateFormat('dd/MM/yyyy').parse(params.vencimento)
+            lote.statusLote = StatusLote.valueOf(params.statusLote)
+            lote.produto.estoque = lote.unidade.capacidade * lote.estoque
+            lote.save()
+            lote.produto.save()
+        }
+        flash.message = 'Lote(s) registrado(s) com sucesso!'
+        redirect(action: 'index')
     }
 
     def edit(Lote lote) {

@@ -1,6 +1,6 @@
 <table>
     <thead>
-    <g:sortableColumn property="participante.codigo" title="Código" />
+    <g:sortableColumn property="codigo" title="Código" />
     <th>Nome Fantasia</th>
     <th>Razao Social</th>
     <g:sortableColumn property="participante.cnpj" title="CNPJ" />

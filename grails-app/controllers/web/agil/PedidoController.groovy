@@ -1,6 +1,7 @@
 package web.agil
 
 import grails.converters.JSON
+import grails.plugin.springsecurity.annotation.Secured
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
 import web.agil.util.Util
@@ -16,6 +17,7 @@ class PedidoController {
 
     static allowedMethods = [savePedidos: "POST", save: "POST", update: "PUT", delete: "DELETE"]
 
+    @Secured(['permitAll'])
     @Transactional
     def savePedidos(String pedidos) {
         println pedidos
@@ -23,7 +25,7 @@ class PedidoController {
         def response = []
         for (JSONObject pedidoJO : pedidosJA) {
             def pedido = new Pedido()
-            def sdf = new SimpleDateFormat("ddMMyyyHHmmss")
+            def sdf = new SimpleDateFormat("ddMMyyyyHHmmss")
             pedido.dataCriacao = sdf.parse( pedidoJO.getString("dataCriacao") )
             pedido.dataFaturamento = sdf.parse( pedidoJO.getString("dataDeFaturamento") )
             pedido.dataSincronizacao = new Date()

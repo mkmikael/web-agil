@@ -23,6 +23,12 @@ class Lote {
     	parent nullable: true
     }
 
+    static namedQueries = {
+        currentLote {
+
+        }
+    }
+
 	def beforeInsert = {
 		codigo = "L" + Util.generateCodigo(12, this.count() + 1)
 	}

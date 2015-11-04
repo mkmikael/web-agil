@@ -176,7 +176,7 @@ class ExcelService {
             lote.produto = produtoInstance
             lote.valor = row.getCell( VALOR )?.toString() as Double
             lote.valorMinimo = row.getCell( VALOR_MIN )?.toString() as Double
-            if (tipo?.trim() == "UNI") {
+            if (tipo?.trim() in ["UNI", "PT", "DP"]) {
                 lote.unidade = new Unidade(tipo: TipoUnidade.get(1), capacidade: 1, produto: produtoInstance).save()
             } else if (tipo?.trim() == "CXA") {
                 lote.unidade = new Unidade(tipo: TipoUnidade.get(2), capacidade: 0, produto: produtoInstance).save()

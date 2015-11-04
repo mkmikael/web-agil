@@ -26,9 +26,9 @@
             </ul>
             </g:hasErrors>
             <g:form action="save">
-                <fieldset class="form">
+                <div class="scroll-x">
                     <g:render template="/pedido/form" model="[pedido: pedido]" />
-                </fieldset>
+                </div>
                 <fieldset class="buttons">
                     <g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
                 </fieldset>
