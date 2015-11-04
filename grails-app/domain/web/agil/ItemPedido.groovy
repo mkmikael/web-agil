@@ -24,12 +24,16 @@ class ItemPedido {
     }
 
     def getEstoqueAtual() {
-        if (unidade.tipo.descricao == "CXA") {
-            return produto?.estoqueTipo?.caixa
-        } else if (unidade.tipo.descricao == "UNI") {
-            return produto?.estoqueTipo?.unidade
-        } else {
-            return 0
+        try {
+            if (unidade.tipo.descricao == "CXA") {
+                return produto?.estoqueTipo?.caixa
+            } else if (unidade.tipo.descricao == "UNI") {
+                return produto?.estoqueTipo?.unidade
+            } else {
+                return 0
+            }
+        } catch (Exception e) {
+            return 0;
         }
     }
 
