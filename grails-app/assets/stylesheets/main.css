@@ -202,7 +202,6 @@ fieldset.search {
 }
 
 fieldset legend { margin: 0 1em; }
-fieldset { padding: 1em; display: inline-block }
 fieldset.search .fieldcontain { display: inline-block }
 fieldset,
 .property-list {

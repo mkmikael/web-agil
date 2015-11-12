@@ -29,6 +29,10 @@
                     </ul>
                     <div id="dados">
                         <div class="property-list">
+                            <div class="fieldcontain">
+                                <span class="property-label">Codigo</span>
+                                <span class="property-value">${cliente?.codigo}</span>
+                            </div>
                             <g:if test="${cliente?.participante.class == Organizacao}">
                                 <g:render template="/organizacao/show" model="[participante: cliente?.participante]" />
                             </g:if>

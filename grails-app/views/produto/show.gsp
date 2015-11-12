@@ -101,6 +101,8 @@
                     </div>
 
                     <div id="unidades">
+                        <g:link class="btn" params="['produto.id': produto.id]" controller="unidade" action="create">Criar Unidade</g:link>
+
                         <fieldset>
                             <table style="width: auto">
                                 <thead>

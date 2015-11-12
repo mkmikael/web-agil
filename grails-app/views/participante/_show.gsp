@@ -1,8 +1,4 @@
 <div class="fieldcontain">
-    <span class="property-label">Código</span>
-    <span class="property-value">${participante?.codigo}</span>
-</div>
-<div class="fieldcontain">
     <span class="property-label">Endereço</span>
     <span class="property-value">${participante?.endereco}</span>
 </div>
