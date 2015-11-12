@@ -15,18 +15,22 @@ class Produto {
             (base - (base % i)) / i
         }
         def show = [:]
-        if (unidades) {
-            if (unidades.size() > 1) {
-                def unidade = unidades.find { it.toString() == "CXA" }
-                show = [caixa: q(estoque , unidade.capacidade), unidade: (estoque % unidade.capacidade)]
-            } else if (unidades.size() == 1) {
-                def unidade = unidades.first()
-                if (unidade.toString() == "CXA") {
-                    show = [caixa: q(estoque , unidade.capacidade), unidade: '']
-                } else {
-                    show = [caixa: '', unidade: estoque]
+        try {
+            if (unidades) {
+                if (unidades.size() > 1) {
+                    def unidade = unidades.find { it.toString() == "CXA" }
+                    show = [caixa: q(estoque , unidade.capacidade), unidade: (estoque % unidade.capacidade)]
+                } else if (unidades.size() == 1) {
+                    def unidade = unidades.first()
+                    if (unidade.toString() == "CXA") {
+                        show = [caixa: q(estoque , unidade.capacidade), unidade: '']
+                    } else {
+                        show = [caixa: '', unidade: estoque]
+                    }
                 }
             }
+        } catch (ArithmeticException) {
+            show = [caixa: '', unidade: '']
         }
         show
     }
