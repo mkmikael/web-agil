@@ -33,7 +33,7 @@
                     <!-- Navigation. We hide it in small screens. -->
                         <g:link class="mdl-navigation__link" controller="lote">Lotes</g:link>
                         <g:link class="mdl-navigation__link" controller="pedido">Pedidos</g:link>
-                        <g:link class="mdl-navigation__link" controller="produto">Estoque</g:link>
+                        <g:link class="mdl-navigation__link" controller="produto">Produtos</g:link>
                         <g:link class="mdl-navigation__link" controller="cliente">Clientes</g:link>
                         <g:link class="mdl-navigation__link" controller="logout">Sair</g:link>
                     </nav>
@@ -43,7 +43,7 @@
                 <span class="mdl-layout-title">Agil</span>
                 <nav class="mdl-navigation">
                     <g:link class="mdl-navigation__link" controller="cliente">Clientes</g:link>
-                    <g:link class="mdl-navigation__link" controller="produto">Estoque</g:link>
+                    <g:link class="mdl-navigation__link" controller="produto">Produtos</g:link>
                     <g:link class="mdl-navigation__link" controller="lote">Lotes</g:link>
                     <g:link class="mdl-navigation__link" controller="pedido">Pedidos</g:link>
                     <g:link class="mdl-navigation__link" controller="fornecedor">Fornecedores</g:link>

@@ -64,7 +64,7 @@
         </fieldset>
     </g:form>
 
-    <g:form name="form-pedidos">
+    <g:form class="scroll-x" name="form-pedidos">
         %{--<fieldset>--}%
             %{--<g:actionSubmit class="btn" value="Negar" action="negarPedidos"/>--}%
             %{--<g:actionSubmit class="btn" value="Confirmar" action="confirmarPedidos"/>--}%

@@ -38,38 +38,40 @@
     Produto <input id="produtoFilter">
     Itens Vendidos <input id="vendidosFilter" type="checkbox">
 </div>
-<table id="itens">
-	<thead>
-        <tr>
-            <th>Produto</th>
-            <th>Unidade</th>
-            <th>Preço</th>
-            <th>Preço Minimo</th>
-            <th>Quant.</th>
-            <th>Desconto</th>
-            <th>Bonificação</th>
-            <th>PP</th>
-            <th>PV</th>
-            <th>Total</th>
-        </tr>
-	</thead>
-	<tbody>
-        <g:each in="${itensList}" var="item" status="i">
-            <tr style="background-color: ${i % 2 == 0 ? transparent : '#efefef'}">
-                <td>
-                    <g:hiddenField name="item.id" value="${item.id}" />
-                    <g:hiddenField name="item.produto.id" value="${item.produto.id}" />${item.produto.descricao}
-                </td>
-                <td><g:select name="item.unidade.id" from="${item.produto.unidades}" value="${item.unidade.id}" optionKey="id" style="width: 100%"></g:select></td>
-                <td>R$ <g:hiddenField name="item.valor" value="${item.valor}" /><span id="preco">${item.valor}</span></td>
-                <td>R$ <g:hiddenField name="item.valorMinimo" value="${item.valorMinimo}" /><span id="precoMinimo">${item.valorMinimo}</span></td>
-                <td><g:textField name="item.quantidade" value="${item.quantidade}" autocomplete="off" style="max-width: 70px" /></td>
-                <td><g:textField name="item.desconto" value="${item.desconto}" autocomplete="off" style="max-width: 70px" /></td>
-                <td><g:textField name="item.bonificacao" value="${item.bonificacao}" autocomplete="off" style="max-width: 70px" /></td>
-                <td>R$ <span id="pp">0</span></td>
-                <td>R$ <span id="pv">0</span></td>
-                <td>R$ <span id="subtotal" class="subtotal">0</span></td>
+<div class="scroll-x">
+    <table id="itens">
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Unidade</th>
+                <th>Preço</th>
+                <th>Preço Minimo</th>
+                <th>Quant.</th>
+                <th>Desconto</th>
+                <th>Bonificação</th>
+                <th>PP</th>
+                <th>PV</th>
+                <th>Total</th>
             </tr>
-        </g:each>
-	</tbody>
-</table>
+        </thead>
+        <tbody>
+            <g:each in="${itensList}" var="item" status="i">
+                <tr style="background-color: ${i % 2 == 0 ? transparent : '#efefef'}">
+                    <td>
+                        <g:hiddenField name="item.id" value="${item.id}" />
+                        <g:hiddenField name="item.produto.id" value="${item.produto.id}" />${item.produto.descricao}
+                    </td>
+                    <td><g:select name="item.unidade.id" from="${item.produto.unidades}" value="${item.unidade.id}" optionKey="id" style="width: 100%"></g:select></td>
+                    <td>R$ <g:hiddenField name="item.valor" value="${item.valor}" /><span id="preco">${item.valor}</span></td>
+                    <td>R$ <g:hiddenField name="item.valorMinimo" value="${item.valorMinimo}" /><span id="precoMinimo">${item.valorMinimo}</span></td>
+                    <td><g:textField name="item.quantidade" value="${item.quantidade}" autocomplete="off" style="max-width: 70px" /></td>
+                    <td><g:textField name="item.desconto" value="${item.desconto}" autocomplete="off" style="max-width: 70px" /></td>
+                    <td><g:textField name="item.bonificacao" value="${item.bonificacao}" autocomplete="off" style="max-width: 70px" /></td>
+                    <td>R$ <span id="pp">0</span></td>
+                    <td>R$ <span id="pv">0</span></td>
+                    <td>R$ <span id="subtotal" class="subtotal">0</span></td>
+                </tr>
+            </g:each>
+        </tbody>
+    </table>
+</div>

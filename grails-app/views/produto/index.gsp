@@ -80,7 +80,6 @@
             <div class="pagination">
                 <g:paginate total="${produtoCount ?: 0}" params="${params}" />
             </div>
-
         </div>
     </body>
 </html>

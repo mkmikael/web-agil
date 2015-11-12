@@ -26,7 +26,7 @@
             </ul>
             </g:hasErrors>
             <g:form action="save">
-                <div class="scroll-x">
+                <div>
                     <g:render template="/pedido/form" model="[pedido: pedido]" />
                 </div>
                 <fieldset class="buttons">
