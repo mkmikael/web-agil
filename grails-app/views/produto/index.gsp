@@ -18,7 +18,7 @@
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
-            <g:form action="index" method="GET">
+            <g:form action="index">
                 <fieldset class="search">
                     <div class="fieldcontain">
                         <label>Código</label>
@@ -49,34 +49,30 @@
                     <input type="submit" value="Procurar" />
                 </fieldset>
             </g:form>
-            <g:form name="form-info-cxa" action="informarCXA" method="post">
-                <g:hiddenField name="quantidade" value="0"/>
-                <g:hiddenField name="acao" value="0"/>
-                <table>
-                    <thead>
-                        <g:sortableColumn property="codigo" title="Código" />
-                        <g:sortableColumn property="ncm" title="NCM" />
-                        <g:sortableColumn property="descricao" title="Descrição" />
-                        <g:sortableColumn property="fornecedor.descricao" title="Fornecedor" />
-                        <g:sortableColumn property="grupo.descricao" title="Grupo" />
-                        <g:sortableColumn property="estoque" title="CXA" />
-                        <th>UNI</th>
-                    </thead>
-                    <tbody>
-                        <g:each in="${produtoList}" var="produto" status="i">
-                            <tr>
-                                <td><g:link action="show" id="${produto?.id}">${produto?.codigo}</g:link></td>
-                                <td>${produto?.ncm}</td>
-                                <td>${produto?.descricao}</td>
-                                <td>${produto?.fornecedor?.descricao}</td>
-                                <td>${produto?.grupo?.descricao}</td>
-                                <td>${produto?.estoqueTipo?.caixa}</td>
-                                <td>${produto?.estoqueTipo?.unidade}</td>
-                            </tr>
-                        </g:each>
-                    </tbody>
-                </table>
-            </g:form>
+            <table>
+                <thead>
+                    <g:sortableColumn params="${params}" property="codigo" title="Código" />
+                    <g:sortableColumn params="${params}" property="ncm" title="NCM" />
+                    <g:sortableColumn params="${params}" property="descricao" title="Descrição" />
+                    <g:sortableColumn params="${params}" property="fornecedor.descricao" title="Fornecedor" />
+                    <g:sortableColumn params="${params}" property="grupo.descricao" title="Grupo" />
+                    <g:sortableColumn params="${params}" property="estoque" title="CXA" />
+                    <th>UNI</th>
+                </thead>
+                <tbody>
+                    <g:each in="${produtoList}" var="produto" status="i">
+                        <tr>
+                            <td><g:link action="show" id="${produto?.id}">${produto?.codigo}</g:link></td>
+                            <td>${produto?.ncm}</td>
+                            <td>${produto?.descricao}</td>
+                            <td>${produto?.fornecedor?.descricao}</td>
+                            <td>${produto?.grupo?.descricao}</td>
+                            <td>${produto?.estoqueTipo?.caixa}</td>
+                            <td>${produto?.estoqueTipo?.unidade}</td>
+                        </tr>
+                    </g:each>
+                </tbody>
+            </table>
             <div class="pagination">
                 <g:paginate total="${produtoCount ?: 0}" params="${params}" />
             </div>
