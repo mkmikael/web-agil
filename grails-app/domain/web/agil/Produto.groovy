@@ -4,34 +4,35 @@ import web.agil.util.Util
 
 class Produto {
 
-	String codigo
-	String descricao
+    String codigo
+    String descricao
     String ncm
     Integer estoque = 0
     static transients = ['estoqueTipo', 'lote']
 
     def getEstoqueTipo() {
         def q = { base, i ->
-            (base - (base % i)) / i
+            try {
+                return (base - (base % i)) / i
+            } catch (ArithmeticException) {
+                return 0
+            }
         }
+
         def show = [:]
-        try {
-            if (unidades) {
-                if (unidades.size() > 1) {
-                    def unidade = unidades.find { it.toString() == "CXA" }
-                    show = [caixa: q(estoque , unidade.capacidade), unidade: (estoque % unidade.capacidade)]
-                } else if (unidades.size() == 1) {
-                    def unidade = unidades.first()
-                    if (unidade.toString() == "CXA") {
-                        show = [caixa: q(estoque , unidade.capacidade), unidade: '']
-                    } else {
-                        show = [caixa: '', unidade: estoque]
-                    }
+        if (unidades) {
+            if (unidades.size() > 1) {
+                def unidade = unidades.find { it.toString() == "CXA" }
+                show = [caixa: q(estoque , unidade.capacidade), unidade: (estoque % unidade.capacidade)]
+            } else if (unidades.size() == 1) {
+                def unidade = unidades.first()
+                if (unidade.toString() == "CXA") {
+                    show = [caixa: q(estoque , unidade.capacidade), unidade: 0]
+                } else {
+                    show = [caixa: 0, unidade: estoque]
                 }
             }
-        } catch (ArithmeticException) {
-            show = [caixa: '', unidade: '']
-        }
+        } // end if
         show
     }
 
@@ -42,15 +43,15 @@ class Produto {
             null
     }
 
-	def beforeInsert = {
+    def beforeInsert = {
         if (!codigo)
             codigo = Util.generateCodigo(12, this.count() + 1)
-	}
+    }
 
-	static hasMany = [lotes: Lote, unidades: Unidade, tributos: ProdutoTributo]
-	static belongsTo = [fornecedor: Fornecedor, grupo: Grupo]
+    static hasMany = [lotes: Lote, unidades: Unidade, tributos: ProdutoTributo]
+    static belongsTo = [fornecedor: Fornecedor, grupo: Grupo]
     static constraints = {
-    	codigo nullable: true
+        codigo nullable: true
         ncm nullable: true
     }
     static mapping = {
@@ -60,6 +61,6 @@ class Produto {
     }
 
     String toString() {
-    	"$codigo - $descricao"
+        "$codigo - $descricao"
     }
 }
