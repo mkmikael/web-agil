@@ -12,8 +12,8 @@ import web.agil.util.Util
 @Transactional
 class ExcelService {
 
-    String pathExcel = "/opt/publico/sistema_venda.xls"
-    String pathClientes = "/opt/publico/clientes-agil-v3.xls"
+    String pathExcel = "/opt/publico/produtos-v4.xls"
+    String pathClientes = "/opt/publico/clientes-agil-v4.xls"
 
     def test() {
         FileInputStream fileInputStream = new FileInputStream(pathClientes)
@@ -44,7 +44,7 @@ class ExcelService {
         final TELEFONE              = 14
         final VENDEDOR              = 15
         final CANAL                 = 16
-        final NUM_ROWS = 301
+        final NUM_ROWS = 316
         FileInputStream fileInputStream = new FileInputStream(pathClientes)
         Workbook workbook = new HSSFWorkbook(fileInputStream)
         Sheet sheet = workbook.getSheetAt(0)
@@ -61,6 +61,7 @@ class ExcelService {
                     participante.razaoSocial = Util.removeSpecialCaracter(params[0].trim())
                 } else {
                     participante.razaoSocial = Util.removeSpecialCaracter(row.getCell( CLIENTE )?.toString())
+                    participante.nomeFantasia = participante.razaoSocial
                 }
                 participante.inscricaoEstadual = row.getCell( INSCRICAO_ESTADUAL )?.toString()
             } else {
@@ -81,6 +82,7 @@ class ExcelService {
             participante.telefone = row.getCell( TELEFONE )?.toString()
 
             participante.save()
+
             def c = new Cliente(participante: participante)
             c.codigo = Util.generateCodigo(9, Participante.count() + 1)
             def vendedor = row.getCell( VENDEDOR )?.toString()
@@ -127,83 +129,101 @@ class ExcelService {
     }
 
     def loadProdutos() {
+        final ID = 1
+        final FORNECEDOR = 2
+        final GRUPO = 3
+        final PRODUTO = 4
+        final NCM = 5
         FileInputStream fileInputStream = new FileInputStream(pathExcel)
         Workbook workbook = new HSSFWorkbook(fileInputStream)
-        Sheet sheet = workbook.getSheet("produto")
+        Sheet sheet = workbook.getSheetAt(0)
         Row row
-        for (i in 1..134) {
+        for (i in 2..158) {
             row = sheet.getRow(i)
             def produto = new Produto()
-            produto.id = row.getCell(0)?.toString() as Long
-            produto.codigo = row.getCell(1)?.toString()
-            produto.descricao = Util.removeSpecialCaracter(row.getCell(2)?.toString())?.toUpperCase()
-            def fornecedor = Fornecedor.findByDescricao(row.getCell(3)?.toString())
+            produto.ncm = row.getCell( NCM )?.toString()
+            def descricao = Util.removeSpecialCaracter(row.getCell( PRODUTO )?.toString())?.toUpperCase()
+            def params = descricao.split('-')
+            if (params.length == 2) {
+                produto.descricao = params[1].trim()
+            } else {
+                produto.descricao = params[0].trim()
+            }
+            def fornecedor = Fornecedor.findByDescricao(row.getCell( FORNECEDOR )?.toString())
             if (!fornecedor) {
-                fornecedor = new Fornecedor( descricao: row.getCell(3)?.toString() ).save()
+                fornecedor = new Fornecedor( descricao: row.getCell( FORNECEDOR )?.toString() ).save()
             }
             produto.fornecedor = fornecedor
-            def grupo = Grupo.findByDescricao( row.getCell(4)?.toString() )
+            def grupo = Grupo.findByDescricao( row.getCell( GRUPO )?.toString() )
             if (!grupo) {
-                grupo = new Grupo( descricao: row.getCell(4)?.toString() ).save()
+                grupo = new Grupo( descricao: row.getCell( GRUPO )?.toString() ).save()
             }
             produto.grupo = grupo
             produto.save()
-            println produto.properties
+            println "${produto.ncm} - ${produto.descricao} - ${produto.fornecedor.descricao} - ${produto.grupo.descricao}"
         }
         fileInputStream.close();
     }
 
-
     def loadUnidades() {
         final ID        = 0
-        final PRODUTO   = 1
-        final TIPO      = 2
-        final VALOR     = 3
-        final VALOR_MIN = 4
+        final PRODUTO   = 4
+        final VALOR_MIN = 7
+        final VALOR     = 6
+        final TIPO      = 8
         FileInputStream fileInputStream = new FileInputStream(pathExcel)
         Workbook workbook = new HSSFWorkbook(fileInputStream)
-        Sheet sheet = workbook.getSheet("precos")
+        Sheet sheet = workbook.getSheetAt(0)
         Row row
-        for (i in 1..181) {
-            println i
+        for (i in 1..158) {
             row = sheet.getRow(i)
             def tipo = row.getCell( TIPO )?.toString()
             def lote  = new Lote()
             lote.vencimento = new Date()
-            def produtoInstance = Produto.get( row.getCell( PRODUTO )?.toString() as Long )
-            if (!produtoInstance)
+            def descricao = row.getCell( PRODUTO )?.toString()
+            def params = descricao.split('-')
+            if (params.length == 2) {
+                descricao = params[1].trim()
+            } else {
+                descricao = params[0].trim()
+            }
+            def produtoInstance = Produto.findByDescricao( descricao )
+            if (!produtoInstance) {
+                println 'not found produto'
                 continue
+            }
             lote.produto = produtoInstance
             lote.valor = row.getCell( VALOR )?.toString() as Double
             lote.valorMinimo = row.getCell( VALOR_MIN )?.toString() as Double
-            if (tipo?.trim() in ["UNI", "PT", "DP"]) {
+            if (tipo?.trim() in ["UNI", "PT", "DP", "LT"]) {
                 lote.unidade = new Unidade(tipo: TipoUnidade.get(1), capacidade: 1, produto: produtoInstance).save()
-            } else if (tipo?.trim() == "CXA") {
+            } else if (tipo?.trim() in ["PCT", "FD", "CJ"]) {
                 lote.unidade = new Unidade(tipo: TipoUnidade.get(2), capacidade: 0, produto: produtoInstance).save()
             } else {
+                println 'not found produto'
                 continue
             }
-            produtoInstance.addToUnidades(lote.unidade)
-            produtoInstance.save()
             lote.statusLote = StatusLote.ESGOTADO
             lote.save()
-            println lote.properties
+            println lote
         }
         fileInputStream.close();
     }
 
     def associarFornecedorAndGrupo() {
+        final FORNECEDOR = 2
+        final GRUPO = 3
         FileInputStream fileInputStream = new FileInputStream(pathExcel)
         Workbook workbook = new HSSFWorkbook(fileInputStream)
-        Sheet sheet = workbook.getSheet("produto")
-        Row row = sheet.getRow(1)
-        def fornecedor = Fornecedor.findByDescricao( row.getCell(3)?.toString() )
-        for ( i in 2..134 ) {
+        Sheet sheet = workbook.getSheetAt(0)
+        Row row = sheet.getRow(2)
+        def fornecedor = Fornecedor.findByDescricao( row.getCell( FORNECEDOR )?.toString() )
+        for ( i in 3..158 ) {
             row = sheet.getRow(i)
-            def f = Fornecedor.findByDescricao( row.getCell(3)?.toString() )
+            def f = Fornecedor.findByDescricao( row.getCell( FORNECEDOR )?.toString() )
             if ( fornecedor != f )
                 fornecedor = f
-            def grupo = Grupo.findByDescricao( row.getCell(4)?.toString() )
+            def grupo = Grupo.findByDescricao( row.getCell( GRUPO )?.toString() )
             fornecedor.addToGrupos( grupo )
             println "$fornecedor - $grupo"
         }

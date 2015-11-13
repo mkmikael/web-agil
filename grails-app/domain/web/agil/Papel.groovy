@@ -7,5 +7,6 @@ class Papel {
 	static belongsTo = [participante: Participante]
     static constraints = {
     	participante nullable: true
+        codigo nullable: true
     }
 }

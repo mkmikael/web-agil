@@ -4,7 +4,6 @@ class ItemPedido {
 
     Boolean calcular = true
     Integer estoque = 0
-    Integer caixas
     Integer estoqueAtual
 
 	Integer quantidade = 0
@@ -18,7 +17,7 @@ class ItemPedido {
     Unidade unidade
     Boolean confirmado = true
 
-    static transients = ['estoqueAtual', 'caixas', 'estoque', 'calcular']
+    static transients = ['estoqueAtual', 'estoque', 'calcular']
 	static belongsTo = [pedido: Pedido]
     static constraints = {
     }

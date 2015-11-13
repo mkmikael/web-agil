@@ -1,10 +1,10 @@
 package web.agil
 
 import web.agil.enums.*
+import web.agil.util.Util
 
 class Cliente extends Papel {
 
-    String codigo
 	Date dataCriacao = new Date()
 	Double limite = 0
 	Situacao situacao = Situacao.EM_DIA
@@ -16,9 +16,14 @@ class Cliente extends Papel {
 	static hasMany = [pedidos: Pedido]
 	static belongsTo = [vendedor: Vendedor]
     static constraints = {
+        codigo: nullable: true
     	diaDeVisita nullable: true
     	prazo nullable: true
     	tipoAvista nullable: true
     }
 
+    def beforeInsert = {
+        if (!codigo)
+            codigo = Util.generateCodigo(12, this.count() + 1)
+    }
 }
