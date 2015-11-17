@@ -44,6 +44,24 @@ class ClienteController {
         render clientes as JSON
     }
 
+    @Transactional
+    def updateAllRota() {
+        def ids = []
+        params.each { entry ->
+            def matcher = entry.key =~ /^check(\d*)/
+            if ( matcher.find() )
+                ids << (matcher[0][1] as Long)
+        }
+        if (params.rota) {
+            Cliente.getAll(ids).each {
+                it.diaDeVisita = Semana.valueOf(params.rota)
+            }
+        } else {
+            println 'deu merda'
+        }
+        redirect(action: 'index')
+    }
+
     def index(Integer max) {
         params.max = Math.min(max ?: 30, 100)
         params.tipoPessoa = params.tipoPessoa ?: 'PF'

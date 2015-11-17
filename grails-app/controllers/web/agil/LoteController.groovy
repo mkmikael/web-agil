@@ -35,6 +35,19 @@ class LoteController {
         render template: '/lote/form', model: [lote: lote, tipoUnidadeList: produto?.unidades?.sort()]
     }
 
+    @Transactional
+    def deleteAll() {
+        def ids = []
+        params.each { entry ->
+            def matcher = entry.key =~ /^check(\d*)/
+            if ( matcher.find() )
+                ids << (matcher[0][1] as Long)
+        }
+        Lote.getAll(ids).each { it.delete() }
+        flash.message = "Lote(s) deletado(s) com sucesso!"
+        redirect(action: 'index')
+    }
+
     def index(Integer max) {
         params.max = Math.min(max ?: 25, 100)
         params.search_status = params.search_status ?: 'DISPONIVEL'

@@ -60,6 +60,19 @@ class PedidoController {
     }
 
     @Transactional
+    def deleteAll() {
+        def ids = []
+        params.each { entry ->
+            def matcher = entry.key =~ /^check(\d*)/
+            if ( matcher.find() )
+                ids << (matcher[0][1] as Long)
+        }
+        Pedido.getAll(ids).each { it.delete() }
+        flash.message = "Pedido(s) deletado(s) com sucesso!"
+        redirect(action: 'index')
+    }
+
+    @Transactional
     def changeItemPedido(Long id, Boolean checked) {
         def item = ItemPedido.get(id)
         item.confirmado = checked

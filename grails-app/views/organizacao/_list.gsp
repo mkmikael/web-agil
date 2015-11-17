@@ -1,5 +1,6 @@
 <table>
     <thead>
+    <th><input onchange="$('table tbody input:checkbox').prop('checked', $(this).prop('checked'))" type="checkbox"></th>
     <g:sortableColumn property="codigo" title="Código" />
     <th>Nome Fantasia</th>
     <th>Razao Social</th>
@@ -14,6 +15,7 @@
     <tbody>
     <g:each in="${clienteList}" var="cliente">
         <tr>
+            <td><g:checkBox name="check${cliente.id}" /></td>
             <td><g:link action="show" id="${cliente?.id}">${cliente?.codigo}</g:link></td>
             <td>${cliente?.participante?.nomeFantasia}</td>
             <td>${cliente?.participante?.razaoSocial}</td>

@@ -39,7 +39,8 @@ $(function() {
 	});
 
 	$('.tabs').tabs();
-	$('button, input:submit, .btn').button();
+	$('.btn').button();
+	$('button, input:submit').addClass('mdl-button mdl-js-button mdl-button--raised mdl-button--colored');
 
 	$('.date').mask('00/00/0000', {placeholder: 'Exemplo 01/01/2016'});
 	$('.telefone').mask('(00)0000-0000', {placeholder: 'Exemplo: (91)3212-1234'});

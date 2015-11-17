@@ -28,17 +28,47 @@
                 </div>
             </g:form>
 
-            <div class="scroll-x">
-                <g:if test="${tipoPessoa == "PF"}">
-                    <g:render template="/pessoa/list" model="[clienteList: clienteList]" />
-                </g:if>
-                <g:if test="${tipoPessoa == "PJ"}">
-                    <g:render template="/organizacao/list" model="[clienteList: clienteList]" />
-                </g:if>
-            </div>
+            <g:form name="operacaoForm">
+                <fieldset class="search">
+                    <legend>Operacoes</legend>
+                    <button class="btn" type="button" onclick="$('#dialogRota').dialog({title: 'Alterar Cliente'})">Alterar Dias de Rota</button>
+                </fieldset>
+                <br>
+                <div class="scroll-x">
+                    <g:if test="${tipoPessoa == "PF"}">
+                        <g:render template="/pessoa/list" model="[clienteList: clienteList]" />
+                    </g:if>
+                    <g:if test="${tipoPessoa == "PJ"}">
+                        <g:render template="/organizacao/list" model="[clienteList: clienteList]" />
+                    </g:if>
+                </div>
+            </g:form>
 
             <div class="pagination">
                 <g:paginate total="${clienteCount ?: 0}" params="${params}" />
+            </div>
+
+            <div id="dialogRota">
+                <script>
+                    function updateAllRota() {
+                        var isConfim = confirm('Voce tem certeza?');
+                        if (isConfim) {
+                            var value = $('#inputRota').val();
+                            var input = $("<input>")
+                                    .attr("type", "hidden")
+                                    .attr("name", "rota").val(value);
+                            $('#operacaoForm').append(input);
+                        }
+                        return isConfim;
+                    }
+                </script>
+
+                <div class="fieldcontain">
+                    <label>Dia de Rota</label>
+                    <g:select name="inputRota" from="${Semana.values()}" />
+                </div>
+                <br>
+                <g:actionSubmit value="Atualizar" action="updateAllRota" form="operacaoForm" onclick="return updateAllRota()" />
             </div>
         </div>
     </body>

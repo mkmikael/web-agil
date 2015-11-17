@@ -74,9 +74,10 @@
     <g:form class="scroll-x" name="form-pedidos">
         <fieldset class="search">
             <legend>Operacoes</legend>
-            <g:actionSubmit class="btn" value="Negar" action="negarPedidos"/>
-            <g:actionSubmit class="btn" value="Confirmar" action="confirmarPedidos"/>
-            <g:actionSubmit class="btn" value="Desfazer" action="desfazerPedidos"/>
+            <g:actionSubmit value="Negar" action="negarPedidos"/>
+            <g:actionSubmit value="Confirmar" action="confirmarPedidos"/>
+            <g:actionSubmit value="Desfazer" action="desfazerPedidos"/>
+            <g:actionSubmit onclick="return confirm('Voce tem certeza?')" value="Deletar" action="deleteAll" />
         </fieldset>
         <br>
 
