@@ -47,6 +47,7 @@ class ProdutoController {
         render list as JSON
     }
 
+    @Deprecated
     def listEstoque() {
         params.max = Math.min(params.int('max')?: 25, 100)
         params.offset = params.offset ?: 0
@@ -91,18 +92,31 @@ class ProdutoController {
         }
         def produtoList = Produto.createCriteria().list(params, criteria)
         def produtoCount = Produto.createCriteria().count(criteria)
-        respond produtoList, model:[produtoCount: produtoCount, fornecedorList: Fornecedor.list(), grupoList: Grupo.list()], params: params
+        respond produtoList, model:[produtoCount: produtoCount, fornecedorList: Fornecedor.list(), grupoList: Grupo.list()] + params
     }
 
     @Transactional
     def show(Produto produto) {
-        def list = produto.tributos*.tributo*.id
+        def tributoIdList = produto.tributos*.tributo*.id
         Tributo.list().each {
-            if (!list.contains(it.id)) {
+            if (!tributoIdList.contains(it.id)) {
                 produto.addToTributos(new ProdutoTributo(produto: produto, tributo: it))
             }
         }
-        println(produto.tributos)
+
+        def unidadeLength =  produto.unidades.size()
+        if (unidadeLength == 0) {
+            produto.addToTributos(new Unidade( tipo: TipoUnidade.UNI, capacidade: 1 ))
+            produto.addToTributos(new Unidade( tipo: TipoUnidade.CXA, capacidade: 0 ))
+        } else if (unidadeLength == 1) {
+            def unidadeDoProduto = produto.unidades.first()
+            if (unidadeDoProduto.tipo.descricao == TipoUnidade.UNI.descricao) {
+                produto.addToUnidades( new Unidade( tipo: TipoUnidade.CXA, capacidade: 0 ) )
+            } else if (unidadeDoProduto.tipo.descricao == TipoUnidade.CXA.descricao) {
+                produto.addToUnidades( new Unidade( tipo: TipoUnidade.UNI, capacidade: 1 ) )
+            }
+        }
+
         produto.save()
         respond produto
     }

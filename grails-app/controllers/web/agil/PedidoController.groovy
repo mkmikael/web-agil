@@ -76,9 +76,17 @@ class PedidoController {
             if ( matcher.find() )
                 ids << (matcher[0][1] as Long)
         }
-        Pedido.getAll(ids).each { p ->
-            p.statusPedido = StatusPedido.NEGADO
-            p.itensPedido.each { item -> item.confirmado = false }
+        if (!ids.empty) {
+            Pedido.getAll(ids).each { p ->
+                if (p.statusPedido == StatusPedido.PENDENTE) {
+                    p.statusPedido = StatusPedido.NEGADO
+                } else {
+                    if (!flash.message) flash.message = []
+                    flash.message << "Erro no pedido ${p.codigo}, voce so pode negar um pedido que esta pendente."
+                }
+            }
+        } else {
+            flash.message = "Selecione pelo menos um pedido."
         }
         redirect(action: 'index')
     }
@@ -91,18 +99,53 @@ class PedidoController {
             if ( matcher.find() )
                 ids << (matcher[0][1] as Long)
         }
-        Pedido.getAll(ids).each { p ->
-            p.statusPedido = StatusPedido.CONFIRMADO
-            p.itensPedido.each { item ->
-                if (item.confirmado)
-                    item.produto.estoque -= item.quantidade - item.bonificacao
+        if (!ids.empty) {
+            Pedido.getAll(ids).each { p ->
+                if (p.statusPedido == StatusPedido.PENDENTE) {
+                    p.statusPedido = StatusPedido.CONFIRMADO
+                    p.itensPedido.each { item ->
+                        println item.unidade.capacidade
+                        item.produto.estoque -= ((item.quantidade + item.bonificacao) * item.unidade.capacidade)
+                    }
+                } else {
+                    if (!flash.message) flash.message = []
+                    flash.message << "Erro no pedido ${p.codigo}, voce so pode confirmar um pedido que esta pendente."
+                }
             }
+        } else {
+            flash.message = "Selecione pelo menos um pedido."
         }
         redirect(action: 'index')
     }
 
+    @Transactional
+    def desfazerPedidos() {
+        def ids = []
+        params.each { entry ->
+            def matcher = entry.key =~ /^check(\d*)/
+            if ( matcher.find() )
+                ids << (matcher[0][1] as Long)
+        }
+        if (!ids.empty) {
+            Pedido.getAll(ids).each { p ->
+                if (p.statusPedido == StatusPedido.CONFIRMADO) {
+                    p.statusPedido = StatusPedido.PENDENTE
+                    p.itensPedido.each { item -> item.produto.estoque += ((item.quantidade + item.bonificacao) * item.unidade.capacidade) }
+                } else if (p.statusPedido == StatusPedido.NEGADO) {
+                    p.statusPedido = StatusPedido.PENDENTE
+                } else {
+                    if (!flash.message) flash.message = []
+                    flash.message << "Erro no pedido ${p.codigo}, voce so pode desfazer um pedido que esta negado ou confirmado."
+                }
+            }
+        } else {
+            flash.message = "Selecione pelo menos um pedido."
+        }
+        redirect(action: 'index')
+    }
 
     @Transactional
+    @Deprecated
     def negarPedido(Long id) {
         def p = Pedido.get(id)
         if (p.statusPedido == StatusPedido.PENDENTE) {
@@ -118,6 +161,7 @@ class PedidoController {
     }
 
     @Transactional
+    @Deprecated
     def confirmarPedido(Long id) {
         def p = Pedido.get(id)
         if (p.statusPedido == StatusPedido.PENDENTE) {
@@ -137,6 +181,7 @@ class PedidoController {
     }
 
     @Transactional
+    @Deprecated
     def desfazerPedido(Long id) {
         def p = Pedido.get(id)
         if (p.statusPedido == StatusPedido.CONFIRMADO) {
@@ -166,9 +211,9 @@ class PedidoController {
             if (params.search_status)
                 eq( 'statusPedido',  StatusPedido.valueOf( params.search_status ) )
             cliente {
+                if (params.search_codigo)
+                    ilike('codigo', "%${params.search_codigo}%")
                 participante {
-                    if (params.search_codigo)
-                        ilike('codigo', "%${params.search_codigo}%")
                     if (params.search_bairro)
                         ilike('bairro', "%${params.search_bairro}%")
                     if (params.search_nome)

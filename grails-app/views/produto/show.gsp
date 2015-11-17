@@ -1,3 +1,4 @@
+<%@ page import="web.agil.TipoUnidade" %>
 <!DOCTYPE html>
 <asset:javascript src="produto.js" />
 <html>
@@ -102,7 +103,22 @@
 
                     <div id="unidades">
                         <g:link class="btn" params="['produto.id': produto.id]" controller="unidade" action="create">Criar Unidade</g:link>
-
+                        <script type="text/javascript">
+                        $(function() {
+                            $('input[name="capacidade"]').blur(function() {
+                                var capacidade = this.value;
+                                var unidadeId = $(this).parent().find('#unidadeId').val();
+                                $.ajax({
+                                    method: "POST",
+                                    url: "${createLink(controller: 'unidade', action: 'changeCapacidade')}",
+                                    data: {
+                                        'capacidade': capacidade,
+                                        'unidadeId': unidadeId
+                                    }
+                                }); // end ajax
+                            }); // end blur
+                        });
+                        </script>
                         <fieldset>
                             <table style="width: auto">
                                 <thead>
@@ -115,7 +131,15 @@
                                     <g:each in="${produto.unidades}" var="unidade" status="i">
                                         <tr>
                                             <td>${unidade.tipo}</td>
-                                            <td>${unidade.capacidade}</td>
+                                            <td>
+                                                <g:if test="${unidade.tipo.descricao == TipoUnidade.CXA.descricao}">
+                                                    <g:hiddenField name="unidadeId" value="${unidade.id}" />
+                                                    <g:textField name="capacidade" value="${unidade.capacidade}" />
+                                                </g:if>
+                                                <g:else>
+                                                    ${unidade.capacidade}
+                                                </g:else>
+                                            </td>
                                         </tr>
                                     </g:each>
                                 </tbody>

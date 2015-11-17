@@ -41,10 +41,10 @@ $(function() {
 	$('.tabs').tabs();
 	$('button, input:submit, .btn').button();
 
-	$('.date').mask('00/00/0000');
-	$('.telefone').mask('(00)0000-0000');
-	$('.cpf').mask('000.000.000-00');
-	$('.cnpj').mask('00.000.000/0000-00');
+	$('.date').mask('00/00/0000', {placeholder: 'Exemplo 01/01/2016'});
+	$('.telefone').mask('(00)0000-0000', {placeholder: 'Exemplo: (91)3212-1234'});
+	$('.cpf').mask('000.000.000-00', {placeholder: 'Exemplo: 123.123.123-32'});
+	$('.cnpj').mask('00.000.000/0000-00', {placeholder: 'Exemplo: 12.123.123/1234-12'});
 	$('.money2').mask('000.000.000.000,00', { reverse: true });
 	$(".money").maskMoney({prefix:'R$ ', allowNegative: true, allowZero: true, thousands:'.', decimal:',', affixesStay: false});
     $(".taxa").maskMoney({suffix:'% ', allowNegative: false, allowZero: true, thousands:'.', decimal:',', affixesStay: false});

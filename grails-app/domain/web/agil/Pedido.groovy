@@ -23,21 +23,21 @@ class Pedido {
         itensPedido cascade: 'all-delete-orphan'
     }
 
+    def isEstoqueIndisponivel() {
+        def valid = false
+        itensPedido.each { valid |= it.isEstoqueIndisponivel() }
+        valid
+    }
+
 	def isItemAbaixoDoMinimo() {
         def valid = false
-		itensPedido.each {
-			if (it.isAbaixoDoMinimo() == true)
-				valid |= it.isAbaixoDoMinimo()
-		}
+		itensPedido.each { valid |= it.isAbaixoDoMinimo() }
 		valid
 	}
 
     def isItemBonificado() {
         def valid = false
-        itensPedido.each {
-            if (it.isBonificado())
-                valid |= it.isBonificado()
-        }
+        itensPedido.each { valid |= it.isBonificado() }
         valid
     }
 

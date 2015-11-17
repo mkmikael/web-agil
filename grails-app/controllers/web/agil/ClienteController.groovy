@@ -48,14 +48,14 @@ class ClienteController {
         params.max = Math.min(max ?: 30, 100)
         params.tipoPessoa = params.tipoPessoa ?: 'PF'
         def criteria = {
+            if (params.search_codigo)
+                ilike('codigo', "%${params.search_codigo}%")
             participante {
                 if (params.tipoPessoa == 'PF') {
                     eq('class', Pessoa.class.getName())
                 } else if (params.tipoPessoa == 'PJ') {
                     eq('class', Organizacao.class.getName())
                 }
-                if (params.search_codigo)
-                    ilike('codigo', "%${params.search_codigo}%")
                 if (params.search_bairro)
                     ilike('bairro', "%${params.search_bairro}%")
                 if (params.search_nome)
@@ -65,7 +65,7 @@ class ClienteController {
                 if (params.search_razaoSocial)
                     ilike('razaoSocial', "%${params.search_razaoSocial}%")
                 if (params.search_cpf)
-                    ilike('cpf', "%${ Util.onlyNumber( params.search_cpf ) }%")
+                    ilike('cpf', "%${  params.search_cpf }%")
                 if (params.search_cnpj)
                     ilike('cnpj', "%${ Util.onlyNumber( params.search_cnpj ) }%")
             } // participante
@@ -100,7 +100,7 @@ class ClienteController {
             return
         }
         cliente.participante = participante
-        respond cliente, model: [participanteType: participanteType,situacaoList: Situacao.values()*.name(), semanaList: Semana.values(), vendedorList: Vendedor.list()]
+        respond cliente, model: [participanteType: participanteType, situacaoList: Situacao.values()*.name(), semanaList: Semana.values(), vendedorList: Vendedor.list()]
     }
 
     @Transactional
@@ -136,7 +136,7 @@ class ClienteController {
     }
 
     def edit(Cliente cliente) {
-        respond cliente, model: [situacaoList: Situacao.values(), semanaList: Semana.values(), vendedorList: Vendedor.list()]
+        respond cliente, model: [situacaoList: Situacao.values()*.name(), semanaList: Semana.values(), vendedorList: Vendedor.list()]
     }
 
     @Transactional

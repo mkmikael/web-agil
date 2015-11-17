@@ -54,7 +54,7 @@ class ExcelService {
             def participante
             if (row.getCell( IS_CNPJ_OR_CPF )?.toString() == "CNPJ") {
                 participante = new Organizacao()
-                participante.cnpj = row.getCell( CNPJ_OR_CPF )?.toString()
+                participante.cnpj = Util.onlyNumber( row.getCell( CNPJ_OR_CPF )?.toString() )
                 def params = row.getCell( CLIENTE )?.toString()?.split('-')
                 if (params?.length == 2) {
                     participante.nomeFantasia = Util.removeSpecialCaracter(params[1].trim())
@@ -66,7 +66,7 @@ class ExcelService {
                 participante.inscricaoEstadual = row.getCell( INSCRICAO_ESTADUAL )?.toString()
             } else {
                 participante = new Pessoa()
-                participante.cpf = row.getCell( CNPJ_OR_CPF )?.toString()
+                participante.cpf = Util.onlyNumber( row.getCell( CNPJ_OR_CPF )?.toString() )
                 def params = row.getCell( CLIENTE )?.toString()?.split('-')
                 if (params?.length == 2) {
                     participante.estabelecimento = Util.removeSpecialCaracter(params[1].trim())

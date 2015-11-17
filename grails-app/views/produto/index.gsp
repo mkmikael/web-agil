@@ -32,7 +32,7 @@
 
                     <div class="fieldcontain">
                         <label>Descrição</label>
-                        <g:textField name="search_descricao" value="${search_descricao}" />
+                        <g:textField name="search_descricao" value="${params.search_descricao}" size="40" />
                     </div>
 
                     <div class="fieldcontain">

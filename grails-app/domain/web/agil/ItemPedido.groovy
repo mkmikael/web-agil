@@ -36,6 +36,10 @@ class ItemPedido {
         }
     }
 
+    def isEstoqueIndisponivel() {
+        (getEstoqueAtual() - quantidade) < 0
+    }
+
 	def isAbaixoDoMinimo() {
 		getPrecoNegociado() < valorMinimo
 	}

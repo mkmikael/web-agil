@@ -6,7 +6,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class UnidadeController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [save: "POST", changeCapacidade: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -67,6 +67,16 @@ class UnidadeController {
             }
             '*'{ respond unidade, [status: OK] }
         }
+    }
+
+    @Transactional
+    def changeCapacidade(Long unidadeId, Integer capacidade) {
+        def unidade = Unidade.get(unidadeId)
+        if (unidade)
+            unidade.capacidade = capacidade
+        else
+            log.error('isso nao deveria acontecer')
+        render('OK')
     }
 
     @Transactional

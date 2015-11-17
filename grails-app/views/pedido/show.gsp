@@ -65,13 +65,13 @@
                 </li>
             </ul>
 
-            <g:form id="${pedido.id}">
-                <fieldset>
-                    <g:actionSubmit class="btn" onclick="return confirm('Voce tem certeza?')" value="Negar" action="negarPedido"  />
-                    <g:actionSubmit class="btn" onclick="return confirm('Voce tem certeza?')" value="Confirmar" action="confirmarPedido" />
-                    <g:actionSubmit class="btn" onclick="return confirm('Voce tem certeza?')" value="Desfazer" action="desfazerPedido" />
-                </fieldset>
-            </g:form>
+            %{--<g:form id="${pedido.id}">--}%
+                %{--<fieldset>--}%
+                    %{--<g:actionSubmit class="btn" onclick="return confirm('Voce tem certeza?')" value="Negar" action="negarPedido"  />--}%
+                    %{--<g:actionSubmit class="btn" onclick="return confirm('Voce tem certeza?')" value="Confirmar" action="confirmarPedido" />--}%
+                    %{--<g:actionSubmit class="btn" onclick="return confirm('Voce tem certeza?')" value="Desfazer" action="desfazerPedido" />--}%
+                %{--</fieldset>--}%
+            %{--</g:form>--}%
 
             <table id="itens">
                 <thead>
@@ -89,7 +89,6 @@
                     <th>PV</th>
                     <th>Total</th>
                     <th>Abaixo Min</th>
-                    <th>Confirmado</th>
                 </thead>
                 <tbody>
                     <g:each in="${pedido.itensPedido.sort{ it.produto?.descricao } }" var="item">
@@ -108,8 +107,7 @@
                             <td>R$ <g:formatNumber number="${item?.valor - (item?.valor * (item?.desconto / 100))}" maxFractionDigits="2" /></td>
                             <td>R$ <g:formatNumber number="${item?.precoNegociado}" maxFractionDigits="2" /></td>
                             <td>R$ <g:formatNumber number="${item?.total}" maxFractionDigits="2" /></td>
-                            <td><g:formatBoolean boolean="${item?.valorMinimo > item?.precoNegociado}" /></td>
-                            <td><g:checkBox name="check${item?.id}" value="${item?.confirmado}" /></td>
+                            <td class="text-center"><asset:image src="${item?.valorMinimo > item?.precoNegociado ? 'error' : 'ok'}.png" /> </td>
                         </tr>
                     </g:each>
                 </tbody>

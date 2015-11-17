@@ -1,9 +1,9 @@
 <%@ page import="web.agil.*; web.agil.enums.*" %>
 
-<g:if test="${participanteType == "PJ"}">
+<g:if test="${clienteInstance.participante.isOrganizacao()}">
 	<g:render template="/organizacao/form" model="[participanteInstance: clienteInstance?.participante]" />
 </g:if>
-<g:elseif test="${participanteType == "PF"}">
+<g:elseif test="${clienteInstance.participante.isPessoa()}">
 	<g:render template="/pessoa/form" model="[participanteInstance: clienteInstance?.participante]" />
 </g:elseif>
 <div class="fieldcontain">

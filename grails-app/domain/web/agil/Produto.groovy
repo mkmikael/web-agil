@@ -23,13 +23,13 @@ class Produto {
         if (unidades) {
             if (unidades.size() > 1) {
                 def unidade = unidades.find { it.toString() == "CXA" }
-                show = [caixa: q(estoque , unidade.capacidade), unidade: (estoque % unidade.capacidade)]
+                show = [caixa: q(estoque , unidade.capacidade), unidade: estoque]
             } else if (unidades.size() == 1) {
                 def unidade = unidades.first()
                 if (unidade.toString() == "CXA") {
                     show = [caixa: q(estoque , unidade.capacidade), unidade: 0]
                 } else {
-                    show = [caixa: 0, unidade: estoque]
+                    show = [caixa: 0, unidade: 0]
                 }
             }
         } // end if

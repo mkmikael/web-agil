@@ -37,6 +37,8 @@ class LoteController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 25, 100)
+        params.search_status = params.search_status ?: 'DISPONIVEL'
+        if (params.search_status == 'TODOS') params.search_status = null
         def criteria = {
             if (params.search_codigo)
                 ilike('codigo', "%${params.search_codigo}%")
@@ -90,37 +92,48 @@ class LoteController {
 
     @Transactional
     def saveAll() {
-        if (params?.produto?.id?.class.array) {
-            for (int i = 0; i < params?.produto?.id.size(); i++) {
+        def error = false
+        if (params.produto) {
+            if (params?.produto?.id?.class?.array) {
+                for (int i = 0; i < params?.produto?.id.size(); i++) {
+                    def lote = new Lote()
+                    lote.produto = Produto.get(params?.produto?.id[i] as Long)
+                    lote.unidade = Unidade.get(params?.unidade?.id[i] as Long)
+                    lote.valor = params.valor[i]?.replace(',', '.') as Double
+                    lote.valorDeCompra = params.valorDeCompra[i]?.replace(',', '.') as Double
+                    lote.valorMinimo = params.valorMinimo[i]?.replace(',', '.') as Double
+                    lote.estoque = params.estoque[i] as Integer
+                    lote.vencimento = new SimpleDateFormat('dd/MM/yyyy').parse(params.vencimento[i])
+                    lote.statusLote = StatusLote.DISPONIVEL
+                    lote.produto.estoque = lote.unidade.capacidade * lote.estoque
+                    lote.save()
+                    lote.produto.save()
+                    error |= lote.hasErrors()
+                }
+            } else {
                 def lote = new Lote()
-                lote.produto = Produto.get(params?.produto?.id[i] as Long)
-                lote.unidade = Unidade.get(params?.unidade?.id[i] as Long)
-                lote.valor = params.valor[i]?.replace(',', '.') as Double
-                lote.valorDeCompra = params.valorDeCompra[i]?.replace(',', '.') as Double
-                lote.valorMinimo = params.valorMinimo[i]?.replace(',', '.') as Double
-                lote.estoque = params.estoque[i] as Integer
-                lote.vencimento = new SimpleDateFormat('dd/MM/yyyy').parse(params.vencimento[i])
-                lote.statusLote = StatusLote.valueOf(params.statusLote[i])
+                lote.produto = Produto.get(params?.produto?.id as Long)
+                lote.unidade = Unidade.get(params?.unidade?.id as Long)
+                lote.valor = params.valor?.replace(',', '.') as Double
+                lote.valorDeCompra = params.valorDeCompra?.replace(',', '.') as Double
+                lote.valorMinimo = params.valorMinimo?.replace(',', '.') as Double
+                lote.estoque = params.int('estoque')
+                lote.vencimento = new SimpleDateFormat('dd/MM/yyyy').parse(params.vencimento)
+                lote.statusLote = StatusLote.DISPONIVEL
                 lote.produto.estoque = lote.unidade.capacidade * lote.estoque
                 lote.save()
-                lote.produto.save()
+                error |= lote.hasErrors()
             }
+            flash.message = 'Lote(s) registrado(s) com sucesso!'
         } else {
-            def lote = new Lote()
-            lote.produto = Produto.get(params?.produto?.id as Long)
-            lote.unidade = Unidade.get(params?.unidade?.id as Long)
-            lote.valor = params.double('valor')
-            lote.valorDeCompra = params.double('valorDeCompra')
-            lote.valorMinimo = params.double('valorMinimo')
-            lote.estoque = params.double('estoque')
-            lote.vencimento = new SimpleDateFormat('dd/MM/yyyy').parse(params.vencimento)
-            lote.statusLote = StatusLote.valueOf(params.statusLote)
-            lote.produto.estoque = lote.unidade.capacidade * lote.estoque
-            lote.save()
-            lote.produto.save()
+            flash.message = 'Voce nao registrou nenhum lote!'
         }
-        flash.message = 'Lote(s) registrado(s) com sucesso!'
-        redirect(action: 'index')
+        if (error) {
+            flash.message = 'Voce deixou de preencher algum campo'
+            redirect(action: 'create')
+        }
+        else
+            redirect(action: 'index')
     }
 
     def edit(Lote lote) {

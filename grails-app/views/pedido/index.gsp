@@ -16,7 +16,14 @@
 <div id="list-pedido" class="content scaffold-list" role="main">
     <h1><g:message code="default.list.label" args="[entityName]" /></h1>
     <g:if test="${flash.message}">
-        <div class="message" role="status">${flash.message}</div>
+        <g:if test="${flash.message.class == java.util.ArrayList}">
+            <g:each in="${flash.message}" var="message">
+                <div class="message" role="status">${message}</div>
+            </g:each>
+        </g:if>
+        <g:else>
+            <div class="message" role="status">${flash.message}</div>
+        </g:else>
     </g:if>
 
     <g:form action="index">
@@ -65,13 +72,17 @@
     </g:form>
 
     <g:form class="scroll-x" name="form-pedidos">
-        %{--<fieldset>--}%
-            %{--<g:actionSubmit class="btn" value="Negar" action="negarPedidos"/>--}%
-            %{--<g:actionSubmit class="btn" value="Confirmar" action="confirmarPedidos"/>--}%
-        %{--</fieldset>--}%
+        <fieldset class="search">
+            <legend>Operacoes</legend>
+            <g:actionSubmit class="btn" value="Negar" action="negarPedidos"/>
+            <g:actionSubmit class="btn" value="Confirmar" action="confirmarPedidos"/>
+            <g:actionSubmit class="btn" value="Desfazer" action="desfazerPedidos"/>
+        </fieldset>
+        <br>
+
         <table id="table-pedido">
             <thead>
-            <th><g:checkBox name="geral" /></th>
+            <th><input type="checkbox" onchange="$('#table-pedido tbody td input').prop('checked', $(this).prop('checked'))" /></th>
             <g:sortableColumn params="${params}" property="codigo" title="Código" />
             <g:sortableColumn params="${params}" property="participante.cliente" title="Cliente" />
             <g:sortableColumn params="${params}" property="dataSincronizacao" title="Dt de Sincronizacao" />
@@ -82,6 +93,7 @@
             <g:sortableColumn params="${params}" property="total" title="Total" />
             <th>Abaixo Min.</th>
             <th>Campanha</th>
+            <th>Estoque Indisponivel</th>
             </thead>
             <tbody>
             <g:each in="${pedidoList}" var="pedido">
@@ -108,8 +120,9 @@
                     <td>${pedido.statusPedido}</td>
                     <td>${pedido.prazo?.periodicidade}</td>
                     <td>R$ <g:formatNumber number="${pedido.total}" maxFractionDigits="2" /></td>
-                    <td><g:formatBoolean boolean="${pedido.isItemAbaixoDoMinimo()}" /></td>
-                    <td><g:formatBoolean boolean="${pedido.isItemBonificado()}" /></td>
+                    <td class="text-center"><asset:image src="${pedido.isItemAbaixoDoMinimo() ? 'error' : 'ok'}.png" /> </td>
+                    <td class="text-center"><asset:image src="${pedido.isItemBonificado() ? 'error' : 'ok'}.png" /> </td>
+                    <td class="text-center"><asset:image src="${pedido.isEstoqueIndisponivel() ? 'error' : 'ok'}.png" /> </td>
                 </tr>
             </g:each>
             </tbody>
