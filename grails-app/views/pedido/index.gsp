@@ -84,7 +84,7 @@
             <thead>
             <th><input type="checkbox" onchange="$('#table-pedido tbody td input').prop('checked', $(this).prop('checked'))" /></th>
             <g:sortableColumn params="${params}" property="codigo" title="Código" />
-            <g:sortableColumn params="${params}" property="participante.cliente" title="Cliente" />
+            <g:sortableColumn params="${params}" property="cliente" title="Cliente" />
             <g:sortableColumn params="${params}" property="dataSincronizacao" title="Dt de Sincronizacao" />
             <g:sortableColumn params="${params}" property="dataCriacao" title="Dt do Pedido" />
             <g:sortableColumn params="${params}" property="dataFaturamento" title="Faturamento" />
