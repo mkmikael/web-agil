@@ -5,4 +5,6 @@ class Vendedor extends Papel {
 	static hasMany = [clientes: Cliente]
     static constraints = {
     }
+
+    String toString() { codigo }
 }

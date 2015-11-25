@@ -216,6 +216,7 @@ class PedidoController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 30, 100)
+        params.tipoPessoa = params.tipoPessoa ?: 'PF'
         params.sort = params.sort ?: "dataSincronizacao"
         params.order = params.order ?: "desc"
         def criteria = {
@@ -224,9 +225,19 @@ class PedidoController {
             if (params.search_status)
                 eq( 'statusPedido',  StatusPedido.valueOf( params.search_status ) )
             cliente {
+                eq('status', StatusPapel.ATIVO)
                 if (params.search_codigo)
                     ilike('codigo', "%${params.search_codigo}%")
+                if (params.search_vendedor)
+                    eq('vendedor', Vendedor.get( params.long('search_vendedor') ) )
+                if (params.search_diaDeVisita)
+                    eq('diaDeVisita', Semana.valueOf(params.search_diaDeVisita) )
                 participante {
+                    if (params.tipoPessoa == 'PF') {
+                        eq('class', Pessoa.class.getName())
+                    } else if (params.tipoPessoa == 'PJ') {
+                        eq('class', Organizacao.class.getName())
+                    }
                     if (params.search_bairro)
                         ilike('bairro', "%${params.search_bairro}%")
                     if (params.search_nome)
@@ -236,10 +247,10 @@ class PedidoController {
                     if (params.search_razaoSocial)
                         ilike('razaoSocial', "%${params.search_razaoSocial}%")
                     if (params.search_cpf)
-                        ilike('cpf', "%${params.search_cpf}%")
+                        ilike('cpf', "%${  params.search_cpf }%")
                     if (params.search_cnpj)
-                        ilike('cnpj', "%${params.search_cnpj}%")
-                } // end participante
+                        ilike('cnpj', "%${ Util.onlyNumber( params.search_cnpj ) }%")
+                } // participante
             } // end cliente
         } // end criteria
         def pedidoList = Pedido.createCriteria().list(params, criteria)

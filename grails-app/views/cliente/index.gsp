@@ -6,7 +6,7 @@
         <meta name="layout" content="main" />
         <g:set var="entityName" value="${message(code: 'cliente.label', default: 'Cliente')}" />
         <title><g:message code="default.list.label" args="[entityName]" /></title>
-        <asset:javascript src="/owner/cliente-choose.js" />
+
     </head>
     <body>
         <div class="nav" role="navigation">
@@ -24,6 +24,7 @@
             <g:form action="index">
                 <g:render template="search" />
                 <div style="margin: .7em">
+                    <input class="btn" type="reset" value="Limpar" />
                     <input type="submit" value="Procurar" />
                 </div>
             </g:form>
@@ -48,27 +49,29 @@
                 <g:paginate total="${clienteCount ?: 0}" params="${params}" />
             </div>
 
-            <div id="dialogRota">
-                <script>
-                    function updateAllRota() {
-                        var isConfim = confirm('Voce tem certeza?');
-                        if (isConfim) {
-                            var value = $('#inputRota').val();
-                            var input = $("<input>")
-                                    .attr("type", "hidden")
-                                    .attr("name", "rota").val(value);
-                            $('#operacaoForm').append(input);
+            <div hidden="hidden">
+                <div id="dialogRota">
+                    <script>
+                        function updateAllRota() {
+                            var isConfim = confirm('Voce tem certeza?');
+                            if (isConfim) {
+                                var value = $('#inputRota').val();
+                                var input = $("<input>")
+                                        .attr("type", "hidden")
+                                        .attr("name", "rota").val(value);
+                                $('#operacaoForm').append(input);
+                            }
+                            return isConfim;
                         }
-                        return isConfim;
-                    }
-                </script>
+                    </script>
 
-                <div class="fieldcontain">
-                    <label>Dia de Rota</label>
-                    <g:select name="inputRota" from="${Semana.values()}" />
+                    <div class="fieldcontain">
+                        <label>Dia de Rota</label>
+                        <g:select name="inputRota" from="${Semana.values()}" />
+                    </div>
+                    <br>
+                    <g:actionSubmit value="Atualizar" action="updateAllRota" form="operacaoForm" onclick="return updateAllRota()" />
                 </div>
-                <br>
-                <g:actionSubmit value="Atualizar" action="updateAllRota" form="operacaoForm" onclick="return updateAllRota()" />
             </div>
         </div>
     </body>

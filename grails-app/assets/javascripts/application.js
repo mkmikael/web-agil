@@ -39,8 +39,7 @@ $(function() {
 	});
 
 	$('.tabs').tabs();
-	$('.btn').button();
-	$('button, input:submit').addClass('mdl-button mdl-js-button mdl-button--raised mdl-button--colored');
+	$('button, input:submit, .btn').addClass('mdl-button mdl-js-button mdl-button--raised mdl-button--colored');
 
 	$('.date').mask('00/00/0000', {placeholder: 'Exemplo 01/01/2016'});
 	$('.telefone').mask('(00)0000-0000', {placeholder: 'Exemplo: (91)3212-1234'});
@@ -49,6 +48,11 @@ $(function() {
 	$('.money2').mask('000.000.000.000,00', { reverse: true });
 	$(".money").maskMoney({prefix:'R$ ', allowNegative: true, allowZero: true, thousands:'.', decimal:',', affixesStay: false});
     $(".taxa").maskMoney({suffix:'% ', allowNegative: false, allowZero: true, thousands:'.', decimal:',', affixesStay: false});
+
+    $('input:reset, button:reset, .reset').click(function () {
+        $('select option').removeAttr('selected');
+        $('input:text').val('');
+    });
 });
 
 if (typeof jQuery !== 'undefined') {

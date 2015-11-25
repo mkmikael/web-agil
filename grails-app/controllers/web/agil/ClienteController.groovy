@@ -14,13 +14,22 @@ class ClienteController {
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", create: ["POST", "GET"]]
 
     @Secured(['permitAll'])
-    def listJson() {
+    def listJson(String vendedor) {
         def clientes = []
-        Cliente.list().each { c ->
+        println vendedor
+        def clienteList = Cliente.createCriteria().list {
+            createAlias('vendedor', 'm')
+            if (vendedor)
+                eq('m.codigo', vendedor)
+        }
+        println clienteList*.vendedor
+        clienteList.each { c ->
             if (c.participante) {
                 def cliente = [:]
                 cliente.id = c.id
                 cliente.codigo = c.codigo
+                cliente.diaDeVisita = c.diaDeVisita?.toString()
+                cliente.status= c.status?.toString()
                 cliente.endereco = c.participante?.endereco
                 cliente.bairro = c.participante?.bairro
                 cliente.referencia = c.participante?.referencia
@@ -66,8 +75,13 @@ class ClienteController {
         params.max = Math.min(max ?: 30, 100)
         params.tipoPessoa = params.tipoPessoa ?: 'PF'
         def criteria = {
+            eq('status', StatusPapel.ATIVO)
             if (params.search_codigo)
                 ilike('codigo', "%${params.search_codigo}%")
+            if (params.search_vendedor)
+                eq('vendedor', Vendedor.get( params.long('search_vendedor') ) )
+            if (params.search_diaDeVisita)
+                eq('diaDeVisita', Semana.valueOf(params.search_diaDeVisita) )
             participante {
                 if (params.tipoPessoa == 'PF') {
                     eq('class', Pessoa.class.getName())
@@ -199,7 +213,7 @@ class ClienteController {
             return
         }
 
-        cliente.delete flush:true
+        cliente.inativar()
 
         request.withFormat {
             form multipartForm {

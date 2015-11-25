@@ -132,12 +132,12 @@
                                         <tr>
                                             <td>${unidade.tipo}</td>
                                             <td>
-                                                <g:if test="${unidade.tipo.descricao == TipoUnidade.CXA.descricao}">
-                                                    <g:hiddenField name="unidadeId" value="${unidade.id}" />
-                                                    <g:textField name="capacidade" value="${unidade.capacidade}" />
+                                                <g:if test="${unidade?.tipo?.descricao != 'UNI'}">
+                                                    <g:hiddenField name="unidadeId" value="${unidade?.id}" />
+                                                    <g:textField name="capacidade" value="${unidade?.capacidade}" />
                                                 </g:if>
                                                 <g:else>
-                                                    ${unidade.capacidade}
+                                                    ${unidade?.capacidade}
                                                 </g:else>
                                             </td>
                                         </tr>

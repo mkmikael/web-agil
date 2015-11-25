@@ -93,7 +93,7 @@
                 <tbody>
                     <g:each in="${pedido.itensPedido.sort{ it.produto?.descricao } }" var="item">
                         <g:set var="novoEstoque" value="${item.estoqueAtual  - item?.quantidade}"/>
-                        <tr style="background-color: ${item.isAbaixoDoMinimo() || novoEstoque < 0 ? 'rgba(255, 10, 27, 0.79)': 'transparent'}">
+                        <tr>
                             <td>${item?.produto?.descricao}</td>
                             <td>${item?.unidade}</td>
                             <td>${item?.quantidade}</td>
@@ -112,6 +112,9 @@
                     </g:each>
                 </tbody>
             </table>
+            <br>
+            <g:link class="edit btn" action="edit" id="${pedido.id}">Editar</g:link>
+
         </div>
     </body>
 </html>

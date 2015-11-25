@@ -13,7 +13,7 @@ class Cliente extends Papel {
 	Semana diaDeVisita
 	TipoAvista tipoAvista = TipoAvista.DINHEIRO // se o prazo escolhido for AVISTA 
 
-	static hasMany = [pedidos: Pedido]
+	static hasMany = [pedidos: Pedido, boletos: Boleto]
 	static belongsTo = [vendedor: Vendedor]
     static constraints = {
         codigo: nullable: true
@@ -25,5 +25,13 @@ class Cliente extends Papel {
     def beforeInsert = {
         if (!codigo)
             codigo = Util.generateCodigo(12, this.count() + 1)
+    }
+
+    String toString() {
+        if (participante.class == Pessoa) {
+            return "$codigo - $participante.nome"
+        } else if (participante.class == Organizacao) {
+            return "$codigo - $participante.nomeFantasia"
+        }
     }
 }

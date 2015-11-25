@@ -26,50 +26,26 @@
         </g:else>
     </g:if>
 
-    <g:form action="index">
-        <fieldset class="search" style="padding: 1em; margin: 1em">
-            <legend>Filtro Cliente</legend>
-            <fieldset class="search">
-                <legend>Geral</legend>
-                <label>Código</label>
-                <g:textField name="search_codigo" value="${search_codigo}" />
-            </fieldset>
+    <fieldset class="search">
+        <legend>Filtros</legend>
+        <g:form action="index">
+            <g:render template="/cliente/search" />
 
             <fieldset class="search">
-                <legend>Pessoa Física</legend>
-                <label>Nome</label>
-                <g:textField name="search_nome" value="${search_nome}" />
+                <legend>Filtro Pedido</legend>
+                <label>Codigo</label>
+                <g:textField name="search_codigo_pedido" value="${search_codigo_pedido}" />
 
-                <label>CPF</label>
-                <g:textField name="search_cpf" class="cpf" value="${search_cpf}" />
+                <label>Status</label>
+                <g:select name="search_status" from="${statusPedidoList}" value="${search_status}" noSelection="['': 'TODOS']" />
             </fieldset>
 
-            <fieldset class="search">
-                <legend>Pessoa Jurídica</legend>
-                <label>Nome Fantasia</label>
-                <g:textField name="search_nomeFantasia" value="${search_nomeFantasia}" />
-
-                <label>Razão Social</label>
-                <g:textField name="search_razaoSocial" value="${search_razaoSocial}" />
-
-                <label>CNPJ</label>
-                <g:textField name="search_cnpj" class="cnpj" value="${search_cnpj}" />
+            <fieldset>
+                <button type="button" class="btn reset">Limpar</button>
+                <input type="submit" value="Procurar" />
             </fieldset>
-        </fieldset>
-
-        <fieldset class="search" style="padding: 1em; margin: 1em">
-            <legend>Filtro Pedido</legend>
-            <label>Codigo</label>
-            <g:textField name="search_codigo_pedido" value="${search_codigo_pedido}" />
-
-            <label>Status</label>
-            <g:select name="search_status" from="${statusPedidoList}" value="${search_status}" noSelection="['': 'TODOS']" />
-        </fieldset>
-
-        <fieldset>
-            <input type="submit" value="Procurar" />
-        </fieldset>
-    </g:form>
+        </g:form>
+    </fieldset>
 
     <g:form class="scroll-x" name="form-pedidos">
         <fieldset class="search">
@@ -119,7 +95,7 @@
                     <td>${g.formatDate(date: pedido.dataCriacao, format: "dd/MM/yyyy HH:mm")}</td>
                     <td>${g.formatDate(date: pedido.dataFaturamento, format: "dd/MM/yyyy")}</td>
                     <td>${pedido.statusPedido}</td>
-                    <td>${pedido.prazo?.periodicidade}</td>
+                    <td class="text-center">${pedido.prazo?.periodicidade}</td>
                     <td>R$ <g:formatNumber number="${pedido.total}" maxFractionDigits="2" /></td>
                     <td class="text-center"><asset:image src="${pedido.isItemAbaixoDoMinimo() ? 'error' : 'ok'}.png" /> </td>
                     <td class="text-center"><asset:image src="${pedido.isItemBonificado() ? 'error' : 'ok'}.png" /> </td>

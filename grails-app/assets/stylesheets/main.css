@@ -536,6 +536,15 @@ a.skip {
     left: -9999px;
 }
 
+/* Menu */
+nav.mdl-navigation span { font-weight: bold; color: rgb(63,81,181) !important; }
+
+.android-drawer-separator {
+    height: 1px;
+    background-color: #dcdcdc;
+    margin: 8px 0;
+}
+
 /* Util */
 
 .text-center { text-align: center; }

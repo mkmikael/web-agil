@@ -22,7 +22,7 @@
 </div>
 <div class="fieldcontain">
 	<label for="participante.telefone">Telefone</label>
-	<g:textField type="phone" name="participante.telefone" class="telefone" value="${participanteInstance?.telefone}" required="required" />
+	<g:textField type="phone" name="participante.telefone" minlength="13" class="telefone" value="${participanteInstance?.telefone}" required="required" />
 </div>
 <div class="fieldcontain">
 	<label for="participante.contato">Contato</label>
