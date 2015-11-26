@@ -1,5 +1,7 @@
 package web.agil
 
+import grails.converters.JSON
+import grails.plugin.springsecurity.annotation.Secured
 import web.agil.enums.StatusBoleto
 
 import static org.springframework.http.HttpStatus.*
@@ -9,6 +11,21 @@ import grails.transaction.Transactional
 class BoletoController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+
+    @Secured(['permitAll'])
+    def list(String codVendedor) {
+        def boletoList = Boleto.createCriteria().list {
+            if (codVendedor)
+                cliente { vendedor { eq('codigo', codVendedor) } }
+            'in'('statusBoleto', [StatusBoleto.ABERTO, StatusBoleto.VENCIDO])
+        } // end boletoList
+        def data = []
+        boletoList.each { b ->
+            data << [id: b.id, cliente: [id: b.cliente.id], dataCriacao: b.dataCriacao, dataVencimento: b.dataVencimento,
+                     valorInicial: b.valorInicial, valorAtualizado: b.valorAtualizado, statusBoleto: b.statusBoleto.toString()]
+        }
+        render data as JSON
+    }
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
