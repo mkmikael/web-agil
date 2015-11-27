@@ -5,18 +5,17 @@ class TipoUnidade {
     static TipoUnidade UNI
     static TipoUnidade CXA
 
-    static UNI() {
-        if (UNI == null) {
-            UNI = TipoUnidade.get(1)
-        }
+    static TipoUnidade getUNI() {
+        if ( !UNI )
+            UNI = TipoUnidade.findByDescricao('UNI')
+        return UNI
     }
 
-    static CXA() {
-        if (CXA == null) {
-            CXA = TipoUnidade.get(2)
-        }
+    static TipoUnidade getCXA() {
+        if ( !CXA )
+            CXA = TipoUnidade.findByDescricao('CXA')
+        return CXA
     }
-
     String descricao
 
     static constraints = {

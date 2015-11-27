@@ -110,9 +110,9 @@ class ProdutoController {
             produto.addToTributos(new Unidade( tipo: TipoUnidade.CXA, capacidade: 0 ))
         } else if (unidadeLength == 1) {
             def unidadeDoProduto = produto.unidades.first()
-            if (unidadeDoProduto.tipo.descricao == TipoUnidade.UNI.descricao) {
+            if (unidadeDoProduto.tipo.descricao == 'UNI') {
                 produto.addToUnidades( new Unidade( tipo: TipoUnidade.CXA, capacidade: 0 ) )
-            } else if (unidadeDoProduto.tipo.descricao == TipoUnidade.CXA.descricao) {
+            } else if (unidadeDoProduto.tipo.descricao == 'CXA') {
                 produto.addToUnidades( new Unidade( tipo: TipoUnidade.UNI, capacidade: 1 ) )
             }
         }
