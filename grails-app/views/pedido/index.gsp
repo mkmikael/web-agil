@@ -1,4 +1,4 @@
-<%@ page import="web.agil.*" %>
+<%@ page import="web.agil.enums.Semana; web.agil.*" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,7 +29,33 @@
     <fieldset class="search">
         <legend>Filtros</legend>
         <g:form action="index">
-            <g:render template="/cliente/search" />
+            <fieldset id="filter-pj" class="search">
+                <legend>Filtros Cliente</legend>
+                <div class="fieldcontain">
+                    <label>Nome Fantasia ou Razão Social ou Nome</label>
+                    <g:textField name="search_nome" size="35" value="${search_nome}" />
+                </div>
+
+                <div class="fieldcontain">
+                    <label>CNPJ ou CPF</label>
+                    <g:textField name="search_doc" size="25" value="${search_doc}" />
+                </div>
+
+                <div class="fieldcontain">
+                    <label>Bairro</label>
+                    <g:textField name="search_bairro" value="${search_bairro}" />
+                </div>
+
+                <div class="fieldcontain">
+                    <label>Vendedor</label>
+                    <g:select name="search_vendedor" value="${search_vendedor}" from="${Vendedor.list()}" optionKey="id" noSelection="['': 'TODOS']" />
+                </div>
+
+                <div class="fieldcontain">
+                    <label>Dia de Rota</label>
+                    <g:select name="search_diaDeVisita" value="${search_diaDeVisita}" from="${Semana.values()}" noSelection="['': 'TODOS']" />
+                </div>
+            </fieldset>
 
             <fieldset class="search">
                 <legend>Filtro Pedido</legend>
@@ -47,7 +73,7 @@
         </g:form>
     </fieldset>
 
-    <g:form class="scroll-x" name="form-pedidos">
+    <g:form name="form-pedidos">
         <fieldset class="search">
             <legend>Operacoes</legend>
             <g:actionSubmit value="Negar" action="negarPedidos"/>
@@ -57,53 +83,55 @@
         </fieldset>
         <br>
 
-        <table id="table-pedido">
-            <thead>
-            <th><input type="checkbox" onchange="$('#table-pedido tbody td input').prop('checked', $(this).prop('checked'))" /></th>
-            <g:sortableColumn params="${params}" property="codigo" title="Código" />
-            <g:sortableColumn params="${params}" property="cliente" title="Cliente" />
-            <g:sortableColumn params="${params}" property="dataSincronizacao" title="Dt de Sincronizacao" />
-            <g:sortableColumn params="${params}" property="dataCriacao" title="Dt do Pedido" />
-            <g:sortableColumn params="${params}" property="dataFaturamento" title="Faturamento" />
-            <g:sortableColumn params="${params}" property="statusPedido" title="Status" />
-            <g:sortableColumn params="${params}" property="prazo" title="Prazo" />
-            <g:sortableColumn params="${params}" property="total" title="Total" />
-            <th>Abaixo Min.</th>
-            <th>Campanha</th>
-            <th>Estoque Indisponivel</th>
-            </thead>
-            <tbody>
-            <g:each in="${pedidoList}" var="pedido">
-                <tr>
-                    <td><g:checkBox name="check${pedido.id}" /></td>
-                    <td><g:link action="show" id="${pedido.id}">${pedido.codigo}</g:link></td>
-                    <g:if test="${pedido.cliente?.participante.isOrganizacao()}">
-                        <td>
-                            <g:link controller="cliente" action="show" id="${pedido.cliente?.id}">
-                                ${pedido.cliente?.codigo} - ${pedido.cliente?.participante?.razaoSocial}
-                            </g:link>
-                        </td>
-                    </g:if>
-                    <g:elseif test="${pedido.cliente?.participante.isPessoa()}">
-                        <td>
-                            <g:link controller="cliente" action="show" id="${pedido.cliente?.id}">
-                                ${pedido.cliente?.codigo} - ${pedido.cliente?.participante?.nome}
-                            </g:link>
-                        </td>
-                    </g:elseif>
-                    <td>${g.formatDate(date: pedido.dataSincronizacao, format: "dd/MM/yyyy HH:mm")}</td>
-                    <td>${g.formatDate(date: pedido.dataCriacao, format: "dd/MM/yyyy HH:mm")}</td>
-                    <td>${g.formatDate(date: pedido.dataFaturamento, format: "dd/MM/yyyy")}</td>
-                    <td>${pedido.statusPedido}</td>
-                    <td class="text-center">${pedido.prazo?.periodicidade}</td>
-                    <td>R$ <g:formatNumber number="${pedido.total}" maxFractionDigits="2" /></td>
-                    <td class="text-center"><asset:image src="${pedido.isItemAbaixoDoMinimo() ? 'error' : 'ok'}.png" /> </td>
-                    <td class="text-center"><asset:image src="${pedido.isItemBonificado() ? 'error' : 'ok'}.png" /> </td>
-                    <td class="text-center"><asset:image src="${pedido.isEstoqueIndisponivel() ? 'error' : 'ok'}.png" /> </td>
-                </tr>
-            </g:each>
-            </tbody>
-        </table>
+        <div class="scroll-x" >
+            <table id="table-pedido">
+                <thead>
+                <th><input type="checkbox" onchange="$('#table-pedido tbody td input').prop('checked', $(this).prop('checked'))" /></th>
+                <g:sortableColumn params="${params}" property="codigo" title="Código" />
+                <g:sortableColumn params="${params}" property="cliente" title="Cliente" />
+                <g:sortableColumn params="${params}" property="dataSincronizacao" title="Dt de Sincronizacao" />
+                <g:sortableColumn params="${params}" property="dataCriacao" title="Dt do Pedido" />
+                <g:sortableColumn params="${params}" property="dataFaturamento" title="Faturamento" />
+                <g:sortableColumn params="${params}" property="statusPedido" title="Status" />
+                <g:sortableColumn params="${params}" property="prazo" title="Prazo" />
+                <g:sortableColumn params="${params}" property="total" title="Total" />
+                <th>Abaixo Min.</th>
+                <th>Campanha</th>
+                <th>Estoque Indisponivel</th>
+                </thead>
+                <tbody>
+                <g:each in="${pedidoList}" var="pedido">
+                    <tr>
+                        <td><g:checkBox name="check${pedido.id}" /></td>
+                        <td><g:link action="show" id="${pedido.id}">${pedido.codigo}</g:link></td>
+                        <g:if test="${pedido.cliente?.participante.isOrganizacao()}">
+                            <td>
+                                <g:link controller="cliente" action="show" id="${pedido.cliente?.id}">
+                                    ${pedido.cliente?.codigo} - ${pedido.cliente?.participante?.razaoSocial}
+                                </g:link>
+                            </td>
+                        </g:if>
+                        <g:elseif test="${pedido.cliente?.participante.isPessoa()}">
+                            <td>
+                                <g:link controller="cliente" action="show" id="${pedido.cliente?.id}">
+                                    ${pedido.cliente?.codigo} - ${pedido.cliente?.participante?.nome}
+                                </g:link>
+                            </td>
+                        </g:elseif>
+                        <td>${g.formatDate(date: pedido.dataSincronizacao, format: "dd/MM/yyyy HH:mm")}</td>
+                        <td>${g.formatDate(date: pedido.dataCriacao, format: "dd/MM/yyyy HH:mm")}</td>
+                        <td>${g.formatDate(date: pedido.dataFaturamento, format: "dd/MM/yyyy")}</td>
+                        <td>${pedido.statusPedido}</td>
+                        <td class="text-center">${pedido.prazo?.periodicidade}</td>
+                        <td>R$ <g:formatNumber number="${pedido.total}" maxFractionDigits="2" /></td>
+                        <td class="text-center"><asset:image src="${pedido.isItemAbaixoDoMinimo() ? 'error' : 'ok'}.png" /> </td>
+                        <td class="text-center"><asset:image src="${pedido.isItemBonificado() ? 'error' : 'ok'}.png" /> </td>
+                        <td class="text-center"><asset:image src="${pedido.isEstoqueIndisponivel() ? 'error' : 'ok'}.png" /> </td>
+                    </tr>
+                </g:each>
+                </tbody>
+            </table>
+        </div>
     </g:form>
 
     <div class="pagination">

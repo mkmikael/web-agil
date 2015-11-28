@@ -28,7 +28,8 @@ class ClienteController {
                 def cliente = [:]
                 cliente.id = c.id
                 cliente.codigo = c.codigo
-                cliente.diaDeVisita = c.diaDeVisita?.toString()
+                if (c.diaDeVisita)
+                    cliente.diaDeVisita = c.diaDeVisita.toString()
                 cliente.status= c.status?.toString()
                 cliente.endereco = c.participante?.endereco
                 cliente.bairro = c.participante?.bairro

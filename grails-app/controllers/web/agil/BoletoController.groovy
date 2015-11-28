@@ -28,7 +28,7 @@ class BoletoController {
     }
 
     def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
+        params.max = Math.min(max ?: 50, 100)
         def filters = {
             if (params.search_statusBoleto)
                 eq('statusBoleto', StatusBoleto.valueOf(params.search_statusBoleto))

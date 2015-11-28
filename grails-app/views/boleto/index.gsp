@@ -21,12 +21,18 @@
             </g:if>
 
             <fieldset class="search">
-                <legend>Filtros</legend>
-                <div class="fieldcontain">
-                    <label for="search_statusBoleto"></label>
-                    <g:select name="search_statusBoleto" from="${StatusBoleto.values()}" noSelection="['': 'TODOS']"/>
-                </div>
+                <g:form action="index">
+                    <legend>Filtros</legend>
+                    <div class="fieldcontain">
+                        <label for="search_statusBoleto"></label>
+                        <g:select name="search_statusBoleto" from="${StatusBoleto.values()}" noSelection="['': 'TODOS']"/>
+                    </div>
+                    <fieldset>
+                        <input type="submit" value="Procurar">
+                    </fieldset>
+                </g:form>
             </fieldset>
+            <br>
             <f:table collection="${boletoList}" />
 
             <div class="pagination">

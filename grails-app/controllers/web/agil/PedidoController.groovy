@@ -22,7 +22,7 @@ class PedidoController {
     def savePedidos(String pedidos) {
         println pedidos
         def pedidosJA = new JSONArray(pedidos);
-        def response = []
+        def responseList = []
         for (JSONObject pedidoJO : pedidosJA) {
             def pedido = new Pedido()
             def sdf = new SimpleDateFormat("ddMMyyyyHHmmss")
@@ -52,11 +52,13 @@ class PedidoController {
                 itemPedido.unidade = unidade
                 pedido.addToItensPedido(itemPedido)
             }
-            pedido.save()
-            response << [codigo: pedido.getCodigo(), id: pedidoJO.getLong('id')]
+            if (pedido.save(failOnError: true))
+                responseList << [codigo: pedido.getCodigo(), id: pedidoJO.getLong('id'), status: 200]
+            else
+                responseList << [status: 500]
         }
-        println response
-        render response as JSON
+        println responseList
+        render responseList as JSON
     }
 
     @Transactional
@@ -216,7 +218,6 @@ class PedidoController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 30, 100)
-        params.tipoPessoa = params.tipoPessoa ?: 'PF'
         params.sort = params.sort ?: "dataSincronizacao"
         params.order = params.order ?: "desc"
         def criteria = {
@@ -233,23 +234,22 @@ class PedidoController {
                 if (params.search_diaDeVisita)
                     eq('diaDeVisita', Semana.valueOf(params.search_diaDeVisita) )
                 participante {
-                    if (params.tipoPessoa == 'PF') {
-                        eq('class', Pessoa.class.getName())
-                    } else if (params.tipoPessoa == 'PJ') {
-                        eq('class', Organizacao.class.getName())
-                    }
                     if (params.search_bairro)
                         ilike('bairro', "%${params.search_bairro}%")
-                    if (params.search_nome)
-                        ilike('nome', "%${params.search_nome}%")
-                    if (params.search_nomeFantasia)
-                        ilike('nomeFantasia', "%${params.search_nomeFantasia}%")
-                    if (params.search_razaoSocial)
-                        ilike('razaoSocial', "%${params.search_razaoSocial}%")
-                    if (params.search_cpf)
-                        ilike('cpf', "%${  params.search_cpf }%")
-                    if (params.search_cnpj)
-                        ilike('cnpj', "%${ Util.onlyNumber( params.search_cnpj ) }%")
+                    or {
+                        if (params.search_doc)
+                            ilike('cpf', "%${ Util.onlyNumber(params.search_doc)}%")
+                        if (params.search_doc)
+                            ilike('cnpj', "%${ Util.onlyNumber( params.search_cnpj ) }%")
+                    }
+                    or {
+                        if (params.search_nome)
+                            ilike('nome', "%${params.search_nome}%")
+                        if (params.search_nome)
+                            ilike('nomeFantasia', "%${params.search_nome}%")
+                        if (params.search_nome)
+                            ilike('razaoSocial', "%${params.search_nome}%")
+                    }
                 } // participante
             } // end cliente
         } // end criteria
